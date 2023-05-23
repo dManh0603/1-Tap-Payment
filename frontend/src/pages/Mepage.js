@@ -1,5 +1,5 @@
 import { Box, Button, Container, FormControl, FormLabel, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Text, useDisclosure, useToast } from '@chakra-ui/react'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useState } from 'react'
 // import { useNavigate } from 'react-router-dom';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js'
 
