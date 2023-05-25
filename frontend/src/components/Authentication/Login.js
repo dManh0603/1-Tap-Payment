@@ -41,7 +41,8 @@ const Login = () => {
         config
       );
 
-      localStorage.setItem('userInfo', JSON.stringify(data.user));
+      
+      localStorage.setItem('userToken', JSON.stringify(data.user.token));
 
       toast({
         title: 'Login successfully',
@@ -50,19 +51,20 @@ const Login = () => {
         isClosable: true,
         position: 'top-right',
       });
-      setLoading(false);
+
       navigate('/me')
 
     } catch (error) {
-
+      console.log(error);
       toast({
-        title: error.response.data.message?? 'Connection error',
-        description: 'Please check your network',
+        title: error.response.data.message ?? 'Connection error',
         status: 'error',
         duration: 3000,
         isClosable: true,
         position: 'top-right',
       });
+
+    } finally {
       setLoading(false);
     }
   }

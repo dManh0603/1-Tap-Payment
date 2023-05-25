@@ -68,13 +68,13 @@ class UserController {
     try {
       const user = await User.findOne({ email });
       if (!user) {
-        throw { statusCode: 400, message: "You have entered wrong email or password!" };
+        throw { statusCode: 200, message: "You have entered wrong email or password!" };
       }
 
       const passwordMatched = await user.matchPassword(password)
 
       if (!passwordMatched) {
-        throw { statusCode: 401, message: "You have entered wrong password!" };
+        throw { statusCode: 200, message: "You have entered wrong password!" };
 
       }
 
@@ -85,10 +85,26 @@ class UserController {
           _id: user._id,
           name: user.name,
           email: user.email,
-          balance: user.balance,
           token: generateToken(user._id)
         }
       });
+    } catch (err) {
+      console.error(err);
+      const statusCode = err.statusCode || 500;
+      const message = err.message || 'Internal server error';
+      res.status(statusCode).json({ message });
+    }
+  }
+
+  async findUser(req, res) {
+    try {
+      const user = await User.findById(req.params.id).select('-password')
+
+      if (!user) {
+        throw { statusCode: 400, message: 'Something went wrong, please try again later!' }
+      }
+      return res.json(user)
+
     } catch (err) {
       console.error(err);
       const statusCode = err.statusCode || 500;
