@@ -1,47 +1,30 @@
 import { useToast } from '@chakra-ui/react';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
-import React from 'react'
-import { UserState } from '../../contexts/UserProvider';
+import React, { useEffect } from 'react'
 
 const PaypalButton = (props) => {
 
-  
   const toast = useToast();
-  const user = UserState();
+  const userToken = JSON.parse(localStorage.getItem('userToken'));
+
 
   return (
     <PayPalScriptProvider options={{
-      'client-id': 'AbO-450EKgswcTUPU9QyFgfflXjrUFLafcSS4jlPxJb2wSnK2bLvrOsUm-7OTct1RnQffQj-BNqe2Lbs',
+      'client-id': 'AVNKZIlA8FJsWuzK7MPH7WvNZGZfWryFumAIO-gYeVl5oNF0K30kfWWLeKVz7P3qCgJU6FQkjrW_QXXb',
     }}>
       {props.amount === undefined
         ? <div>{console.log(props.amount)}</div>
         : <PayPalButtons
-          createOrder={() => {
-            return fetch('/transaction/create', {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                // "Authorization": `Bearer` 
-              },
-              body: JSON.stringify({
-                userId: user._id,
-                amount: props.amount
-              })
-
-            })
-              .then(res => {
-                if (!res.ok) {
-                  throw new Error("Failed to create order");
+          createOrder={(data, actions) => {
+            actions.order.create({
+              purchase_units: [
+                {
+                  amount: {
+                    value: props.amount,
+                  }
                 }
-                return res.json();
-              })
-              .then(({ id }) => {
-                return id;
-              })
-              .catch(e => {
-                console.error(e.message);
-                alert("Failed to create order. Please try again later.");
-              })
+              ]
+            })
           }}
           onApprove={(data, actions) => {
             return actions.order.capture()
@@ -51,10 +34,10 @@ const PaypalButton = (props) => {
                 console.log('details:', details);
 
 
-                const receive = {
-                  status: "COMPLETED",
-                  amount: "1.00",
-                }
+                // const receive = {
+                //   status: "COMPLETED",
+                //   amount: "1.00",
+                // }
 
                 // const details = {
                 //   "id": "4CD02420FE597212K",
@@ -144,6 +127,7 @@ const PaypalButton = (props) => {
         />}
     </PayPalScriptProvider>
   )
+
 }
 
 export default PaypalButton

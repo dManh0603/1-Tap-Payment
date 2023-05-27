@@ -1,26 +1,21 @@
-import { Box, Button, Container, Divider, Image, Spinner, Text } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+import { Box, Container, Image, Text, useToast } from '@chakra-ui/react';
+import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import PaypalButton from '../components/payment/PaypalButton';
-import { UserState } from '../contexts/UserProvider';
-import { ChevronLeftIcon } from '@chakra-ui/icons'
+import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js'
+import { UserState } from '../contexts/UserProvider'
 
 const Depositpage = () => {
 
-  const [isLoading, setIsLoading] = useState(true)
+  const userToken = JSON.parse(localStorage.getItem('userToken'));
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = UserState();
   const { amount } = location.state
-
+  const toast = useToast();
+  const { user } = UserState();
 
   useEffect(() => {
-    if (!amount > 0 || !user) navigate('/me');
-
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 500)
-  })
+    if (!userToken) navigate('/');
+  }, [])
 
   return (
     <>
@@ -35,35 +30,15 @@ const Depositpage = () => {
             p={3}
             bg={'white'}
             w={'100%'}
+            m={'12px 0 16px 0'}
+            borderRadius={'lg'}
             borderWidth={'1px'}
           >
-            <Text fontSize={'4xl'} textAlign={'center'}>
+            <Text fontSize={'4xl'} fontFamily={'Work sans'} textAlign={'center'}>
               NEU 1-Tap Parking Payment
             </Text>
-            <Box display={'flex'} alignContent={'end'}>
-              <Button
-                colorScheme='blue'
-                rightIcon={<ChevronLeftIcon boxSize={8} fontSize={'2xl'} />}
-              >
-                Logout
-              </Button>
-            </Box>
           </Box>
-          <Box
-            bg={'white'}
-            w={'100%'}
-            my={'4px'}
-            borderRadius={'lg'}
-          >
-            <Button
-              colorScheme='blue'
-              leftIcon={<ChevronLeftIcon boxSize={8} fontSize={'2xl'} />}
-            >
-              Back
-            </Button>
 
-
-          </Box>
           <Box
             bg={'white'}
             w={'100%'}
@@ -72,29 +47,53 @@ const Depositpage = () => {
             borderWidth={'1px'}
           >
             <Box maxW='32rem'>
-              <Text fontSize={'2xl'} textAlign={'center'}> {user.name}, you are going to deposit {amount}$ to your balance </Text>
-              <Divider mt={'3'} />
+              <Text fontSize={'3xl'} fontFamily={'Work sans'} textAlign={'center'}>You going to deposit to your balance {amount}$</Text>
 
-              <Text fontSize={'xl'} >Please check again your infomation</Text>
-              <Text fontSize={'xl'}>
-                Your name: {user.name}
+              <Text fontSize='1xl'>
+                Name: {user.name}
                 <br></br>
-                Your email: {user.email}
+                Email: {user.email}
                 <br></br>
               </Text>
-              <Divider mt={'3'} />
 
-              <Text fontSize={'xl'} >You can now pay by these method: </Text>
               <Box mt={3} display={'flex'} justifyContent={'center'}>
-                {isLoading
-                  ? (<Spinner
-                    thickness='4px'
-                    speed='0.65s'
-                    emptyColor='gray.200'
-                    color='blue.500'
-                    size='xl'
-                  />)
-                  : (<PaypalButton amount={amount} />)}
+
+                <PayPalScriptProvider options={{
+                  'client-id': 'AbO-450EKgswcTUPU9QyFgfflXjrUFLafcSS4jlPxJb2wSnK2bLvrOsUm-7OTct1RnQffQj-BNqe2Lbs',
+                }}>
+                  {amount === undefined
+                    ? <div>{console.log(amount)}</div>
+                    : <PayPalButtons
+                      createOrder={(data, actions) => {
+                        return actions.order.create({
+                          purchase_units: [
+                            {
+                              amount: {
+                                value: amount,
+                              }
+                            }
+                          ],
+                        });
+                      }}
+                      onApprove={(data, actions) => {
+                        return actions.order.capture()
+                          .then((details) => {
+                            console.log('amount:', details.purchase_units[0].amount.value);
+                            console.log('details:', details);
+                            toast({
+                              title: 'Transaction completed',
+                              duration: 5000,
+                              status: 'success',
+                              isClosable: true,
+                              position: 'top-right'
+                            })
+                          })
+                      }}
+                      onError={error => {
+                        return console.log(error);
+                      }}
+                    />}
+                </PayPalScriptProvider>
               </Box>
             </Box>
           </Box>

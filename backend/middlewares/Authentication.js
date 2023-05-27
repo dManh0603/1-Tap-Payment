@@ -12,7 +12,7 @@ const authenticate = async (req, res, next) => {
             if (!encodedToken) {
                 throw { statusCode: 401, message: 'Please login first!' }
             }
-            console.log(encodedToken);
+
             const decodedToken = jwt.verify(encodedToken, process.env.JWT_SECRET);
             req.user = await User.findById(decodedToken.id).select('-password').exec();
             next()
