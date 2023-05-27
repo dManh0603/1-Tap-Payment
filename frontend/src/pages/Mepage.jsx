@@ -1,16 +1,16 @@
 import { Box, Button, Container, FormControl, FormLabel, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Text, useDisclosure } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'
+import { UserState } from '../contexts/UserProvider';
 
 const Mepage = () => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [amount, setAmount] = useState(0);
-  const [user, setUser] = useState();
   const navigate = useNavigate();
+  const { user } = UserState();
 
-  const info = JSON.parse(localStorage.getItem('userInfo'));
+  const userToken = JSON.parse(localStorage.getItem('userToken'));
 
   const goPay = () => {
     navigate('/me/deposit', {
@@ -20,21 +20,9 @@ const Mepage = () => {
     });
   };
 
-  const fetchUser = async () => {
-    try {
-      const response = await axios.get(`/api/user/${info._id}`);
-      setUser(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   useEffect(() => {
-    if (!info) return navigate('/');
-    fetchUser();
-  });
-
-
+    if (!userToken) return navigate('/');
+  }, []);
 
   return (
     <>
@@ -112,12 +100,8 @@ const Mepage = () => {
         </Container>
 
       }
-
     </>
-
   )
-
 }
-
 
 export default Mepage

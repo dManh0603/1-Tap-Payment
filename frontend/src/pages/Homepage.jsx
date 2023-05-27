@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react'
 import { Box, Container, Tab, TabList, TabPanel, TabPanels, Tabs, Text, Image } from '@chakra-ui/react'
-import Login from '../components/Authentication/Login'
-import ForgetPassword from '../components/Authentication/ForgetPassword'
+import Login from '../components/authentication/Login'
+import ForgetPassword from '../components/authentication/ForgetPassword'
 import { useNavigate } from 'react-router-dom'
 
 const Homepage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('userInfo'));
+    const userToken = JSON.parse(localStorage.getItem('userToken'));
 
-    if (user) navigate('/me');
+    if (userToken) navigate('/me');
 
   })
 

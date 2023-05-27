@@ -85,6 +85,7 @@ class UserController {
           _id: user._id,
           name: user.name,
           email: user.email,
+          balance: user.balance,
           token: generateToken(user._id)
         }
       });
@@ -98,7 +99,7 @@ class UserController {
 
   async findUser(req, res) {
     try {
-      const user = await User.findById(req.params.id).select('-password')
+      const user = await User.findById(req.user._id).select('-password')
 
       if (!user) {
         throw { statusCode: 400, message: 'Something went wrong, please try again later!' }

@@ -2,6 +2,7 @@ import { Button, FormControl, FormLabel, Input, InputGroup, InputRightElement, V
 import React, { useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import { UserState } from '../../contexts/UserProvider'
 
 const Login = () => {
 
@@ -9,7 +10,7 @@ const Login = () => {
   const [email, setEmail] = useState()
   const [password, setPassword] = useState()
   const [loading, setLoading] = useState(false);
-
+  const { setUser } = UserState();
   const toast = useToast();
   const navigate = useNavigate();
   const handleClick = () => setShow(!show);
@@ -41,7 +42,8 @@ const Login = () => {
         config
       );
 
-      
+      setUser(data.user)
+
       localStorage.setItem('userToken', JSON.stringify(data.user.token));
 
       toast({
