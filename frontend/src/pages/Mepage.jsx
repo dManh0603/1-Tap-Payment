@@ -2,6 +2,7 @@ import { Box, Button, Container, FormControl, FormLabel, Image, Modal, ModalBody
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { UserState } from '../contexts/UserProvider';
+import Banner from '../components/miscellaneous/Banner';
 
 const Mepage = () => {
 
@@ -28,23 +29,7 @@ const Mepage = () => {
     <>
       {user &&
         <Container maxW='xl' centerContent>
-          <Box mt={'2'} w='100%'>
-            <Image src='/banner-yersin.jpg' />
-          </Box>
-          <Box
-            d={'flex'}
-            justifyContent={'center'}
-            p={3}
-            bg={'white'}
-            w={'100%'}
-            m={'12px 0 16px 0'}
-            borderRadius={'lg'}
-            borderWidth={'1px'}
-          >
-            <Text fontSize={'4xl'} fontFamily={'Work sans'} textAlign={'center'}>
-              NEU 1-Tap Parking Payment
-            </Text>
-          </Box>
+          <Banner />
 
           <Box
             bg={'white'}

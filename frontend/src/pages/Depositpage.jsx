@@ -3,6 +3,8 @@ import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js'
 import { UserState } from '../contexts/UserProvider'
+import Banner from '../components/miscellaneous/Banner';
+
 
 const Depositpage = () => {
 
@@ -21,24 +23,7 @@ const Depositpage = () => {
     <>
       {user &&
         <Container maxW='xl' centerContent>
-          <Box mt={'2'} w='100%'>
-            <Image src='/banner-yersin.jpg' />
-          </Box>
-          <Box
-            d={'flex'}
-            justifyContent={'center'}
-            p={3}
-            bg={'white'}
-            w={'100%'}
-            m={'12px 0 16px 0'}
-            borderRadius={'lg'}
-            borderWidth={'1px'}
-          >
-            <Text fontSize={'4xl'} fontFamily={'Work sans'} textAlign={'center'}>
-              NEU 1-Tap Parking Payment
-            </Text>
-          </Box>
-
+          <Banner />
           <Box
             bg={'white'}
             w={'100%'}
