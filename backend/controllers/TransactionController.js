@@ -1,50 +1,30 @@
-const paypal = require('@paypal/checkout-server-sdk');
-
-const Environment = process.env.NODE_ENV === "production"
-  ? paypal.core.LiveEnvironment
-  : paypal.core.SandboxEnvironment
-
-const paypalClient = new paypal.core.PayPalHttpClient(
-  new Environment(
-    process.env.PAYPAL_CLIENT_ID,
-    process.env.PAYPAL_CLIENT_SECRET
-  )
-);
+const Transaction = require('../models/TransactionModel');
 class TransactionController {
 
   async create(req, res) {
-
-    const request = new paypal.orders.OrdersCreateRequest();
-    const total = req.body.amount;
-    console.log('total: ', total);
-    request.prefer('return=representation');
-    request.requestBody({
-      intent: 'CAPTURE',
-      purchase_units: [
-        {
-          amount: {
-            currency_code: 'USD',
-            value: total,
-            breakdown: {
-              item_total: {
-                currency_code: "USD",
-                value: total,
-              },
-            },
-          }
-        }
-      ]
-    })
-
     try {
-      const order = await paypalClient.execute(request);
-      console.log('order', order)
-      res.json({ id: order.result.id })
+      const { payment_id, status, amount, create_time, update_time, email_address } = req.body;
+      const { _id: user_id } = req.user;
+
+      const transaction = await Transaction.create({
+        PP_info: {
+          payment_id,
+          status,
+          create_time,
+          update_time,
+          payer_email_address: email_address
+        },
+        amount: parseFloat(amount),
+        user_id
+      });
+
+      res.status(201).json({ transaction });
     } catch (error) {
-      console.log(error)
-      res.status(500).json({ error: error.message })
+      console.error('Error creating transaction:', error);
+      res.status(500).json({ error: 'Failed to create transaction' });
     }
   }
+
 }
 
 module.exports = new TransactionController();

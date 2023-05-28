@@ -1,17 +1,25 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
-
+// Define the Transaction schema
 const TransactionSchema = mongoose.Schema(
   {
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    balance: { type: Number, default: 0 }
+    PP_info: {
+      payment_id: { type: String, required: true },
+      status: { type: String, required: true },
+      create_time: { type: Date, required: true },
+      update_time: { type: Date, required: true },
+      payer_id: { type: String },
+      payer_email_address: { type: String },
+    },
+    amount: { type: Number, required: true },
+    user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   },
   {
-    timestamps: true,
+    timestamps: true, // Add timestamps for createdAt and updatedAt fields
   }
 );
 
-const user = mongoose.model('Transaction', TransactionSchema)
-module.exports = user
+// Create the Transaction model
+const Transaction = mongoose.model('Transaction', TransactionSchema);
+
+module.exports = Transaction;

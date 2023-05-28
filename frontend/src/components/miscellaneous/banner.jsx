@@ -1,7 +1,11 @@
-import { Box, Image, Text } from '@chakra-ui/react'
+import { Box, Image, Text, useToast } from '@chakra-ui/react'
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
+import ProfileModal from './ProfileModal';
+import { UserState } from '../../contexts/UserProvider';
 
 const Banner = () => {
+
   return (
     <>
       <Box w='100%'>
@@ -19,6 +23,10 @@ const Banner = () => {
         <Text fontSize={'4xl'} fontFamily={'Work sans'} textAlign={'center'}>
           NEU 1-Tap Parking Payment
         </Text>
+        <Box display={'flex'} justifyContent={'end'}>
+
+          <ProfileModal />
+        </Box>
       </Box>
     </>
   )
