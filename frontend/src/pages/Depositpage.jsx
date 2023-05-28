@@ -19,12 +19,9 @@ const Depositpage = () => {
 
 
   const handleTransaction = async (captureDetails) => {
-    console.log('handle',captureDetails)
+    console.log('paypal details captured', captureDetails);
     try {
-      console.log('amount:', captureDetails.purchase_units[0].amount.value);
-      console.log('details:', captureDetails);
-
-      const transaction = {
+      const data = {
         payment_id: captureDetails.purchase_units[0].payments.captures[0].id,
         status: captureDetails.purchase_units[0].payments.captures[0].status,
         amount: captureDetails.purchase_units[0].payments.captures[0].amount.value,
@@ -33,16 +30,17 @@ const Depositpage = () => {
         payer_id: captureDetails.payer.payer_id,
         email_address: captureDetails.payer.email_address
       };
-
-      const response = await axios.post('/api/transaction/create', transaction, {
+  
+      const createApiResponse = await axios.post('/api/transaction/create', data, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${userToken}`
         }
       });
-
-      if (response.status === 201) {
-        // const result = response.data;
+  
+      if (createApiResponse.status === 201) {
+        const transaction = createApiResponse.data;
+        console.log('/api/transaction/create data', transaction);
         toast({
           title: 'Transaction completed',
           duration: 5000,
@@ -50,6 +48,24 @@ const Depositpage = () => {
           isClosable: true,
           position: 'top-right'
         });
+  
+        const payload = {
+          amount: transaction.amount,
+          transactionId: transaction._id
+        };
+  
+        const addApiResponse = await axios.put('/api/balance/add', payload, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${userToken}`
+          }
+        });
+  
+        if (addApiResponse.status === 200) {
+          console.log('Amount added to balance');
+        } else {
+          throw new Error('Failed to add amount to balance');
+        }
       } else {
         throw new Error('Failed to create transaction');
       }
@@ -65,6 +81,8 @@ const Depositpage = () => {
       });
     }
   };
+  
+
 
   useEffect(() => {
     if (!userToken) navigate('/');

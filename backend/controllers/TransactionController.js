@@ -18,7 +18,7 @@ class TransactionController {
         user_id
       });
 
-      res.status(201).json({ transaction });
+      res.status(201).json(transaction);
     } catch (error) {
       console.error('Error creating transaction:', error);
       res.status(500).json({ error: 'Failed to create transaction' });

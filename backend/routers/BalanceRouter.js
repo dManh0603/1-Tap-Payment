@@ -4,9 +4,9 @@ const authenticate = require('../middlewares/Authentication')
 
 const router = express.Router()
 
-router.put('/deposit',authenticate, balanceController.deposit)
+router.put('/add',authenticate, balanceController.add)
 // router.put('/refund', userController.signup)
-// router.post('/pay', userController.signup)
+router.put('/deduct',authenticate, balanceController.deduct)
 
 
 module.exports = router
