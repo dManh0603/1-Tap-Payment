@@ -6,7 +6,7 @@ const router = express.Router()
 
 router.put('/add',authenticate, balanceController.add)
 // router.put('/refund', userController.signup)
-router.put('/deduct',authenticate, balanceController.deduct)
+router.put('/deduct/:card_uid', balanceController.deduct)
 
 
 module.exports = router

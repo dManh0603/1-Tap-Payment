@@ -27,20 +27,31 @@ class BalanceController {
 
   async deduct(req, res) {
     try {
-      const userId = req.user._id;
+      const card_uid = req.params.card_uid;
       const amount = req.body.amount;
 
-      // Find the user by userId and deduct the amount from the balance field
-      const user = await User.findByIdAndUpdate(userId, { $inc: { balance: -amount } }, { new: true });
+      // Find the user by card_uid
+      const user = await User.findOne({ card_uid });
 
       if (!user) {
         return res.status(404).json({ error: 'User not found' });
       }
 
-      res.status(200).json({ user });
+      // Check if the balance has enough funds
+      if (user.balance < amount) {
+        return res.status(400).json({ error: 'Insufficient balance' });
+      }
+
+      // Deduct the amount from the balance field
+      user.balance -= amount;
+
+      // Save the updated user
+      await user.save();
+
+      res.status(200).json(user);
     } catch (error) {
       console.error('Error deducting amount:', error);
-      res.status(500).json({ error: 'Failed to deduct amount' });
+      res.status(500).json({ error: error.message });
     }
   }
 

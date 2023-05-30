@@ -4,11 +4,18 @@ const path = require('path')
 const db = require('./config/db')
 const route = require('./routers')
 const chalk = require('chalk');
-const app = express()
-
 const ip = require("ip");
 
+const app = express()
+
+// Set the "public" folder as the static directory
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(express.json())
+
+// Set EJS as the view engine
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 dotenv.config()
 

@@ -2,7 +2,6 @@ import { Box, Container, Spinner, Text, useToast } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js'
-import { UserState } from '../contexts/UserProvider'
 import Banner from '../components/miscellaneous/Banner';
 import Profile from '../components/miscellaneous/Profile';
 import axios from 'axios';
@@ -14,7 +13,6 @@ const Depositpage = () => {
   const location = useLocation();
   const { amount } = location.state
   const toast = useToast();
-  const { user } = UserState();
   const [isLoading, setIsLoading] = useState(true);
 
 
@@ -30,17 +28,37 @@ const Depositpage = () => {
         payer_id: captureDetails.payer.payer_id,
         email_address: captureDetails.payer.email_address
       };
-  
+
       const createApiResponse = await axios.post('/api/transaction/create', data, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${userToken}`
         }
       });
-  
+
       if (createApiResponse.status === 201) {
         const transaction = createApiResponse.data;
         console.log('/api/transaction/create data', transaction);
+
+
+        const payload = {
+          amount: transaction.amount,
+          transactionId: transaction._id
+        };
+
+        const addApiResponse = await axios.put('/api/balance/add', payload, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${userToken}`
+          }
+        });
+
+        if (addApiResponse.status === 200) {
+          console.log('Amount added to balance');
+        } else {
+          throw new Error('Failed to add amount to balance');
+        }
+
         toast({
           title: 'Transaction completed',
           duration: 5000,
@@ -48,24 +66,8 @@ const Depositpage = () => {
           isClosable: true,
           position: 'top-right'
         });
-  
-        const payload = {
-          amount: transaction.amount,
-          transactionId: transaction._id
-        };
-  
-        const addApiResponse = await axios.put('/api/balance/add', payload, {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${userToken}`
-          }
-        });
-  
-        if (addApiResponse.status === 200) {
-          console.log('Amount added to balance');
-        } else {
-          throw new Error('Failed to add amount to balance');
-        }
+        navigate('/me')
+
       } else {
         throw new Error('Failed to create transaction');
       }
@@ -81,7 +83,7 @@ const Depositpage = () => {
       });
     }
   };
-  
+
 
 
   useEffect(() => {
@@ -89,12 +91,22 @@ const Depositpage = () => {
     setTimeout(() => {
       setIsLoading(false);
     }, 1000)
-
   }, [])
 
   return (
     <>
-      {user &&
+      {isLoading ? (
+        <Container maxW={'xl'} centerContent mt={'16'}>
+          <Spinner
+            thickness='4px'
+            speed='0.65s'
+            emptyColor='gray.200'
+            color='blue.500'
+            size='xl'
+          />
+        </Container>
+      )
+        :
         <Container maxW='xl' centerContent>
           <Banner />
           <Box

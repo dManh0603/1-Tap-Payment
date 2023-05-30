@@ -15,7 +15,7 @@ const UserProvider = ({ children }) => {
     try {
       const response = await axios.get(`/api/user/`, {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${userToken}`
         }
       });
 
@@ -36,7 +36,7 @@ const UserProvider = ({ children }) => {
 
   return (
     <UserContext.Provider value={{
-      user, setUser
+      user, setUser, fetchUser
     }}>
       {children}
     </UserContext.Provider>

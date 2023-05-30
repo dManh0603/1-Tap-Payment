@@ -1,4 +1,4 @@
-import { Box, Button, Container, FormControl, FormLabel, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Text, useDisclosure } from '@chakra-ui/react'
+import { Box, Button, Container, FormControl, FormLabel, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Text, useDisclosure } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { UserState } from '../contexts/UserProvider';
@@ -9,7 +9,7 @@ const Mepage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [amount, setAmount] = useState(0);
   const navigate = useNavigate();
-  const { user } = UserState();
+  const { user, fetchUser } = UserState();
 
   const userToken = JSON.parse(localStorage.getItem('userToken'));
 
@@ -23,6 +23,7 @@ const Mepage = () => {
 
   useEffect(() => {
     if (!userToken) return navigate('/');
+    fetchUser();
   }, []);
 
   return (
