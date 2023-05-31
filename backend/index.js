@@ -7,7 +7,16 @@ const chalk = require('chalk');
 const handlebars = require('express-handlebars');
 const ip = require("ip");
 const bodyParser = require('body-parser');
+const session = require('express-session');
+
 const app = express()
+
+// Configure the session middleware
+app.use(session({
+  secret: 'your_secret_key',
+  resave: false,
+  saveUninitialized: true
+}));
 
 // Set the "public" folder as the static directory
 app.use(express.static(path.join(__dirname, 'public')));

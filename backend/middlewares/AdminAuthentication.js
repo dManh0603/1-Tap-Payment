@@ -24,6 +24,11 @@ const adminAuthenticate = async (req, res, next) => {
 
     }
 
+    req.session.user = {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+    };
     console.log(`Admin: ${user._id} logged in.`)
 
     next();

@@ -19,63 +19,10 @@ class AdminController {
     res.render('index');
   }
 
-  async login(req, res) {
-    const { email, password } = req.body;
-
-    try {
-      const user = await User.findOne({ email, role: "admin" });
-      if (!user) {
-        throw { statusCode: 401, message: "You have entered wrong email or password!" };
-      }
-
-      const passwordMatched = await user.matchPassword(password)
-
-      if (!passwordMatched) {
-        throw { statusCode: 401, message: "You have entered wrong password!" };
-
-      }
-
-      console.log(`Admin: ${user._id} logged in.`)
-
-      res.status(200).json({
-        message: 'Admin login successfully',
-        user: {
-          _id: user._id,
-          name: user.name,
-          email: user.email,
-          balance: user.balance,
-          token: generateToken(user._id)
-        }
-      });
-    } catch (err) {
-      console.error(err);
-      const statusCode = err.statusCode || 500;
-      const message = err.message || 'Internal server error';
-      res.status(statusCode).json({ message });
-    }
-  }
-
-  async findUser(req, res) {
-    try {
-      const user = await User.findById(req.user._id).select('-password')
-
-      if (!user) {
-        throw { statusCode: 400, message: 'Something went wrong, please try again later!' }
-      }
-      return res.json(user)
-
-    } catch (err) {
-      console.error(err);
-      const statusCode = err.statusCode || 500;
-      const message = err.message || 'Internal server error';
-      res.status(statusCode).json({ message });
-    }
-  }
-
   async dashboard(req, res) {
 
-    res.json('dashboard');
-    // res.render('dashboard')
+    res.json(req.session.user);
+
   }
 
 }
