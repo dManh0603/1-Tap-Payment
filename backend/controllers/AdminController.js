@@ -23,21 +23,22 @@ class AdminController {
     const { email, password } = req.body;
 
     try {
-      const user = await User.findOne({ email });
+      const user = await User.findOne({ email, role: "admin" });
       if (!user) {
-        throw { statusCode: 200, message: "You have entered wrong email or password!" };
+        throw { statusCode: 401, message: "You have entered wrong email or password!" };
       }
 
       const passwordMatched = await user.matchPassword(password)
 
       if (!passwordMatched) {
-        throw { statusCode: 200, message: "You have entered wrong password!" };
+        throw { statusCode: 401, message: "You have entered wrong password!" };
 
       }
 
-      console.log(`User: ${user._id} logged in.`)
+      console.log(`Admin: ${user._id} logged in.`)
+
       res.status(200).json({
-        message: 'User login successfully',
+        message: 'Admin login successfully',
         user: {
           _id: user._id,
           name: user.name,
@@ -69,6 +70,12 @@ class AdminController {
       const message = err.message || 'Internal server error';
       res.status(statusCode).json({ message });
     }
+  }
+
+  async dashboard(req, res) {
+
+    res.json('dashboard');
+    // res.render('dashboard')
   }
 
 }

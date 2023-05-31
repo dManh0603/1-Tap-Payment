@@ -4,17 +4,26 @@ const path = require('path')
 const db = require('./config/db')
 const route = require('./routers')
 const chalk = require('chalk');
+const handlebars = require('express-handlebars');
 const ip = require("ip");
-
+const bodyParser = require('body-parser');
 const app = express()
 
 // Set the "public" folder as the static directory
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Parse URL-encoded bodies
+app.use(bodyParser.urlencoded({ extended: true }));
+// Parse JSON-encoded bodies
 app.use(express.json())
 
-// Set EJS as the view engine
-app.set('view engine', 'ejs');
+// Set HBS as the view engine
+app.engine('hbs', handlebars.engine({
+  extname: '.hbs',
+  // helpers: require('./helpers/HbsHelper'),
+}));
+
+app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 
 dotenv.config()

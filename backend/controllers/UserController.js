@@ -68,13 +68,13 @@ class UserController {
     try {
       const user = await User.findOne({ email });
       if (!user) {
-        throw { statusCode: 200, message: "You have entered wrong email or password!" };
+        throw { statusCode: 401, message: "You have entered wrong email or password!" };
       }
 
       const passwordMatched = await user.matchPassword(password)
 
       if (!passwordMatched) {
-        throw { statusCode: 200, message: "You have entered wrong password!" };
+        throw { statusCode: 401, message: "You have entered wrong password!" };
 
       }
 

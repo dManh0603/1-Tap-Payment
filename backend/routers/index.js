@@ -8,6 +8,13 @@ const route = (app) => {
   app.use('/api/balance', balanceRouter);
   app.use('/api/transaction', transactionRouter);
   app.use('/', adminRouter);
+
+  app.use((error, res, next) => {
+    console.log(error)
+    res.render('error', {
+      message: error.message
+    })
+  })
 }
 
 module.exports = route

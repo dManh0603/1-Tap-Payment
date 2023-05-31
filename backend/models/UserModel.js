@@ -7,7 +7,7 @@ const UserSchema = mongoose.Schema(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     balance: { type: Number, default: 0, min: 0 },
-    card_uid: { type: String, unique: true }
+    card_uid: { type: String, default: null}
   },
   {
     timestamps: true,

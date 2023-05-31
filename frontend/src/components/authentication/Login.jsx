@@ -41,7 +41,7 @@ const Login = () => {
         { email, password },
         config
       );
-
+      console.log(data)
       setUser(data.user)
 
       localStorage.setItem('userToken', JSON.stringify(data.user.token));
