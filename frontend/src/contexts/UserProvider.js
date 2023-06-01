@@ -1,24 +1,21 @@
+import React, { createContext, useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-
-const { createContext, useState, useEffect, useContext } = require("react")
 
 const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
-  const [user, setUser] = useState();
-  const [userToken, setUserToken] = useState();
-  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [userToken, setUserToken] = useState(null);
+
 
   const fetchUser = async () => {
     try {
-      const response = await axios.get(`/api/user/`, {
+      const response = await axios.get("/api/user/", {
         headers: {
           Authorization: `Bearer ${userToken}`
         }
       });
 
-      console.log(response)
       setUser(response.data);
     } catch (error) {
       console.error(error);
@@ -26,26 +23,29 @@ const UserProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    console.log('user provider')
-    if (!userToken) {
-      return navigate('/')
+    if (userToken) {
+      fetchUser();
     }
-    fetchUser(userToken)
-  }, [])
+  }, []);
+
+  const userContextValue = {
+    user,
+    setUser,
+    userToken,
+    fetchUser,
+    setUserToken
+  };
 
   return (
-    <UserContext.Provider value={{
-      user, setUser, fetchUser, setUserToken
-    }}>
+    <UserContext.Provider value={userContextValue}>
       {children}
     </UserContext.Provider>
-  )
-}
+  );
+};
 
 export const UserState = () => {
-
-  return useContext(UserContext)
-}
-
+  const context = useContext(UserContext);
+  return context;
+};
 
 export default UserProvider;

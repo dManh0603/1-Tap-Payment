@@ -41,11 +41,10 @@ const Login = () => {
         { email, password },
         config
       );
-      console.log(data)
+      
       setUser(data.user)
-
-      localStorage.setItem('userToken', JSON.stringify(data.user.token));
       setUserToken(data.user.token);
+
       toast({
         title: 'Login successfully',
         status: 'success',
@@ -59,7 +58,7 @@ const Login = () => {
     } catch (error) {
       console.log(error);
       toast({
-        title: error.response.data.message ?? 'Connection error',
+        title: error.message ?? 'Connection error',
         status: 'error',
         duration: 3000,
         isClosable: true,

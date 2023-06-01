@@ -8,15 +8,13 @@ import { UserState } from '../contexts/UserProvider'
 const Homepage = () => {
   const navigate = useNavigate();
 
-  const { user, setUserToken } = UserState()
-  
-  useEffect(() => {
-    
-    // const userToken = localStorage.getItem('userToken');
-    // if(userToken)
-    if (user) navigate('/me');
+  const { user } = UserState()
 
-  })
+  useEffect(() => {
+    console.log(user)
+    if (user !== null) navigate('/me');
+
+  }, [])
 
 
   return (

@@ -21,7 +21,10 @@ const Mepage = () => {
 
   useEffect(() => {
     if (!user) return navigate('/');
-    // fetchUser();
+    console.log('user',user);
+    console.log('userToken',userToken);
+
+    fetchUser();
   }, []);
 
   return (

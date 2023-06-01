@@ -67,10 +67,10 @@ const Depositpage = () => {
           isClosable: true,
           position: 'top-right'
         });
-        setTimeout(()=>{
+        setTimeout(() => {
           navigate('/me')
 
-        },1000)
+        }, 1000)
 
       } else {
         throw new Error('Failed to create transaction');
@@ -91,7 +91,11 @@ const Depositpage = () => {
 
 
   useEffect(() => {
-    if (!userToken) navigate('/');
+    if (userToken === null) {
+      console.log('no user token')
+      navigate('/');
+    }
+
     setTimeout(() => {
       setIsLoading(false);
     }, 1000)
