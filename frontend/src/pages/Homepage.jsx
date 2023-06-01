@@ -3,14 +3,18 @@ import { Box, Container, Tab, TabList, TabPanel, TabPanels, Tabs, Text, Image } 
 import Login from '../components/authentication/Login'
 import ForgetPassword from '../components/authentication/ForgetPassword'
 import { useNavigate } from 'react-router-dom'
+import { UserState } from '../contexts/UserProvider'
 
 const Homepage = () => {
   const navigate = useNavigate();
 
+  const { user, setUserToken } = UserState()
+  
   useEffect(() => {
-    const userToken = JSON.parse(localStorage.getItem('userToken'));
-
-    if (userToken) navigate('/me');
+    
+    // const userToken = localStorage.getItem('userToken');
+    // if(userToken)
+    if (user) navigate('/me');
 
   })
 

@@ -5,10 +5,11 @@ import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js'
 import Banner from '../components/miscellaneous/Banner';
 import Profile from '../components/miscellaneous/Profile';
 import axios from 'axios';
+import { UserState } from '../contexts/UserProvider';
 
 const Depositpage = () => {
 
-  const userToken = JSON.parse(localStorage.getItem('userToken'));
+  const { userToken } = UserState();
   const navigate = useNavigate();
   const location = useLocation();
   const { amount } = location.state
@@ -66,7 +67,10 @@ const Depositpage = () => {
           isClosable: true,
           position: 'top-right'
         });
-        navigate('/me')
+        setTimeout(()=>{
+          navigate('/me')
+
+        },1000)
 
       } else {
         throw new Error('Failed to create transaction');

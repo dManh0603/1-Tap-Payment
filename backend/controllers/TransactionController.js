@@ -25,6 +25,46 @@ class TransactionController {
     }
   }
 
+  async fetchMonthly(req, res) {
+    try {
+      const currentDate = new Date();
+      const currentMonth = currentDate.getMonth() + 1;
+  
+      // Initialize an array to store the monthly sums
+      const monthlySums = Array(currentMonth).fill(0);
+  
+      // Query the transactions collection and calculate the sums for each month
+      const result = await Transaction.aggregate([
+        {
+          $group: {
+            _id: { $month: "$createdAt" },
+            monthlyIncome: { $sum: "$amount" }
+          }
+        },
+        { $sort: { _id: 1 } }
+      ]);
+  
+      // Iterate through the result and update the monthly sums array
+      result.forEach(item => {
+        const monthIndex = item._id - 1;
+        monthlySums[monthIndex] = item.monthlyIncome;
+      });
+  
+      // Fill in zeros for missing months
+      for (let i = 0; i < currentMonth; i++) {
+        if (monthlySums[i] === 0) {
+          monthlySums[i] = 0;
+        }
+      }
+  
+      return res.json(monthlySums);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  }
+  
+  
 }
 
 module.exports = new TransactionController();

@@ -9,9 +9,7 @@ const Mepage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [amount, setAmount] = useState(0);
   const navigate = useNavigate();
-  const { user, fetchUser } = UserState();
-
-  const userToken = JSON.parse(localStorage.getItem('userToken'));
+  const { user, fetchUser, userToken } = UserState();
 
   const goPay = () => {
     navigate('/me/deposit', {
@@ -22,8 +20,8 @@ const Mepage = () => {
   };
 
   useEffect(() => {
-    if (!userToken) return navigate('/');
-    fetchUser();
+    if (!user) return navigate('/');
+    // fetchUser();
   }, []);
 
   return (

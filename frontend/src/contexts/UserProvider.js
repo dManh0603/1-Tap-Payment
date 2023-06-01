@@ -7,11 +7,10 @@ const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState();
+  const [userToken, setUserToken] = useState();
   const navigate = useNavigate();
 
-  const userToken = JSON.parse(localStorage.getItem('userToken'));
-
-  const fetchUser = async (token) => {
+  const fetchUser = async () => {
     try {
       const response = await axios.get(`/api/user/`, {
         headers: {
@@ -36,7 +35,7 @@ const UserProvider = ({ children }) => {
 
   return (
     <UserContext.Provider value={{
-      user, setUser, fetchUser
+      user, setUser, fetchUser, setUserToken
     }}>
       {children}
     </UserContext.Provider>

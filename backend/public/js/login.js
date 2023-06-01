@@ -1,25 +1,25 @@
-// $(document).ready(function () {
-//   $('#login-form').submit(function (e) {
-//     e.preventDefault();
-//     const formData = $(this).serializeArray();
-//     const formObject = {};
+$(document).ready(function () {
+  // When the login button is clicked
+  $('#login-button').click(function (event) {
+    event.preventDefault(); // Stop the default form submission
 
-//     // Convert form data array to object
-//     formData.forEach(function (input) {
-//       formObject[input.name] = input.value;
-//     });
+    // Get the form data
+    const email = $('#email').val();
+    const password = $('#password').val();
+    const formData = { email, password };
 
-//     // Send Axios request
-//     axios.post($(this).attr('action'), formObject)
-//       .then(function (response) {
-//         if (response.status === 200) {
-//           const data = response.data;
-//           console.log(data);
-//           localStorage.setItem('userToken', JSON.stringify(data.user.token));
-//         }
-//       })
-//       .catch(function (error) {
-//         $('#error').text("Check again your email and password");
-//       });
-//   });
-// });
+    // Send a POST request to the endpoint
+    $.post('/admin/api/getToken', formData)
+      .done(function (response) {
+        localStorage.setItem('adminToken', response.token);
+        // Trigger form submission
+        $('#login-form').submit();
+
+      })
+      .fail(function (error) {
+        // Handle the error response
+        console.error('Error:', error.responseText);
+        $('#error').text('Login failed. Please try again.'); // Display an error message
+      });
+  });
+});
