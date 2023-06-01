@@ -20,9 +20,9 @@ const Mepage = () => {
   };
 
   useEffect(() => {
-    if (!user) return navigate('/');
-    console.log('user',user);
-    console.log('userToken',userToken);
+    if (user === null) return navigate('/');
+    console.log('user', user);
+    console.log('userToken', userToken);
 
     fetchUser();
   }, []);

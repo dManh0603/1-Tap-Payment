@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Box, Container, Tab, TabList, TabPanel, TabPanels, Tabs, Text, Image } from '@chakra-ui/react'
+import { Box, Container, Tab, TabList, TabPanel, TabPanels, Tabs, Text, Image, useToast } from '@chakra-ui/react'
 import Login from '../components/authentication/Login'
 import ForgetPassword from '../components/authentication/ForgetPassword'
 import { useNavigate } from 'react-router-dom'
@@ -9,12 +9,21 @@ const Homepage = () => {
   const navigate = useNavigate();
 
   const { user } = UserState()
-
+  const toast = useToast();
+  
   useEffect(() => {
     console.log(user)
-    if (user !== null) navigate('/me');
-
-  }, [])
+    if (user !== null) {
+      toast({
+        title: 'Welcome back',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+        position: 'top-right',
+      });
+      navigate('/me')
+    };
+  })
 
 
   return (

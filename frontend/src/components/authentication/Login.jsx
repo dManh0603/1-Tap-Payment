@@ -44,6 +44,7 @@ const Login = () => {
       
       setUser(data.user)
       setUserToken(data.user.token);
+      localStorage.setItem('userToken', data.user.token)
 
       toast({
         title: 'Login successfully',
