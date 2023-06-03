@@ -4,36 +4,25 @@ const generateToken = require('../config/jwt');
 
 class AdminController {
 
-  index(req, res) {
-    if (req.session.user) {
-      return res.redirect('/dashboard');
-    }
-    return res.render('index', {
-      layout: 'blank.hbs'
-    });
-  }
-
   async getMonthlyIncome() {
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth();
     const currentYear = currentDate.getFullYear();
-  
+
     const startDate = new Date(currentYear, currentMonth, 1);
     const endDate = new Date(currentYear, currentMonth + 1, 0, 23, 59, 59);
-  
+
     const monthlyTransactions = await Transaction.find({
       "createdAt": { $gte: startDate.toISOString(), $lte: endDate.toISOString() },
     });
-  
+
     let monthlyIncome = 0;
     monthlyTransactions.forEach((transaction) => {
       monthlyIncome += transaction.amount;
     });
-  
-    console.log(monthlyIncome);
+
     return monthlyIncome;
   }
-  
 
   async getAnnualIncome() {
     const currentDate = new Date();
@@ -51,16 +40,22 @@ class AdminController {
       annualIncome += transaction.amount;
     });
 
-    console.log(annualIncome);
     return annualIncome;
   }
 
+  async getTransactionCount() {
+    const transaction = await Transaction.find();
+    const transactionCount = transaction.length;
+    return transactionCount;
+  }
 
-
-  async getUserCount() {
-    const users = await User.find();
-    const userCount = users.length;
-    return userCount;
+  index(req, res) {
+    if (req.session && req.session.user) {
+      return res.redirect('/dashboard');
+    }
+    return res.render('index', {
+      layout: 'blank.hbs',
+    });
   }
 
   dashboard = async (req, res) => {
@@ -71,17 +66,16 @@ class AdminController {
     try {
       const monthlyIncome = await this.getMonthlyIncome();
       const annualIncome = await this.getAnnualIncome();
-      const userCount = await this.getUserCount();
+      const transactionCount = await this.getTransactionCount();
 
-      return res.render('dashboard', { monthlyIncome, annualIncome, userCount });
+      return res.render('dashboard', { monthlyIncome, annualIncome, transactionCount });
     } catch (error) {
       console.error(error);
       return res.render('error', { error });
     }
   }
 
-
-  async login(req, res) {
+  login = async (req, res) => {
     const { email, password } = req.body;
 
     try {
@@ -89,7 +83,9 @@ class AdminController {
       if (!user) {
         return res.render('index', {
           email,
-          error: "You have entered wrong password or email"
+          error: "You have entered wrong password or email",
+          layout: 'blank'
+
         })
 
       }
@@ -99,7 +95,8 @@ class AdminController {
       if (!passwordMatched) {
         return res.render('index', {
           email,
-          error: "You have entered wrong password"
+          error: "You have entered wrong password",
+          layout: 'blank',
         })
       }
 
@@ -116,7 +113,7 @@ class AdminController {
     }
   }
 
-  async getToken(req, res) {
+  getToken = async (req, res) => {
     const { email, password } = req.body;
 
     try {
@@ -144,6 +141,46 @@ class AdminController {
       res.status(statusCode).json({ message });
     }
   }
+
+  transactions = async (req, res) => {
+    if (!req.session.user) return res.redirect('/');
+
+    const transactions = await Transaction.find();
+
+    const userIds = transactions.map(transaction => transaction.user_id);
+    const users = await User.find({ _id: { $in: userIds } });
+
+    const transactionsWithUserEmail = transactions.map(transaction => {
+      const user = users.find(user => user._id.toString() === transaction.user_id.toString());
+      const email = user ? user.email : 'Unknown'; // Handle case where user is not found
+      return {
+        ...transaction.toObject(),
+        email: email
+      };
+    });
+
+    res.render('transactions', { transactions: transactionsWithUserEmail });
+  };
+
+  transactionDetails = async (req, res) => {
+    // if (!req.session.user) return res.redirect('/');
+
+    const transactionId = req.params.id;
+    try {
+      const transaction = await Transaction.findById(transactionId).lean().exec();
+      console.log(transaction);
+
+      const userId = transaction.user_id;
+      const user = await User.findById(userId).select('-password -balance -card_uid').lean().exec();
+      console.log(user);
+
+      res.render('transaction-details', { transaction: transaction, user: user });
+    } catch (error) {
+      // Handle any errors that occur during the database operation
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  };
 
 }
 

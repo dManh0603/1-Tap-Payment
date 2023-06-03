@@ -10,9 +10,8 @@ const Homepage = () => {
 
   const { user } = UserState()
   const toast = useToast();
-  
+
   useEffect(() => {
-    console.log(user)
     if (user !== null) {
       toast({
         title: 'Welcome back',

@@ -1,0 +1,48 @@
+<div class="d-flex justify-content-center align-items-center">
+  <div class="container m-5">
+    <div class="row g-5 w-100">
+      <div class="col-12 col-lg-8 ">
+        <h2 class="text-center m-3">Transaction {{transaction._id}}</h2>
+      </div>
+      <div class="col-lg-4 ">
+        <div class="card border-0">
+          <div class="card-header border-0">
+            <h4 class="mt-1" style="color: black;">User information</h4>
+          </div>
+          <div class="card-body border-0">
+            <p class="card-text">
+              Email: {{user.email}}
+
+            </p>
+            <p class="card-text">
+              Name: {{user.name}}
+            </p>
+          </div>
+        </div>
+
+        <div class="card border-0">
+          <div class="card-header border-0">
+            <h4 class="mt-1" style="color: black;">Transaction information</h4>
+          </div>
+          <div class="card-body border-0">
+            <p class="card-text">
+              Status: {{transaction.PP_info.status}}
+            </p>
+            <p class="card-text">
+              Amount: {{transaction.amount}}
+            </p>
+            <p class="card-text">
+              Pay at: {{formatDate transaction.createdAt}}
+            </p>
+            <p class="card-text">
+              Payment id: {{transaction.PP_info.payment_id}}
+            </p>
+            <p class="card-text">
+              Payer email: {{transaction.PP_info.payer_email_address}}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

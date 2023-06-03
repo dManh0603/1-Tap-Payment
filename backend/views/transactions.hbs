@@ -1,0 +1,44 @@
+<head>
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+</head>
+<div class="container-fluid px-4">
+  <h1 class="mt-4">Total Transactions</h1>
+
+  <div class="card mb-4">
+
+    <div class="card-body">
+      <table id="datatablesSimple">
+        <thead>
+          <tr>
+            <th>Actions</th>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Amount</th>
+            <th>Created at</th>
+            <th>Updated at</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          {{#each transactions}}
+          <tr>
+            <td><a href="/transactions/{{this._id}}"><i class="fas fa-eye"></i></a></td>
+            <td>{{this.email}}</td>
+            <td>{{this.PP_info.status}}</td>
+            <td>{{this.amount}}</td>
+            <td>{{formatDate this.createdAt}}</td>
+            <td>{{formatDate this.updatedAt}}</td>
+          </tr>
+          {{/each}}
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="/js/tables/script.js"></script>
+<script src="/js/tables/data-table.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
+  crossorigin="anonymous"></script>

@@ -1,53 +1,62 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import axios from "axios";
-// import { useNavigate } from "react-router-dom";
-
+import { useLocation, useNavigate } from "react-router-dom";
+import { useToast } from '@chakra-ui/react'
 const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [userToken, setUserToken] = useState(null);
 
-  // const navigate = useNavigate();
+  const toast = useToast();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const fetchUser = async () => {
-    try {
-      const response = await axios.get("/api/user/", {
-        headers: {
-          Authorization: `Bearer ${userToken}`
-        }
-      });
-
-      console.log(response.data);
-      setUser(response.data);
-
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const logout = () => {
+    localStorage.removeItem('userToken');
+    setUser(null);
+    toast({
+      title: 'Logout succesfully',
+      status: 'success',
+      duration: 3000,
+      isClosable: true,
+      position: 'top-right'
+    })
+    navigate('/')
+  }
 
   useEffect(() => {
-    console.log('userprovider')
-    const storedToken = localStorage.getItem("userToken");
-    if (storedToken) {
-      console.log(storedToken)
-      setUserToken(storedToken);
+
+    console.log('user provider triggered')
+    const storedToken = localStorage.getItem('userToken');
+
+    if (!storedToken) {
+      navigate('/');
+      return
     }
 
-  }, []);
+    const fetchUser = async (token) => {
+      try {
+        const response = await axios.get("/api/user/", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
 
-  useEffect(() => {
-    if (userToken !== null) {
-      fetchUser();
-    }
-  }, [userToken]);
+        setUser(response.data);
+
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchUser(storedToken);
+
+  }, [location.pathname])
 
   const userContextValue = {
     user,
     setUser,
-    userToken,
-    fetchUser,
-    setUserToken
+    logout
   };
 
   return (

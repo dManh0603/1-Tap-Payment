@@ -29,7 +29,7 @@ app.use(express.json())
 // Set HBS as the view engine
 app.engine('hbs', handlebars.engine({
   extname: '.hbs',
-  // helpers: require('./helpers/HbsHelper'),
+  helpers: require('./helpers/HbsHelper'),
 }));
 
 app.set('view engine', 'hbs');

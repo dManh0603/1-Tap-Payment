@@ -9,7 +9,8 @@ import { UserState } from '../contexts/UserProvider';
 
 const Depositpage = () => {
 
-  const { userToken } = UserState();
+  // const { userToken } = UserState();
+  const userToken = localStorage.getItem('userToken');
   const navigate = useNavigate();
   const location = useLocation();
   const { amount } = location.state

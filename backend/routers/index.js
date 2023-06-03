@@ -9,10 +9,10 @@ const route = (app) => {
   app.use('/api/transaction', transactionRouter);
   app.use('/', adminRouter);
 
-  app.use((error, res, next) => {
-    console.log(error)
-    res.render('error', {
-      message: error.message
+  // handle 404
+  app.use((req, res, next) => {
+    return res.status(404).render('error', {
+      layout: 'blank'
     })
   })
 }

@@ -3,6 +3,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import ProfileModal from './ProfileModal';
 import { UserState } from '../../contexts/UserProvider';
+import DrawerButton from './DrawerButton';
 
 const Banner = () => {
 
@@ -25,7 +26,8 @@ const Banner = () => {
         </Text>
         <Box display={'flex'} justifyContent={'end'}>
 
-          <ProfileModal />
+        <DrawerButton />
+          {/* <ProfileModal /> */}
         </Box>
       </Box>
     </>

@@ -10,7 +10,7 @@ const Login = () => {
   const [email, setEmail] = useState()
   const [password, setPassword] = useState()
   const [loading, setLoading] = useState(false);
-  const { setUser, setUserToken } = UserState();
+  const { setUser } = UserState();
   const toast = useToast();
   const navigate = useNavigate();
   const handleClick = () => setShow(!show);
@@ -43,7 +43,6 @@ const Login = () => {
       );
       
       setUser(data.user)
-      setUserToken(data.user.token);
       localStorage.setItem('userToken', data.user.token)
 
       toast({

@@ -5,8 +5,8 @@ const adminAuthenticate = require('../middlewares/AdminAuthentication')
 
 const router = express.Router()
 
-router.post('/create',authenticate, transactionController.create)
+router.post('/create', authenticate, transactionController.create)
 router.get('/fetchMonthly', adminAuthenticate, transactionController.fetchMonthly)
-
+router.get('/', authenticate, transactionController.getUserTransactions)
 
 module.exports = router
