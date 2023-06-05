@@ -1,4 +1,4 @@
-const { createContext, useState, useContext } = require("react")
+const { createContext, useState, useContext, useEffect } = require("react")
 
 const ChatContext = createContext();
 
@@ -6,7 +6,6 @@ const ChatProvider = ({ children }) => {
   const [selectedChat, setSelectedChat] = useState();
   const [chats, setChats] = useState([]);
   const [notification, setNotification] = useState([]);
-
 
   return (
     <ChatContext.Provider value={{

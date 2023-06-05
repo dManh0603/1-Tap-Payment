@@ -11,6 +11,7 @@ function App() {
       <Routes>
         <Route path="/me/deposit" Component={Depositpage}></Route>
         <Route path="/me/transactions" Component={Transactionpage}></Route>
+        <Route path="/me/chat" Component={Transactionpage}></Route>
         <Route path="/me" Component={Mepage}></Route>
         <Route path="/" Component={Homepage}></Route>
       </Routes>

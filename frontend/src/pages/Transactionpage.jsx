@@ -59,8 +59,8 @@ const Transactionpage = () => {
           >
             <Card>
               <CardHeader>
-                <Heading size='md'>Your total deposit {totalDeposit} $</Heading>
                 <Heading size='md'>Your transactions ({transactionLength})</Heading>
+                <Heading size='md'>Total: {totalDeposit} $</Heading>
               </CardHeader>
 
               <CardBody>

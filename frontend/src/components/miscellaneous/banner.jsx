@@ -1,9 +1,7 @@
-import { Box, Image, Text, useToast } from '@chakra-ui/react'
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
-import ProfileModal from './ProfileModal';
-import { UserState } from '../../contexts/UserProvider';
+import { Box, Image, Text } from '@chakra-ui/react'
+import React, { useState } from 'react'
 import DrawerButton from './DrawerButton';
+import ChatButton from '../chat/ChatButton';
 
 const Banner = () => {
 
@@ -21,13 +19,12 @@ const Banner = () => {
         m={'0 0 12px 0'}
         borderWidth={'1px'}
       >
-        <Text fontSize={'4xl'} fontFamily={'Work sans'} textAlign={'center'}>
+        <Text fontSize={'4xl'} textAlign={'center'}>
           NEU 1-Tap Parking Payment
         </Text>
-        <Box display={'flex'} justifyContent={'end'}>
-
-        <DrawerButton />
-          {/* <ProfileModal /> */}
+        <Box display={'flex'} justifyContent={'space-between'}>
+          <ChatButton />
+          <DrawerButton />
         </Box>
       </Box>
     </>

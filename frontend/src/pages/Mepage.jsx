@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { UserState } from '../contexts/UserProvider';
 import Banner from '../components/miscellaneous/Banner';
+import Profile from '../components/miscellaneous/Profile';
 
 const Mepage = () => {
 
@@ -20,7 +21,8 @@ const Mepage = () => {
   };
 
   useEffect(() => {
-    if (user === null) return navigate('/');
+    const storedToken = localStorage.getItem('userToken');
+    if (storedToken === null) return navigate('/');
     console.log('user', user);
 
   }, []);
@@ -39,15 +41,7 @@ const Mepage = () => {
             borderWidth={'1px'}
           >
             <Box maxW='32rem'>
-              <Text fontSize={'3xl'} fontFamily={'Work sans'} textAlign={'center'}>Your infomation</Text>
-
-              <Text fontSize='1xl'>
-                Name: {user.name}
-                <br></br>
-                Email: {user.email}
-                <br></br>
-                Balance: {user.balance}
-              </Text>
+              <Profile email={user.email} name={user.name} balance={user.balance} />
 
               <Box mt={3} display={'flex'} justifyContent={'end'}>
                 <Button mr={3} colorScheme='blue' onClick={onOpen}>Deposit</Button>

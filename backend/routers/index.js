@@ -2,11 +2,16 @@ const userRouter = require('./UserRouter');
 const balanceRouter = require('./BalanceRouter');
 const transactionRouter = require('./TransactionRouter');
 const adminRouter = require('./AdminRouter');
+const chatRouter = require('./ChatRouter');
+const messageRouter = require('./MessageRouter');
 
 const route = (app) => {
   app.use('/api/user', userRouter);
   app.use('/api/balance', balanceRouter);
   app.use('/api/transaction', transactionRouter);
+  app.use('/api/chat', chatRouter)
+  app.use('/api/message', messageRouter)
+
   app.use('/', adminRouter);
 
   // handle 404
