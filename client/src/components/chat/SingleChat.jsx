@@ -243,16 +243,13 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         </Box>
       </>
     ) : (
-      <Box
-        display={'flex'}
-        alignItems={'center'}
-        justifyContent={'center'}
-        h={'100%'}
-      >
-        <Text fontSize={'3xl'} pb={3} fontFamily={'Work sans'}>
-          Choose a friend to start chatting.
-        </Text>
-      </Box>
+      <Spinner
+        size={'xl'}
+        w={20}
+        h={20}
+        alignSelf={'center'}
+        margin={'auto'}
+      />
     )}
   </>)
 }
