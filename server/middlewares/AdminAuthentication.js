@@ -18,6 +18,7 @@ const adminAuthenticate = async (req, res, next) => {
       if (!admin) {
         throw { statusCode: 404, message: 'Incorrect admin id' }
       }
+      req.user = admin;
       next()
     } catch (error) {
       console.log(error);

@@ -182,6 +182,59 @@ class AdminController {
     }
   };
 
+  API_dashboard = async (req, res) => {
+    try {
+      const monthlyIncomePromise = this.getMonthlyIncome();
+      const annualIncomePromise = this.getAnnualIncome();
+      const transactionCountPromise = this.getTransactionCount();
+
+      const [monthlyIncome, annualIncome, transactionCount] = await Promise.all([
+        monthlyIncomePromise,
+        annualIncomePromise,
+        transactionCountPromise
+      ]);
+
+      return res.status(200).json({ monthlyIncome, annualIncome, transactionCount });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  };
+
+  API_login = async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+      const user = await User.findOne({ email, role: 'admin' });
+      if (!user) {
+        throw { statusCode: 401, message: "You have entered wrong email or password!" };
+      }
+
+      const passwordMatched = await user.matchPassword(password)
+
+      if (!passwordMatched) {
+        throw { statusCode: 401, message: "You have entered wrong password!" };
+
+      }
+
+      console.log(`User: ${user._id} logged in.`)
+      res.status(200).json({
+        message: 'User login successfully',
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          balance: user.balance,
+          token: generateToken(user._id)
+        }
+      });
+    } catch (err) {
+      console.error(err);
+      const statusCode = err.statusCode || 500;
+      const message = err.message || 'Internal server error';
+      res.status(statusCode).json({ message });
+    }
+  }
 }
 
 module.exports = new AdminController();

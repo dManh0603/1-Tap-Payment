@@ -2,3 +2,4 @@
 /node_modules
 .vscode
 /server/public/vendor
+/admin/public/vendor

@@ -14,7 +14,11 @@ const authenticate = async (req, res, next) => {
             }
 
             const decodedToken = jwt.verify(encodedToken, process.env.JWT_SECRET);
-            req.user = await User.findById(decodedToken.id).select('-password').exec();
+            const user = await User.findById(decodedToken.id).select('-password').exec();
+            if (!user) {
+                throw { statusCode: 404, message: 'Incorrect admin id' }
+            }
+            req.user = user;
             next()
         } catch (error) {
             console.log(error);

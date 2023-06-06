@@ -38,7 +38,7 @@ function get_labels() {
 }
 
 async function getData() {
-  const token = localStorage.getItem('adminToken');
+  const token = localStorage.getItem('userToken');
   try {
     const response = await fetch('/api/transaction/fetchMonthly', {
       method: 'GET',

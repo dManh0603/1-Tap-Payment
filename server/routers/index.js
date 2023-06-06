@@ -4,6 +4,7 @@ const transactionRouter = require('./TransactionRouter');
 const adminRouter = require('./AdminRouter');
 const chatRouter = require('./ChatRouter');
 const messageRouter = require('./MessageRouter');
+const adminApiRouter = require('./AdminApiRouter');
 
 const route = (app) => {
   app.use('/api/user', userRouter);
@@ -11,6 +12,7 @@ const route = (app) => {
   app.use('/api/transaction', transactionRouter);
   app.use('/api/chat', chatRouter)
   app.use('/api/message', messageRouter)
+  app.use('/api/admin', adminApiRouter)
 
   app.use('/', adminRouter);
 
