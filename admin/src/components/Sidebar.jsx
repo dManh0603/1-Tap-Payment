@@ -1,6 +1,9 @@
 import React from 'react'
+import { useLocation } from 'react-router-dom';
 
 const Sidebar = () => {
+  const location = useLocation();
+
   return (
     <>
       {/* <!-- Sidebar --> */}
@@ -18,10 +21,10 @@ const Sidebar = () => {
         <hr className="sidebar-divider my-0" />
 
         {/* <!-- Nav Item - Dashboard --> */}
-        <li className="nav-item active">
-          <a className="nav-link" id="dashboard-atag" href="/">
+        <li className={`nav-item ${location.pathname === '/dashboard' ? 'active' : ''}`}>
+          <a className="nav-link" id="dashboard-atag" href="/dashboard">
             <i className="fas fa-fw fa-tachometer-alt"></i>
-            <span>Dashboard</span></a>
+            <span className='xl'>Dashboard</span></a>
         </li>
 
         {/* <!-- Divider --> */}
@@ -32,15 +35,8 @@ const Sidebar = () => {
           Resources
         </div>
 
-        {/* <!-- Nav Item - Charts --> */}
-        {/* <li className="nav-item">
-          <a className="nav-link" href="">
-            <i className="fas fa-fw fa-chart-area"></i>
-            <span>Charts</span></a>
-        </li> */}
-
         {/* <!-- Nav Item - Tables --> */}
-        <li className="nav-item">
+        <li className={`nav-item ${location.pathname === '/transactions' ? 'active' : ''}`}>
           <a className="nav-link" href="/transactions">
             <i className="fas fa-fw fa-table"></i>
             <span>Transactions</span>

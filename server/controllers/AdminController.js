@@ -235,6 +235,47 @@ class AdminController {
       res.status(statusCode).json({ message });
     }
   }
+
+  API_transactions = async (req, res) => {
+    try {
+      const transactions = await Transaction.find();
+
+      const userIds = transactions.map(transaction => transaction.user_id);
+      const users = await User.find({ _id: { $in: userIds } });
+
+      const transactionsWithUserEmail = transactions.map(transaction => {
+        const user = users.find(user => user._id.toString() === transaction.user_id.toString());
+        const email = user ? user.email : 'Unknown'; // Handle case where user is not found
+        return {
+          ...transaction.toObject(),
+          email: email
+        };
+      });
+
+      res.json({ transactions: transactionsWithUserEmail });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  };
+
+  API_transaction_details = async (req, res) => {
+    const transactionId = req.params.id;
+    try {
+      const transaction = await Transaction.findById(transactionId).lean().exec();
+      console.log(transaction);
+
+      const userId = transaction.user_id;
+      const user = await User.findById(userId).select('-password -balance -card_uid').lean().exec();
+      console.log(user);
+
+      res.json({ transaction: transaction, user: user });
+    } catch (error) {
+      // Handle any errors that occur during the database operation
+      console.error(error);
+      res.status(500).json('Internal Server Error');
+    }
+  }
 }
 
 module.exports = new AdminController();

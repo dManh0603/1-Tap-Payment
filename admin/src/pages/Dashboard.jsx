@@ -1,16 +1,15 @@
 import React, { useEffect } from 'react'
 import DashboardContent from '../components/DashboardContent'
 import Sidebar from '../components/Sidebar'
-import { UserState } from '../contexts/UserProvider'
 import { useNavigate } from 'react-router-dom'
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { user } = UserState();
+  const storedToken = localStorage.getItem('userToken');
 
   useEffect(() => {
-    if (user === null) return navigate('/');
-  },[])
+    if (!storedToken) return navigate('/');
+  }, [])
   return (
     <>
       <Sidebar />

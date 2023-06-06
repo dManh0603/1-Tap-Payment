@@ -9,6 +9,7 @@
 
 window.addEventListener('DOMContentLoaded', event => {
 
+    console.log('scripts.js')
     // Toggle the side navigation
     const sidebarToggle = document.body.querySelector('#sidebarToggle');
     if (sidebarToggle) {
