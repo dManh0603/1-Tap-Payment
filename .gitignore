@@ -1,4 +1,4 @@
 .env
 /node_modules
 .vscode
-/backend/public/vendor
+/server/public/vendor
