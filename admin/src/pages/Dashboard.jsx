@@ -10,7 +10,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (user === null) return navigate('/');
-  })
+  },[])
   return (
     <>
       <Sidebar />

@@ -51,7 +51,7 @@ const UserProvider = ({ children }) => {
 
     fetchUser(storedToken);
 
-  }, [location.pathname])
+  }, [])
 
   const userContextValue = {
     user,
