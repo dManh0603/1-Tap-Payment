@@ -5,7 +5,7 @@ import Sidebar from '../components/Sidebar';
 import { formatDate } from '../helpers/ViewHelper';
 import { DataTable } from 'simple-datatables';
 import { useNavigate } from 'react-router-dom';
-
+import Helmet from 'react-helmet'
 const Transactions = () => {
   const [transactions, setTransactions] = useState([]);
   const storedToken = localStorage.getItem('userToken');
@@ -39,6 +39,11 @@ const Transactions = () => {
       const table = new DataTable(tableRef.current, {
         // Configure the options for the table here
       });
+      // Custom search bar styles
+      const searchInput = tableRef.current.querySelector('.dataTables_filter input');
+      if (searchInput) {
+        searchInput.style.border = '1px solid black';
+      }
 
       return () => {
         table.destroy();
@@ -48,6 +53,9 @@ const Transactions = () => {
 
   return (
     <>
+      <Helmet>
+        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+      </Helmet>
       <Sidebar />
 
       {isLoading && transactions
@@ -91,7 +99,7 @@ const Transactions = () => {
                         </td>
                         <td>{t.email}</td>
                         <td>{t.PP_info.status}</td>
-                        <td>{t.amount}</td>
+                        <td>{t.amount} $</td>
                         <td>{formatDate(t.createdAt)}</td>
                         <td>{formatDate(t.updatedAt)}</td>
                       </tr>
