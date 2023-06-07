@@ -77,7 +77,7 @@ const Transactions = () => {
         <div id="content-wrapper" className="d-flex flex-column">
           <Topbar />
           <div className="container-fluid px-4">
-            <h1 className="">Total Transactions</h1>
+          <h1 className="h3 mb-0 text-gray-800">Total transactions</h1>
             <div className="card mb-4">
               <div className="card-body">
                 <table id="datatablesSimple" ref={tableRef}>

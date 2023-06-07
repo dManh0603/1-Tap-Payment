@@ -19,7 +19,7 @@ const Chatpage = () => {
           display={'flex'}
           justifyContent={'space-between'}
           w={'100%'}
-          p={'10px'}
+          p={'0 10px 10px 10px'}
           h={'91.5vh'}
         >
           {user && <MyChats fetchAgain={fetchAgain} />}

@@ -61,8 +61,10 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
 
   socket.on('setup', (userData) => {
-    socket.join(userData._id);
-    socket.emit(`connected`)
+    if(userData){
+      socket.join(userData._id);
+      socket.emit(`connected`)
+    }
   })
 
   socket.on('join chat', (room) => {

@@ -17,7 +17,6 @@ const ChatBox = ({ fetchAgain, setFetchAgain }) => {
       borderRadius={'lg'}
       borderWidth={'1px'}
     >
-      Chat
       <SingleChat fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
     </Box>
   )

@@ -63,7 +63,6 @@ const MyChats = ({ fetchAgain }) => {
         pb={3}
         px={3}
         fontSize={{ base: '28px', md: '30px' }}
-        fontFamily="Work sans"
         display={{ base: selectedChat ? 'none' : 'flex', md: 'flex' }}
         w="100%"
         justifyContent="space-between"
@@ -92,14 +91,11 @@ const MyChats = ({ fetchAgain }) => {
                   cursor="pointer"
                   bg={selectedChat === chat ? '#38B2AC' : '#E8E8E8'}
                   color={selectedChat === chat ? 'white' : 'black'}
-                  px={3}
-                  py="4px"
+                  p={2}
                   borderRadius="lg"
                 >
-                  <Text>
-                    {!chat.isGroupChat
-                      ? getSender(loggedUser, chat.users)
-                      : chat.chatName}
+                  <Text fontSize={'xl'} m={1}>
+                    {getSender(loggedUser, chat.users)}
                   </Text>
                 </Box>
               ))}

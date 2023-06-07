@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { ChatState } from '../../contexts/ChatProvider'
-import { Box, FormControl, IconButton, Input, Spinner, Text, useToast } from '@chakra-ui/react'
-import { ArrowBackIcon } from '@chakra-ui/icons'
+import { Box, FormControl, IconButton, Input, InputGroup, InputRightElement, Spinner, Text, useToast } from '@chakra-ui/react'
+import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons'
 import { getSenderFull, getSender } from '../../helpers/ChatHelper'
 // import ProfileModal from '../components/miscellaneous/ProfileModal'
 import axios from 'axios'
@@ -9,8 +9,10 @@ import ScrollableChat from './ScrollableChat'
 import io from 'socket.io-client'
 import Lottie from 'react-lottie'
 import animationData from '../../animations/typing.json'
+import { UserState } from '../../contexts/UserProvider'
+import ProfileModal from '../miscellaneous/ProfileModal'
 
-const ENDPOINT = 'http://localhost:3000';
+const ENDPOINT = 'http://localhost:4000';
 
 let socket, selectedChatCompare;
 
@@ -24,8 +26,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [isTyping, setIsTyping] = useState(false);
 
   const toast = useToast();
-
-  const { user, selectedChat, setSelectedChat, notification, setNotification } = ChatState();
+  const { user } = UserState();
+  const { selectedChat, setSelectedChat, notification, setNotification } = ChatState();
+  const storedToken = localStorage.getItem('userToken');
 
   const defaultOptions = {
     loop: true,
@@ -42,7 +45,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     try {
       const config = {
         headers: {
-          Authorization: `Bearer ${user.token}`
+          Authorization: `Bearer ${storedToken}`
         }
       };
 
@@ -78,7 +81,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         const config = {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${user.token}`,
+            Authorization: `Bearer ${storedToken}`,
           }
         }
 
@@ -170,32 +173,17 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           pb={3}
           px={2}
           w={'100%'}
-          fontFamily={'Work sans'}
           display={'flex'}
           justifyContent={{ base: 'space-between' }}
           alignItems={'center'}
         >
           <IconButton
-            display={{ base: 'flex', md: 'none' }}
-            icon={<ArrowBackIcon />}
+            // display={{ base: 'flex', md: 'none' }}
+            icon={<ArrowBackIcon boxSize={6} />}
             onClick={() => setSelectedChat('')}
           />
-
-          {!selectedChat.isGroupChat
-            ? (<>
-              {getSender(user, selectedChat.users)}
-              {/* <ProfileModal user={getSenderFull(user, selectedChat.users)} /> */}
-            </>)
-            : (
-              <>
-                {selectedChat.chatName.toUpperCase()}
-                {/* <UpdateGroupChatModal
-                  fetchAgain={fetchAgain}
-                  setFetchAgain={setFetchAgain}
-                  fetchMessages={fetchMessages}
-                /> */}
-              </>
-            )}
+          {getSender(user, selectedChat.users)}
+          <ProfileModal user={getSenderFull(user, selectedChat.users)} />
         </Text>
         <Box
           display={'flex'}
@@ -235,13 +223,18 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                       />
                     </div>
                     : <></>}
-                  <Input
-                    mt={2}
-                    bg={'white'}
-                    placeholder='Type here ...'
-                    onChange={typingHandler}
-                    value={newMessage}
-                  />
+                  <InputGroup mt={2}>
+                    <Input
+                      // mt={2}
+                      bg={'white'}
+                      placeholder='Type here ...'
+                      onChange={typingHandler}
+                      value={newMessage}
+                    />
+                    <InputRightElement onClick={sendMessage} className='text-hover'>
+                      <ArrowForwardIcon color='green.500' boxSize={6} />
+                    </InputRightElement>
+                  </InputGroup>
 
                 </FormControl>
               </>
@@ -256,8 +249,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         justifyContent={'center'}
         h={'100%'}
       >
-        <Text fontSize={'3xl'} pb={3} fontFamily={'Work sans'}>
-          Choose a friend to start chatting.
+        <Text fontSize={'3xl'} pb={3}>
+          Check your notification
         </Text>
       </Box>
     )}

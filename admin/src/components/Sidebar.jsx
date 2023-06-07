@@ -1,4 +1,5 @@
 import React from 'react'
+import { Helmet } from 'react-helmet';
 import { useLocation } from 'react-router-dom';
 
 const Sidebar = () => {
@@ -24,7 +25,7 @@ const Sidebar = () => {
         <li className={`nav-item ${location.pathname === '/dashboard' ? 'active' : ''}`}>
           <a className="nav-link" id="dashboard-atag" href="/dashboard">
             <i className="fas fa-fw fa-tachometer-alt"></i>
-            <span className='xl'>Dashboard</span></a>
+            <span style={{ fontSize: '16px' }}>Dashboard</span></a>
         </li>
 
         {/* <!-- Divider --> */}
@@ -39,7 +40,7 @@ const Sidebar = () => {
         <li className={`nav-item ${location.pathname === '/transactions' ? 'active' : ''}`}>
           <a className="nav-link" href="/transactions">
             <i className="fas fa-fw fa-table"></i>
-            <span>Transactions</span>
+            <span style={{ fontSize: '16px' }}>Transactions</span>
           </a>
         </li>
 
@@ -47,7 +48,7 @@ const Sidebar = () => {
         <li className={`nav-item ${location.pathname === '/chats' ? 'active' : ''}`}>
           <a className="nav-link" href="/chats">
             <i className="fas fa-fw fa-comment"></i>
-            <span>Chats</span>
+            <span style={{ fontSize: '16px' }}>Chats</span>
           </a>
         </li>
 
@@ -59,6 +60,9 @@ const Sidebar = () => {
           <button className="rounded-circle border-0" id="sidebarToggle"></button>
         </div>
       </ul>
+      <Helmet>
+        <script src="/js/sb-admin-2.min.js"></script>
+      </Helmet>
     </>
   )
 }
