@@ -6,6 +6,7 @@ import { formatDate } from '../helpers/ViewHelper';
 import { DataTable } from 'simple-datatables';
 import { useNavigate } from 'react-router-dom';
 import Helmet from 'react-helmet'
+import Topbar from '../components/Topbar';
 const Transactions = () => {
   const [transactions, setTransactions] = useState([]);
   const storedToken = localStorage.getItem('userToken');
@@ -61,7 +62,7 @@ const Transactions = () => {
       {isLoading && transactions
         ?
         <div className='w-100'>
-
+          <Topbar />
           <Box pt={'40vh'} display={'flex'} justifyContent={'center'} alignItems={'center'}>
             <Spinner
               thickness='4px'
@@ -74,8 +75,9 @@ const Transactions = () => {
         </div>
         :
         <div id="content-wrapper" className="d-flex flex-column">
+          <Topbar />
           <div className="container-fluid px-4">
-            <h1 className="mt-4">Total Transactions</h1>
+            <h1 className="">Total Transactions</h1>
             <div className="card mb-4">
               <div className="card-body">
                 <table id="datatablesSimple" ref={tableRef}>

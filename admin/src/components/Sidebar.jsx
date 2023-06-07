@@ -35,11 +35,19 @@ const Sidebar = () => {
           Resources
         </div>
 
-        {/* <!-- Nav Item - Tables --> */}
+        {/* <!-- Nav Item - Transactions --> */}
         <li className={`nav-item ${location.pathname === '/transactions' ? 'active' : ''}`}>
           <a className="nav-link" href="/transactions">
             <i className="fas fa-fw fa-table"></i>
             <span>Transactions</span>
+          </a>
+        </li>
+
+        {/* <!-- Nav Item - Chats --> */}
+        <li className={`nav-item ${location.pathname === '/chats' ? 'active' : ''}`}>
+          <a className="nav-link" href="/chats">
+            <i className="fas fa-fw fa-comment"></i>
+            <span>Chats</span>
           </a>
         </li>
 

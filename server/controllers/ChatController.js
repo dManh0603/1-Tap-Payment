@@ -53,7 +53,6 @@ class ChatController {
       })
 
         .populate('users', '-password')
-        .populate('groupAdmin', '-password')
         .populate({
           path: 'latestMessage',
           populate: {
