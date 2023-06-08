@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Helmet } from 'react-helmet';
@@ -14,6 +15,7 @@ const DashboardContent = () => {
 
   useEffect(() => {
     if (!storedToken) return navigate('/');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -31,6 +33,7 @@ const DashboardContent = () => {
     }
 
     fetchDashboard();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -44,7 +47,7 @@ const DashboardContent = () => {
           {/* <!-- Page Heading --> */}
           <div className="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 className="h3 mb-0 text-gray-800">Dashboard</h1>
-            <a href="#" className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+            <a className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
               className="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
           </div>
 
@@ -143,17 +146,17 @@ const DashboardContent = () => {
                 <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                   <h6 className="m-0 font-weight-bold text-primary">Earnings Overview</h6>
                   <div className="dropdown no-arrow">
-                    <a className="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                    <a className="dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown"
                       aria-haspopup="true" aria-expanded="false">
                       <i className="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                     </a>
                     <div className="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                       aria-labelledby="dropdownMenuLink">
                       <div className="dropdown-header">Dropdown Header:</div>
-                      <a className="dropdown-item" href="#">Action</a>
-                      <a className="dropdown-item" href="#">Another action</a>
+                      <a className="dropdown-item">Action</a>
+                      <a className="dropdown-item">Another action</a>
                       <div className="dropdown-divider"></div>
-                      <a className="dropdown-item" href="#">Something else here</a>
+                      <a className="dropdown-item">Something else here</a>
                     </div>
                   </div>
                 </div>
@@ -173,17 +176,17 @@ const DashboardContent = () => {
                 <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                   <h6 className="m-0 font-weight-bold text-primary">Revenue Sources</h6>
                   <div className="dropdown no-arrow">
-                    <a className="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                    <a className="dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown"
                       aria-haspopup="true" aria-expanded="false">
                       <i className="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                     </a>
                     <div className="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                       aria-labelledby="dropdownMenuLink">
                       <div className="dropdown-header">Dropdown Header:</div>
-                      <a className="dropdown-item" href="#">Action</a>
-                      <a className="dropdown-item" href="#">Another action</a>
+                      <a className="dropdown-item">Action</a>
+                      <a className="dropdown-item">Another action</a>
                       <div className="dropdown-divider"></div>
-                      <a className="dropdown-item" href="#">Something else here</a>
+                      <a className="dropdown-item">Something else here</a>
                     </div>
                   </div>
                 </div>

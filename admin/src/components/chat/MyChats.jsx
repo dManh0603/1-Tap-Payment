@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Stack, Text, useToast } from '@chakra-ui/react';
+import { Box, Stack, Text, useToast } from '@chakra-ui/react';
 import axios from 'axios';
-import { AddIcon } from '@chakra-ui/icons';
-// import ChatLoading from './ChatLoading';
 import { getSender } from '../../helpers/ChatHelper';
-// import GroupChatModal from './miscellaneous/GroupChatModal';
 import { ChatState } from '../../contexts/ChatProvider';
 import { UserState } from '../../contexts/UserProvider';
 
@@ -42,6 +39,7 @@ const MyChats = ({ fetchAgain }) => {
     // const user = JSON.parse(localStorage.getItem('userToken'));
     setLoggedUser(user);
     fetchChats();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchAgain]);
 
   const handleChatClick = (chat) => {

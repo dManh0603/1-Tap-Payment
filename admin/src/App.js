@@ -4,8 +4,8 @@ import Homepage from './pages/Homepage';
 import Transactions from './pages/Transactions';
 import TransactionDetails from './pages/TransactionDetails';
 import Chats from './pages/Chats';
-import Sidebar from './components/Sidebar';
-import Topbar from './components/Topbar';
+import Sidebar from './components/miscellaneous/Sidebar';
+import Topbar from './components/miscellaneous/Topbar';
 import { UserState } from './contexts/UserProvider';
 import { useEffect, useState } from 'react';
 import io from 'socket.io-client'
@@ -19,12 +19,12 @@ socket = io(ENDPOINT);
 function App() {
   const { user } = UserState();
   const [socketConennected, setSocketConennected] = useState(false)
-  const {  notification, setNotification } = ChatState();
+  const { notification, setNotification } = ChatState();
   const [fetchAgain, setFetchAgain] = useState(false);
 
   useEffect(() => {
     console.log(user)
-    if(user){
+    if (user) {
       console.log('app setup');
       socket.emit('setup', user);
       socket.on('connected', () => setSocketConennected(true));
@@ -32,6 +32,7 @@ function App() {
   }, [user])
 
   useEffect(() => {
+    if (!socketConennected) return;
     socket.on('message received', (newMessage) => {
       console.log('message received')
       if (!selectedChatCompare || selectedChatCompare._id !== newMessage.chat._id) {
@@ -41,7 +42,7 @@ function App() {
         }
       }
     })
-  },[])
+  }, [socketConennected])
 
   return (
     <div className="App" id='wrapper'>

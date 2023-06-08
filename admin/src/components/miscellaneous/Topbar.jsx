@@ -1,6 +1,7 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react'
-import NotificationsDropdown from './NotificationsDropdown'
-import MessagesDropdown from './MessagesDropdown'
+import NotificationsDropdown from '../NotificationsDropdown'
+import MessagesDropdown from '../MessagesDropdown'
 
 const Topbar = () => {
 
@@ -65,7 +66,7 @@ const Topbar = () => {
             <a className="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
               aria-haspopup="true" aria-expanded="false">
               <span style={{ fontSize: '16px' }} className="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-              <img className="img-profile rounded-circle" src="img/undraw_profile.svg" />
+              <img alt='image404' className="img-profile rounded-circle" src="img/undraw_profile.svg" />
             </a>
             {/* <!-- Dropdown - User Information --> */}
             <div style={{ fontSize: '16px' }} className="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">

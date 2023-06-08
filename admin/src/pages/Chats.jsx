@@ -1,6 +1,4 @@
 import React, { useState } from 'react'
-import Sidebar from '../components/Sidebar'
-import Topbar from '../components/Topbar'
 import { UserState } from '../contexts/UserProvider'
 import MyChats from '../components/chat/MyChats'
 import ChatBox from '../components/chat/ChatBox'

@@ -21,7 +21,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState('');
-  const [socketConnected, setSocketConnected] = useState(false)
+  // const [socketConnected, setSocketConnected] = useState(false)
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
 
@@ -115,7 +115,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
 
-    if (!socketConnected) return;
+    // if (!socketConnected) return;
 
     if (!typing) {
       setTyping(true);
@@ -148,20 +148,21 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     fetchMessages();
 
     selectedChatCompare = selectedChat;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedChat]);
 
-  // useEffect(() => {
-  //   socket.on('message received', (newMessage) => {
-  //     if (!selectedChatCompare || selectedChatCompare._id !== newMessage.chat._id) {
-  //       if (!notification.includes(newMessage)) {
-  //         setNotification([newMessage, ...notification]);
-  //         setFetchAgain(!fetchAgain);
-  //       }
-  //     } else {
-  //       setMessages([...messages, newMessage])
-  //     }
-  //   })
-  // })
+  useEffect(() => {
+    socket.on('message received', (newMessage) => {
+      if (!selectedChatCompare || selectedChatCompare._id !== newMessage.chat._id) {
+        if (!notification.includes(newMessage)) {
+          setNotification([newMessage, ...notification]);
+          setFetchAgain(!fetchAgain);
+        }
+      } else {
+        setMessages([...messages, newMessage])
+      }
+    })
+  })
 
 
   return (<>

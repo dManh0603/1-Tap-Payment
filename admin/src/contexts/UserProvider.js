@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useToast } from '@chakra-ui/react'
 const UserContext = createContext();
 
@@ -9,7 +9,6 @@ const UserProvider = ({ children }) => {
 
   const toast = useToast();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const logout = () => {
     localStorage.removeItem('userToken');
@@ -50,7 +49,7 @@ const UserProvider = ({ children }) => {
 
     fetchUser(storedToken);
 
-  }, [])
+  }, [navigate])
 
   const userContextValue = {
     user,

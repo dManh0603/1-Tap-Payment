@@ -1,12 +1,11 @@
 import axios from 'axios';
 import React, { useEffect, useState, useRef } from 'react';
 import { Box, Spinner } from '@chakra-ui/react'
-import Sidebar from '../components/Sidebar';
 import { formatDate } from '../helpers/ViewHelper';
 import { DataTable } from 'simple-datatables';
 import { useNavigate } from 'react-router-dom';
 import Helmet from 'react-helmet'
-import Topbar from '../components/Topbar';
+
 const Transactions = () => {
   const [transactions, setTransactions] = useState([]);
   const storedToken = localStorage.getItem('userToken');
@@ -33,6 +32,8 @@ const Transactions = () => {
     };
 
     fetchTransactions();
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

@@ -1,16 +1,24 @@
+import { Menu, MenuButton } from '@chakra-ui/react'
 import React from 'react'
+import NotificationBadge from 'react-notification-badge/lib/components/NotificationBadge'
+import { Effect } from 'react-notification-badge'
 
 const NotificationsDropdown = () => {
   return (
     <li className="nav-item dropdown no-arrow mx-1">
-      <a className="nav-link dropdown-toggle" href={"#"} id="alertsDropdown" role="button" data-toggle="dropdown"
-        aria-haspopup="true" aria-expanded="false" >
-        <i className="fas fa-bell fa-fw fa-2x"></i>
-        {/* <!-- Counter - Alerts --> */}
-        <span className="badge badge-danger badge-counter">3+</span>
-      </a>
+      <Menu >
+        <MenuButton className={'nav-link'}>
+          <NotificationBadge
+            count={3}
+            effect={Effect.SCALE}
+          />
+          <i className="fas fa-bell fa-fw fa-2x"></i>
+        </MenuButton>
+      </Menu>
+      {/* <a className="nav-link dropdown-toggle" href={"#"} id="alertsDropdown" role="button" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false" ></a> */}
       {/* <!-- Dropdown - Alerts --> */}
-      <div className="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+      {/* <div className="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
         aria-labelledby="alertsDropdown">
         <h6 className="dropdown-header">
           Alerts Center
@@ -49,7 +57,7 @@ const NotificationsDropdown = () => {
           </div>
         </a>
         <a className="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
-      </div>
+      </div> */}
     </li>
   )
 }

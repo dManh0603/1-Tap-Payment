@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
-import Sidebar from '../components/Sidebar';
 import { formatDate } from '../helpers/ViewHelper';
 import axios from 'axios';
 import { Box, Card, CardBody, CardHeader, Heading, Stack, StackDivider, Text } from '@chakra-ui/react';
@@ -27,7 +26,7 @@ const TransactionDetails = () => {
       }
     }
     fetchTransaction();
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
 
