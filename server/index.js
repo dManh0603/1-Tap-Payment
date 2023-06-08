@@ -64,6 +64,7 @@ io.on("connection", (socket) => {
     if(userData){
       socket.join(userData._id);
       socket.emit(`connected`)
+      console.log("user connected to: ", userData._id)
     }
   })
 
@@ -85,6 +86,7 @@ io.on("connection", (socket) => {
       if (user._id == newMessage.sender._id) return;
 
       socket.in(user._id).emit('message received', newMessage)
+      console.log('send message to socket:', user._id)
     });
   })
 

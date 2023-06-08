@@ -33,7 +33,6 @@ const TransactionDetails = () => {
 
   return (
     <>
-      <Sidebar />
       {
         transaction && (
           <div className="d-flex justify-content-center w-100">

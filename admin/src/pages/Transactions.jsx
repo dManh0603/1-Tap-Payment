@@ -57,12 +57,9 @@ const Transactions = () => {
       <Helmet>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
       </Helmet>
-      <Sidebar />
-
       {isLoading && transactions
         ?
         <div className='w-100'>
-          <Topbar />
           <Box pt={'40vh'} display={'flex'} justifyContent={'center'} alignItems={'center'}>
             <Spinner
               thickness='4px'
@@ -75,7 +72,6 @@ const Transactions = () => {
         </div>
         :
         <div id="content-wrapper" className="d-flex flex-column">
-          <Topbar />
           <div className="container-fluid px-4">
           <h1 className="h3 mb-0 text-gray-800">Total transactions</h1>
             <div className="card mb-4">

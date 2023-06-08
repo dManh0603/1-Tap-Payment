@@ -26,7 +26,6 @@ const UserProvider = ({ children }) => {
 
   useEffect(() => {
 
-    console.log('user provider triggered')
     const storedToken = localStorage.getItem('userToken');
 
     if (!storedToken) {

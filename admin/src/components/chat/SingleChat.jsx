@@ -3,7 +3,6 @@ import { ChatState } from '../../contexts/ChatProvider'
 import { Box, FormControl, IconButton, Input, InputGroup, InputRightElement, Spinner, Text, useToast } from '@chakra-ui/react'
 import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons'
 import { getSenderFull, getSender } from '../../helpers/ChatHelper'
-// import ProfileModal from '../components/miscellaneous/ProfileModal'
 import axios from 'axios'
 import ScrollableChat from './ScrollableChat'
 import io from 'socket.io-client'
@@ -15,13 +14,14 @@ import ProfileModal from '../miscellaneous/ProfileModal'
 const ENDPOINT = 'http://localhost:4000';
 
 let socket, selectedChatCompare;
+socket = io(ENDPOINT);
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState('');
-  const [socketConented, setSocketConented] = useState(false)
+  const [socketConnected, setSocketConnected] = useState(false)
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
 
@@ -115,7 +115,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
 
-    if (!socketConented) return;
+    if (!socketConnected) return;
 
     if (!typing) {
       setTyping(true);
@@ -138,9 +138,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   }
 
   useEffect(() => {
-    socket = io(ENDPOINT);
-    socket.emit('setup', user);
-    socket.on('connected', () => setSocketConented(true));
+    // socket.emit('setup', user);
+    // socket.on('connected', () => setSocketConnected(true));
     socket.on('typing', () => setIsTyping(true))
     socket.on('stop typing', () => setIsTyping(false))
   }, [])
@@ -151,18 +150,18 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     selectedChatCompare = selectedChat;
   }, [selectedChat]);
 
-  useEffect(() => {
-    socket.on('message received', (newMessage) => {
-      if (!selectedChatCompare || selectedChatCompare._id !== newMessage.chat._id) {
-        if (!notification.includes(newMessage)) {
-          setNotification([newMessage, ...notification]);
-          setFetchAgain(!fetchAgain);
-        }
-      } else {
-        setMessages([...messages, newMessage])
-      }
-    })
-  })
+  // useEffect(() => {
+  //   socket.on('message received', (newMessage) => {
+  //     if (!selectedChatCompare || selectedChatCompare._id !== newMessage.chat._id) {
+  //       if (!notification.includes(newMessage)) {
+  //         setNotification([newMessage, ...notification]);
+  //         setFetchAgain(!fetchAgain);
+  //       }
+  //     } else {
+  //       setMessages([...messages, newMessage])
+  //     }
+  //   })
+  // })
 
 
   return (<>

@@ -12,9 +12,7 @@ const Chatpage = () => {
 
   return (
     <>
-      <Sidebar />
-      <div id="content-wrapper" className='d-flex flex-column'>
-        <Topbar />
+
         <Box
           display={'flex'}
           justifyContent={'space-between'}
@@ -25,7 +23,7 @@ const Chatpage = () => {
           {user && <MyChats fetchAgain={fetchAgain} />}
           {user && <ChatBox fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />}
         </Box>
-      </div>
+
     </>
   )
 }
