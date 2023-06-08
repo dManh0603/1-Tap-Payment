@@ -5,7 +5,7 @@ const NotificationsDropdown = () => {
     <li className="nav-item dropdown no-arrow mx-1">
       <a className="nav-link dropdown-toggle" href={"#"} id="alertsDropdown" role="button" data-toggle="dropdown"
         aria-haspopup="true" aria-expanded="false" >
-        <i className="fas fa-bell fa-fw"></i>
+        <i className="fas fa-bell fa-fw fa-2x"></i>
         {/* <!-- Counter - Alerts --> */}
         <span className="badge badge-danger badge-counter">3+</span>
       </a>
