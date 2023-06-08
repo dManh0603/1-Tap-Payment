@@ -5,12 +5,13 @@ import { ChatState } from '../contexts/ChatProvider'
 import { Effect } from 'react-notification-badge'
 import NotificationBadge from 'react-notification-badge'
 import { getSender } from '../helpers/ChatHelper'
+import { useNavigate } from 'react-router-dom';
 
 const MessagesDropdown = () => {
 
   const { user } = UserState()
   const { setSelectedChat, notification, setNotification } = ChatState();
-
+  const navigate = useNavigate();
   return (
     <li className="nav-item dropdown no-arrow mx-1">
       <Menu >
@@ -26,12 +27,11 @@ const MessagesDropdown = () => {
           {!notification.length && "No new messages"}
           {notification.map(notif => (
             <MenuItem key={notif._id} onClick={() => {
-              setSelectedChat(notif.chat)
+              navigate('/chats');
               setNotification(notification.filter(n => n !== notif))
+              setSelectedChat(notif.chat)
             }}>
-              {notif.chat.isGroupChat
-                ? `New message in ${notif.chat.chatName}`
-                : `${getSender(user, notif.chat.users)} sent you a new message`}
+              {`${getSender(user, notif.chat.users)} sent you a new message`}
             </MenuItem>
           ))}
         </MenuList>
