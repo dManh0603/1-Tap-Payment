@@ -180,15 +180,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       console.log('Calling updateSeenChat');
       updateSeenChat();
     }
-    
-  
-    console.log('selectedChat:', selectedChat);
-    console.log('loading:', loading);
-  
-    if (!loading && selectedChat) {
-      console.log('Calling updateSeenChat');
-      updateSeenChat();
-    }
+ 
   }, [selectedChat]);
   
 

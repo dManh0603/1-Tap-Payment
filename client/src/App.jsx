@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { UserState } from './contexts/UserProvider';
 import { ChatState } from './contexts/ChatProvider';
 import io from 'socket.io-client'
+import axios from 'axios';
 
 const ENDPOINT = 'http://localhost:3000';
 let socket, selectedChatCompare;
@@ -19,7 +20,7 @@ function App() {
   const [socketConennected, setSocketConennected] = useState(false)
   const { notification, setNotification } = ChatState();
   const [fetchAgain, setFetchAgain] = useState(false);
-
+  const storedToken = localStorage.getItem('userToken');
   useEffect(() => {
     console.log(user)
     if (user) {
@@ -28,6 +29,24 @@ function App() {
       socket.on('connected', () => setSocketConennected(true));
     }
   }, [user])
+
+  useEffect(() => {
+    const fetchUnseenChats = async () => {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${storedToken}`
+        }
+      }
+      try {
+        const { data } = await axios.get('/api/chat/unseen', config)
+        console.log('unseen chat', data);
+        setNotification([...data, ...notification]);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchUnseenChats();
+  }, [])
 
   useEffect(() => {
     if (!socketConennected) return;

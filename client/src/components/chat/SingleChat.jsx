@@ -138,6 +138,38 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   }
 
   useEffect(() => {
+    const updateSeenChat = async () => {
+      try {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${storedToken}`,
+          },
+        };
+
+        const requestData = {
+          chatId: selectedChat._id,
+        };
+
+        const { data } = await axios.put('/api/chat/seen', requestData, config);
+        console.log('seen chat id', selectedChat._id);
+        console.log('seen chat', data);
+      } catch (error) {
+        console.log('cant update');
+        console.log(error);
+      }
+    };
+
+    console.log('selectedChat:', selectedChat);
+    console.log('loading:', loading);
+
+    if (!loading && selectedChat) {
+      console.log('Calling updateSeenChat');
+      updateSeenChat();
+    }
+
+  }, [selectedChat]);
+
+  useEffect(() => {
     socket = io(ENDPOINT);
     socket.emit('setup', user);
     socket.on('connected', () => setSocketConented(true));
