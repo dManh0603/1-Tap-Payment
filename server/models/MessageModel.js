@@ -12,7 +12,11 @@ const MessageModel = mongoose.Schema(
         chat: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Chat"
-        }
+        },
+        seen: {
+            type: Boolean,
+            default: false,
+        },
     },
     {
         timestamps: true,

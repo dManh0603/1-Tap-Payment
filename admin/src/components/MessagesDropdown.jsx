@@ -12,6 +12,7 @@ const MessagesDropdown = () => {
   const { user } = UserState()
   const { setSelectedChat, notification, setNotification } = ChatState();
   const navigate = useNavigate();
+  console.log(notification);
   return (
     <li className="nav-item dropdown no-arrow mx-1">
       <Menu >
@@ -28,7 +29,7 @@ const MessagesDropdown = () => {
           {notification.map(notif => (
             <MenuItem key={notif._id} onClick={() => {
               navigate('/chats');
-              setNotification(notification.filter(n => n !== notif))
+              setNotification(notification.filter(n => n._id !== notif._id))
               setSelectedChat(notif.chat)
             }}>
               {`${getSender(user, notif.chat.users)} sent you a new message`}

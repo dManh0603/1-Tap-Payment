@@ -46,6 +46,7 @@ const UserProvider = ({ children }) => {
 
       } catch (error) {
         console.error(error);
+        navigate('/');
       }
     };
 

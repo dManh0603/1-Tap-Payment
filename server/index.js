@@ -9,6 +9,7 @@ const ip = require("ip");
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const { Server } = require('socket.io')
+const cors = require('cors');
 
 const app = express()
 
@@ -17,6 +18,12 @@ app.use(session({
   secret: 'your_secret_key',
   resave: false,
   saveUninitialized: true
+}));
+
+// Using cors middleware
+app.use(cors({
+  origin: '*',
+  method: ['POST, GET, PUT, DELETE']
 }));
 
 // Set the "public" folder as the static directory

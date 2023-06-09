@@ -7,6 +7,11 @@ const ChatProvider = ({ children }) => {
   const [chats, setChats] = useState([]);
   const [notification, setNotification] = useState([]);
 
+  useEffect(() => {
+    console.log('chat provider')
+  }, [])
+
+
   return (
     <ChatContext.Provider value={{
       selectedChat,

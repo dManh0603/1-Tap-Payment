@@ -1,6 +1,6 @@
 const Chat = require('../models/ChatModel');
 const User = require('../models/UserModel');
-
+const Message = require('../models/MessageModel')
 class ChatController {
   async accessChat(req, res, next) {
     const { userId } = req.body;
@@ -70,6 +70,70 @@ class ChatController {
     }
   }
 
+  async fetchUnseenChats(req, res) {
+    try {
+      const userId = req.user._id;
+  
+      // Find all chats where the user is a participant and the latest message is unseen
+      const unseenChats = await Chat.find({
+        users: userId,
+        latestMessage: { $exists: true },
+      }).populate({
+        path: 'users',
+        select: '_id name email', // Include _id, name, and email fields for users
+      }).populate({
+        path: 'latestMessage',
+        match: {
+          seen: false,
+          sender: { $ne: userId }, // Exclude the messages where the sender is the user
+        },
+        populate: {
+          path: 'sender',
+          select: '_id name',
+        },
+      });
+  
+      // Transform the response to the desired structure
+      const transformedChats = unseenChats.map(chat => {
+        const { _id, users, createdAt, updatedAt, __v, latestMessage } = chat;
+  
+        return {
+          chat: { _id, users, createdAt, updatedAt, __v },
+          content: latestMessage.content,
+          createdAt: latestMessage.createdAt,
+          seen: latestMessage.seen,
+          sender: latestMessage.sender,
+          updatedAt: latestMessage.updatedAt,
+          __v: latestMessage.__v,
+          _id: latestMessage._id,
+        };
+      });
+  
+      res.json(transformedChats);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+  
+
+  async seenChat(req, res) {
+
+    try {
+      const {chatId} = req.body;
+      console.log(chatId)
+      // Update all messages in the chat to seen
+      const result = await Message.updateMany(
+        { chat: chatId },
+        { seen: true }
+      );
+      console.log('update success')
+      res.json({ message: 'Messages updated to seen' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
 }
 
 

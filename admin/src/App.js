@@ -10,6 +10,7 @@ import { UserState } from './contexts/UserProvider';
 import { useEffect, useState } from 'react';
 import io from 'socket.io-client'
 import { ChatState } from './contexts/ChatProvider';
+import axios from 'axios'
 
 const ENDPOINT = 'http://localhost:4000';
 
@@ -21,6 +22,25 @@ function App() {
   const [socketConennected, setSocketConennected] = useState(false)
   const { notification, setNotification } = ChatState();
   const [fetchAgain, setFetchAgain] = useState(false);
+  const storedToken = localStorage.getItem('userToken');
+
+  useEffect(() => {
+    const fetchUnseenChats = async () => {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${storedToken}`
+        }
+      }
+      try {
+        const { data } = await axios.get('/api/chat/unseen', config)
+        console.log('unseen chat', data);
+        setNotification([...data, ...notification]);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchUnseenChats();
+  }, [])
 
   useEffect(() => {
     console.log(user)
