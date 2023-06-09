@@ -5,6 +5,8 @@ import ChatBox from './ChatBox'
 import axios from 'axios'
 import { UserState } from '../../contexts/UserProvider'
 import { ChatState } from '../../contexts/ChatProvider'
+import NotificationBadge from 'react-notification-badge'
+import { Effect } from 'react-notification-badge'
 
 const ChatButton = () => {
   const [fetchAgain, setFetchAgain] = useState(false);
@@ -36,7 +38,7 @@ const ChatButton = () => {
       console.log('retrieved chat data', data);
       setSelectedChat(data);
       setLoading(false);
-      
+
     } catch (error) {
       console.error(error);
       toast({
@@ -50,12 +52,20 @@ const ChatButton = () => {
     }
   };
 
+  const handleChatClick = () => {
+    onOpen();
+    accessChat('6475d74a202e98a518cbca9b');
+    setNotification([])
+  }
+  
   return (
     <>
-      <Button colorScheme='blue' onClick={() => {
-        onOpen();
-        accessChat('6475d74a202e98a518cbca9b');
-      }}>
+
+      <Button colorScheme='blue' onClick={handleChatClick}>
+        <NotificationBadge
+          count={notification.length}
+          effect={Effect.SCALE}
+        />
         <ChatIcon />
       </Button>
       <Drawer placement={'left'} onClose={onClose} isOpen={isOpen}>
