@@ -1,14 +1,13 @@
 const express = require('express')
 const adminController = require('../controllers/AdminController');
+const adminAuthenticate = require('../middlewares/AdminAuthentication');
 
 const router = express.Router()
 
-router.post('/login', adminController.login);
-router.post('/admin/api/getToken', adminController.getToken)
+router.post('/login', adminController.login)
+router.get('/dashboard',adminAuthenticate, adminController.dashboard)
+router.get('/transactions',adminAuthenticate, adminController.transactions)
+router.get('/transaction/:id',adminAuthenticate, adminController.transaction_details)
 
-router.get('/dashboard', adminController.dashboard)
-router.get('/transactions/:id', adminController.transactionDetails)
-router.get('/transactions', adminController.transactions)
-router.get('/', adminController.index);
 
 module.exports = router

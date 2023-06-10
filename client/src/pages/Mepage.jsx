@@ -1,24 +1,16 @@
-import { Box, Button, Container, FormControl, FormLabel, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Text, useDisclosure } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
+import { Box, Container, Text } from '@chakra-ui/react'
+import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { UserState } from '../contexts/UserProvider';
 import Banner from '../components/miscellaneous/Banner';
 import Profile from '../components/miscellaneous/Profile';
+import DepositModal from '../components/miscellaneous/DepositModal';
+import DeactivateCardModal from '../components/miscellaneous/DeactivateCardModal';
 
 const Mepage = () => {
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [amount, setAmount] = useState(0);
   const navigate = useNavigate();
   const { user } = UserState();
-
-  const goPay = () => {
-    navigate('/me/deposit', {
-      state: {
-        amount,
-      },
-    });
-  };
 
   useEffect(() => {
     const storedToken = localStorage.getItem('userToken');
@@ -41,39 +33,12 @@ const Mepage = () => {
             borderWidth={'1px'}
           >
             <Box maxW='32rem'>
-              <Profile email={user.email} name={user.name} balance={user.balance} />
+              <Profile user={user} />
 
-              <Box mt={3} display={'flex'} justifyContent={'end'}>
-                <Button mr={3} colorScheme='blue' onClick={onOpen}>Deposit</Button>
+              <Box mt={3} display={'flex'} justifyContent={'space-between'}>
+                {user.card_disabled ? <Text as={'i'}>Contact admin for any help</Text> : <DeactivateCardModal user={user} />}
+                <DepositModal />
               </Box>
-
-              <Modal isOpen={isOpen} onClose={onClose}>
-                <ModalOverlay />
-                <ModalContent>
-                  <ModalHeader>Choose the amount to deposit</ModalHeader>
-                  <ModalCloseButton />
-                  <ModalBody>
-
-                    <FormControl>
-                      <FormLabel>Amount ($)</FormLabel>
-                      <NumberInput min={1} onChange={e => setAmount(e)} value={amount}>
-                        <NumberInputField />
-                        <NumberInputStepper>
-                          <NumberIncrementStepper />
-                          <NumberDecrementStepper />
-                        </NumberInputStepper>
-                      </NumberInput>
-                    </FormControl>
-                  </ModalBody>
-
-                  <ModalFooter>
-                    <Button colorScheme='red' mr={3} onClick={onClose}>
-                      Close
-                    </Button>
-                    {amount > 0 && (<Button colorScheme='blue' onClick={goPay}>Go to payment</Button>)}
-                  </ModalFooter>
-                </ModalContent>
-              </Modal>
             </Box>
           </Box>
         </Container>

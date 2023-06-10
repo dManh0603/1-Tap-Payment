@@ -15,7 +15,7 @@ const Depositpage = () => {
   const { amount } = location.state
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(true);
-
+  const {user} = UserState();
 
   const handleTransaction = async (captureDetails) => {
     console.log('paypal details captured', captureDetails);
@@ -127,7 +127,7 @@ const Depositpage = () => {
             <Box maxW='32rem'>
               <Text fontSize={'3xl'} fontFamily={'Work sans'} textAlign={'center'}>You going to deposit to your balance {amount}$</Text>
 
-              <Profile />
+              <Profile user = {user}/>
 
               <Box mt={3} display={'flex'} justifyContent={'center'}>
 

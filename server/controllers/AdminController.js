@@ -58,61 +58,6 @@ class AdminController {
     });
   }
 
-  dashboard = async (req, res) => {
-    if (!req.session.user) {
-      return res.redirect('/');
-    }
-
-    try {
-      const monthlyIncome = await this.getMonthlyIncome();
-      const annualIncome = await this.getAnnualIncome();
-      const transactionCount = await this.getTransactionCount();
-
-      return res.render('dashboard', { monthlyIncome, annualIncome, transactionCount });
-    } catch (error) {
-      console.error(error);
-      return res.render('error', { error });
-    }
-  }
-
-  login = async (req, res) => {
-    const { email, password } = req.body;
-
-    try {
-      const user = await User.findOne({ email, role: "admin" });
-      if (!user) {
-        return res.render('index', {
-          email,
-          error: "You have entered wrong password or email",
-          layout: 'blank'
-
-        })
-
-      }
-
-      const passwordMatched = await user.matchPassword(password)
-
-      if (!passwordMatched) {
-        return res.render('index', {
-          email,
-          error: "You have entered wrong password",
-          layout: 'blank',
-        })
-      }
-
-      req.session.user = {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-      };
-      console.log(`Admin: ${user._id} logged in.`)
-      return res.redirect('/dashboard');
-    } catch (err) {
-      console.error(err);
-      return res.render('error', err)
-    }
-  }
-
   getToken = async (req, res) => {
     const { email, password } = req.body;
 
@@ -142,47 +87,9 @@ class AdminController {
     }
   }
 
-  transactions = async (req, res) => {
-    if (!req.session.user) return res.redirect('/');
+  
 
-    const transactions = await Transaction.find();
-
-    const userIds = transactions.map(transaction => transaction.user_id);
-    const users = await User.find({ _id: { $in: userIds } });
-
-    const transactionsWithUserEmail = transactions.map(transaction => {
-      const user = users.find(user => user._id.toString() === transaction.user_id.toString());
-      const email = user ? user.email : 'Unknown'; // Handle case where user is not found
-      return {
-        ...transaction.toObject(),
-        email: email
-      };
-    });
-
-    res.render('transactions', { transactions: transactionsWithUserEmail });
-  };
-
-  transactionDetails = async (req, res) => {
-    // if (!req.session.user) return res.redirect('/');
-
-    const transactionId = req.params.id;
-    try {
-      const transaction = await Transaction.findById(transactionId).lean().exec();
-      console.log(transaction);
-
-      const userId = transaction.user_id;
-      const user = await User.findById(userId).select('-password -balance -card_uid').lean().exec();
-      console.log(user);
-
-      res.render('transaction-details', { transaction: transaction, user: user });
-    } catch (error) {
-      // Handle any errors that occur during the database operation
-      console.error(error);
-      res.status(500).send('Internal Server Error');
-    }
-  };
-
-  API_dashboard = async (req, res) => {
+  dashboard = async (req, res) => {
     try {
       const monthlyIncomePromise = this.getMonthlyIncome();
       const annualIncomePromise = this.getAnnualIncome();
@@ -201,7 +108,7 @@ class AdminController {
     }
   };
 
-  API_login = async (req, res) => {
+  login = async (req, res) => {
     const { email, password } = req.body;
 
     try {
@@ -236,7 +143,7 @@ class AdminController {
     }
   }
 
-  API_transactions = async (req, res) => {
+  transactions = async (req, res) => {
     try {
       const transactions = await Transaction.find();
 
@@ -259,7 +166,7 @@ class AdminController {
     }
   };
 
-  API_transaction_details = async (req, res) => {
+  transaction_details = async (req, res) => {
     const transactionId = req.params.id;
     try {
       const transaction = await Transaction.findById(transactionId).lean().exec();

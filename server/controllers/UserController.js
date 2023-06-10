@@ -114,6 +114,32 @@ class UserController {
     }
   }
 
+  async disableCard(req, res) {
+    const userId = req.user._id;
+    const password = req.body.password
+    try {
+      // Find the user by their _id and update the card_disable field to true
+      const user = await User.findByIdAndUpdate(userId, { card_disabled: true });
+      if (!user) {
+        // User with the given _id not found
+        return res.status(404).json({ message: 'User not found' });
+      }
+      const passwordMatched = await user.matchPassword(password)
+      if (!passwordMatched) {
+        throw { statusCode: 401, message: "You have entered wrong password!" };
+
+      }
+      // Card disabled successfully
+      return res.json({ message: 'Card disabled successfully' });
+    } catch (err) {
+      // Handle error
+      console.error(err);
+      const statusCode = err.statusCode || 500;
+      const message = err.message || 'Internal server error';
+      res.status(statusCode).json({ message });
+    }
+  }
+
 }
 
 module.exports = new UserController();

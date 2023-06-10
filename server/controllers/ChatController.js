@@ -70,10 +70,11 @@ class ChatController {
     }
   }
 
+  // [GET] /api/chat/unseen
   async fetchUnseenChats(req, res) {
     try {
       const userId = req.user._id;
-  
+
       // Find all chats where the user is a participant and the latest message is unseen
       const unseenChats = await Chat.find({
         users: userId,
@@ -92,11 +93,21 @@ class ChatController {
           select: '_id name',
         },
       });
-  
+
+      // Check if there are any messages with seen set to false
+      const hasUnseenMessages = unseenChats.some(chat => chat.latestMessage && chat.latestMessage.seen === false);
+
+      if (!hasUnseenMessages) {
+        // No messages with seen set to false, return an empty array
+        return res.json([]);
+      }
+
       // Transform the response to the desired structure
       const transformedChats = unseenChats.map(chat => {
         const { _id, users, createdAt, updatedAt, __v, latestMessage } = chat;
-  
+        if (!latestMessage) {
+          return;
+        }
         return {
           chat: { _id, users, createdAt, updatedAt, __v },
           content: latestMessage.content,
@@ -108,19 +119,19 @@ class ChatController {
           _id: latestMessage._id,
         };
       });
-  
-      res.json(transformedChats);
+
+      return res.json(transformedChats);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'Internal server error' });
+      return res.status(500).json({ error: 'Internal server error' });
     }
   }
-  
 
+  // [PUT] /api/chat/seen
   async seenChat(req, res) {
 
     try {
-      const {chatId} = req.body;
+      const { chatId } = req.body;
       console.log(chatId)
       // Update all messages in the chat to seen
       const result = await Message.updateMany(
