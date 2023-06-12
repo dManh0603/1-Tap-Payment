@@ -12,7 +12,6 @@ const MessagesDropdown = () => {
   const { user } = UserState()
   const { setSelectedChat, notification, setNotification } = ChatState();
   const navigate = useNavigate();
-  console.log(notification);
   return (
     <li className="nav-item dropdown no-arrow mx-1">
       <Menu >

@@ -52,6 +52,14 @@ const Sidebar = () => {
           </a>
         </li>
 
+        {/* <!-- Nav Item - Users --> */}
+        <li className={`nav-item ${location.pathname === '/users' ? 'active' : ''}`}>
+          <a className="nav-link" href="/users">
+            <i className="fas fa-fw fa-user"></i>
+            <span style={{ fontSize: '16px' }}>Users</span>
+          </a>
+        </li>
+
         {/* <!-- Divider --> */}
         <hr className="sidebar-divider d-none d-md-block" />
 

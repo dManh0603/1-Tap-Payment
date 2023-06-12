@@ -77,58 +77,8 @@ const TransactionDetails = () => {
               </CardBody>
             </Card>
           </div>
-
-          // <div className="d-flex justify-content-center align-items-center">
-          //   <div className="container mt-0">
-          //     <div className="row g-5 w-100">
-          //       <div className="row col-12 col-lg-8 ">
-          //         <h2 className="text-center m-3">Transaction {transaction._id}</h2>
-          //       </div>
-          //       <div className="row col-lg-4 ">
-          //         <div className="card border-0">
-          //           <div className="card-header border-0">
-          //             <h4 className="mt-1" style={{ color: 'black'}}>User information</h4>
-          //           </div>
-          //           <div className="card-body border-0">
-          //             <p className="card-text">
-          //               Email: {user && user.email}
-
-          //             </p>
-          //             <p className="card-text">
-          //               Name: {user && user.name}
-          //             </p>
-          //           </div>
-          //         </div>
-
-          //         <div className="card border-0">
-          //           <div className="card-header border-0">
-          //             <h4 className="mt-1" style={{ color: 'black'}}>Transaction information</h4>
-          //           </div>
-          //           <div className="card-body border-0">
-          //             <p className="card-text">
-          //               Status: {transaction.PP_info.status}
-          //             </p>
-          //             <p className="card-text">
-          //               Amount: {transaction.amount}
-          //             </p>
-          //             <p className="card-text">
-          //               Pay at: {formatDate(transaction.createdAt)}
-          //             </p>
-          //             <p className="card-text">
-          //               Payment id: {transaction.PP_info.payment_id}
-          //             </p>
-          //             <p className="card-text">
-          //               Payer email: {transaction.PP_info.payer_email_address}
-          //             </p>
-          //           </div>
-          //         </div>
-          //       </div>
-          //     </div>
-          //   </div>
-          // </div>
         )
       }
-
     </>
   )
 }

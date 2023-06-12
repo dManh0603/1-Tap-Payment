@@ -87,9 +87,9 @@ class AdminController {
     }
   }
 
-  
 
-  dashboard = async (req, res) => {
+
+  getDashboard = async (req, res) => {
     try {
       const monthlyIncomePromise = this.getMonthlyIncome();
       const annualIncomePromise = this.getAnnualIncome();
@@ -143,7 +143,7 @@ class AdminController {
     }
   }
 
-  transactions = async (req, res) => {
+  getTransactions = async (req, res) => {
     try {
       const transactions = await Transaction.find();
 
@@ -166,7 +166,7 @@ class AdminController {
     }
   };
 
-  transaction_details = async (req, res) => {
+  getTransactionDetails = async (req, res) => {
     const transactionId = req.params.id;
     try {
       const transaction = await Transaction.findById(transactionId).lean().exec();
@@ -181,6 +181,66 @@ class AdminController {
       // Handle any errors that occur during the database operation
       console.error(error);
       res.status(500).json('Internal Server Error');
+    }
+  }
+  getUsers = async (req, res) => {
+    try {
+      // Find all users with the role "client" and exclude the password field
+      const users = await User.find({ role: { $ne: 'admin' } }).select('-password');
+
+      return res.json(users);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: 'Internal server error' });
+
+    }
+  }
+
+  getUserDetails = async (req, res) => {
+    const userId = req.params.id;
+    try {
+      const user = await User.findById(userId).lean().select('-password').exec();
+      console.log(user);
+      res.json(user);
+    } catch (error) {
+      console.log(error)
+      res.status(500).json({ error: 'Internal server error' })
+    }
+  }
+
+  updateUserDetails = async (req, res) => {
+    const userId = req.params.id;
+    const body = req.body;
+    try {
+      const user = await User.findById(userId);
+
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      if (body.balance !== '') {
+        user.balance = body.balance;
+      }
+
+      if (body.email !== '') {
+        user.email = body.email;
+      }
+
+      if (body.name !== '') {
+        user.name = body.name;
+      }
+
+      if (body.card_disabled !== undefined) {
+        user.card_disabled = body.card_disabled;
+      }
+
+      // Save the updated user document
+      await user.save();
+
+      return res.json({ user: user, message: 'User details updated successfully' });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: 'Internal server error' });
     }
   }
 }

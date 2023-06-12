@@ -11,6 +11,8 @@ import { useEffect, useState } from 'react';
 import io from 'socket.io-client'
 import { ChatState } from './contexts/ChatProvider';
 import axios from 'axios'
+import Users from './pages/Users';
+import UserDetails from './pages/UserDetails';
 
 const ENDPOINT = 'http://localhost:4000';
 
@@ -75,6 +77,8 @@ function App() {
           <Route path="/transactions" Component={Transactions}></Route>
           <Route path="/transaction/:id" Component={TransactionDetails}></Route>
           <Route path="/chats" Component={Chats}></Route>
+          <Route path="/users" Component={Users}></Route>
+          <Route path="/user/:id" Component={UserDetails}></Route>
 
         </Routes>
       </div>
