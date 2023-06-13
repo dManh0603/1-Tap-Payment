@@ -1,5 +1,7 @@
-const express = require('express')
 const dotenv = require('dotenv')
+dotenv.config()
+
+const express = require('express')
 const path = require('path')
 const db = require('./config/db')
 const route = require('./routers')
@@ -10,8 +12,9 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const { Server } = require('socket.io')
 const cors = require('cors');
-
 const app = express()
+const loggerMiddleware = require('./middlewares/LoggerMiddleware')
+
 
 // Configure the session middleware
 app.use(session({
@@ -34,16 +37,21 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Parse JSON-encoded bodies
 app.use(express.json())
 
+// Use winston logger
+app.use(loggerMiddleware);
+
 // Set HBS as the view engine
 app.engine('hbs', handlebars.engine({
   extname: '.hbs',
   helpers: require('./helpers/HbsHelper'),
 }));
 
+
+
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 
-dotenv.config()
+
 
 db.connect()
 
@@ -68,7 +76,7 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
 
   socket.on('setup', (userData) => {
-    if(userData){
+    if (userData) {
       socket.join(userData._id);
       socket.emit(`connected`)
       console.log("user connected to: ", userData._id)

@@ -15,7 +15,7 @@ const Depositpage = () => {
   const { amount } = location.state
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(true);
-  const {user} = UserState();
+  const { user } = UserState();
 
   const handleTransaction = async (captureDetails) => {
     console.log('paypal details captured', captureDetails);
@@ -88,9 +88,36 @@ const Depositpage = () => {
     }
   };
 
+  const handleCreateOrder = (data, actions) => {
+    return actions.order.create({
+      purchase_units: [
+        {
+          amount: {
+            value: amount,
+          }
+        }
+      ],
+    });
+  };
 
+  const handleApprove = async (data, actions) => {
+    return actions.order.capture()
+      .then(handleTransaction);
+  };
+
+  const handleError = error => {
+    toast({
+      title: 'Error happened. Please contact admin or try again later',
+      duration: 5000,
+      status: 'error',
+      isClosable: true,
+      position: 'top-right'
+    });
+    console.log(error);
+  };
 
   useEffect(() => {
+    console.log(process.env.REACT_APP_PAYPAL_CLIENT_ID)
     if (userToken === null) {
       console.log('no user token')
       navigate('/');
@@ -127,7 +154,7 @@ const Depositpage = () => {
             <Box maxW='32rem'>
               <Text fontSize={'3xl'} fontFamily={'Work sans'} textAlign={'center'}>You going to deposit to your balance {amount}$</Text>
 
-              <Profile user = {user}/>
+              {/* <Profile user={user} /> */}
 
               <Box mt={3} display={'flex'} justifyContent={'center'}>
 
@@ -143,31 +170,9 @@ const Depositpage = () => {
                       size='xl'
                     />
                     : <PayPalButtons
-                      createOrder={(data, actions) => {
-                        return actions.order.create({
-                          purchase_units: [
-                            {
-                              amount: {
-                                value: amount,
-                              }
-                            }
-                          ],
-                        });
-                      }}
-                      onApprove={async (data, actions) => {
-                        return actions.order.capture()
-                          .then(handleTransaction)
-                      }}
-                      onError={error => {
-                        toast({
-                          title: 'Error happend. Please contact admin or try again later',
-                          duration: 5000,
-                          status: 'error',
-                          isClosable: true,
-                          position: 'top-right'
-                        })
-                        return console.log(error);
-                      }}
+                      createOrder={handleCreateOrder}
+                      onApprove={handleApprove}
+                      onError={handleError}
                     />}
                 </PayPalScriptProvider>
               </Box>
