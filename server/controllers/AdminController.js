@@ -1,6 +1,7 @@
 const User = require('../models/UserModel');
 const Transaction = require('../models/TransactionModel');
 const generateToken = require('../config/jwt');
+const UserActivity =require('../models/UserActivity')
 
 class AdminController {
 
@@ -49,6 +50,23 @@ class AdminController {
     return transactionCount;
   }
 
+  async getMonthlyActivity(req, res) {
+    try {
+      const motorbikeCount = await UserActivity.countDocuments({ 'meta.type': 'motorbike' });
+      const bicycleCount = await UserActivity.countDocuments({ 'meta.type': 'bicycle' });
+      
+      const activityCounts = [
+        { type: 'motorbike', count: motorbikeCount },
+        { type: 'bicycle', count: bicycleCount },
+      ];
+  
+      res.json(activityCounts);
+    } catch (error) {
+      console.error('Error retrieving monthly activity:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+  
   index(req, res) {
     if (req.session && req.session.user) {
       return res.redirect('/dashboard');
@@ -91,6 +109,7 @@ class AdminController {
 
   getDashboard = async (req, res) => {
     try {
+      // line chart
       const monthlyIncomePromise = this.getMonthlyIncome();
       const annualIncomePromise = this.getAnnualIncome();
       const transactionCountPromise = this.getTransactionCount();
@@ -100,6 +119,8 @@ class AdminController {
         annualIncomePromise,
         transactionCountPromise
       ]);
+
+      //pie chart
 
       return res.status(200).json({ monthlyIncome, annualIncome, transactionCount });
     } catch (error) {
@@ -243,6 +264,8 @@ class AdminController {
       return res.status(500).json({ error: 'Internal server error' });
     }
   }
+
+
 }
 
 module.exports = new AdminController();

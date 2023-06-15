@@ -197,14 +197,12 @@ const DashboardContent = () => {
                   </div>
                   <div className="mt-4 text-center small">
                     <span className="mr-2">
-                      <i className="fas fa-circle text-primary"></i> Direct
+                      <i className="fas fa-circle text-primary"></i> Motorbike
                     </span>
                     <span className="mr-2">
-                      <i className="fas fa-circle text-success"></i> Social
+                      <i className="fas fa-circle text-success"></i> Bicycle
                     </span>
-                    <span className="mr-2">
-                      <i className="fas fa-circle text-info"></i> Referral
-                    </span>
+
                   </div>
                 </div>
               </div>
