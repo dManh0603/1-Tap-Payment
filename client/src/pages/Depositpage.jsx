@@ -117,7 +117,6 @@ const Depositpage = () => {
   };
 
   useEffect(() => {
-    console.log(process.env.REACT_APP_PAYPAL_CLIENT_ID)
     if (userToken === null) {
       console.log('no user token')
       navigate('/');
@@ -159,7 +158,7 @@ const Depositpage = () => {
               <Box mt={3} display={'flex'} justifyContent={'center'}>
 
                 <PayPalScriptProvider options={{
-                  'client-id': 'AVNKZIlA8FJsWuzK7MPH7WvNZGZfWryFumAIO-gYeVl5oNF0K30kfWWLeKVz7P3qCgJU6FQkjrW_QXXb',
+                  'client-id': process.env.REACT_APP_PAYPAL_CLIENT_ID,
                 }}>
                   {isLoading
                     ? <Spinner
