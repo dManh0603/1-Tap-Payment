@@ -60,6 +60,14 @@ const Sidebar = () => {
           </a>
         </li>
 
+        {/* <!-- Nav Item - Activities --> */}
+        <li className={`nav-item ${location.pathname === '/users' ? 'active' : ''}`}>
+          <a className="nav-link" href="/activities">
+            <i className="fas fa-fw fa-tags"></i>
+            <span style={{ fontSize: '16px' }}>Activities</span>
+          </a>
+        </li>
+
         {/* <!-- Divider --> */}
         <hr className="sidebar-divider d-none d-md-block" />
 

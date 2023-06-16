@@ -13,6 +13,7 @@ import { ChatState } from './contexts/ChatProvider';
 import axios from 'axios'
 import Users from './pages/Users';
 import UserDetails from './pages/UserDetails';
+import Activities from './pages/Activities';
 
 const ENDPOINT = 'http://localhost:4000';
 
@@ -79,7 +80,7 @@ function App() {
           <Route path="/chats" Component={Chats}></Route>
           <Route path="/users" Component={Users}></Route>
           <Route path="/user/:id" Component={UserDetails}></Route>
-
+          <Route path="/activities" Component={Activities}></Route>
         </Routes>
       </div>
     </div>

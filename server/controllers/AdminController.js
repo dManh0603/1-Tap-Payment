@@ -1,7 +1,7 @@
 const User = require('../models/UserModel');
 const Transaction = require('../models/TransactionModel');
 const generateToken = require('../config/jwt');
-const UserActivity =require('../models/UserActivity')
+const UserActivity = require('../models/UserActivity')
 
 class AdminController {
 
@@ -54,19 +54,19 @@ class AdminController {
     try {
       const motorbikeCount = await UserActivity.countDocuments({ 'meta.type': 'motorbike' });
       const bicycleCount = await UserActivity.countDocuments({ 'meta.type': 'bicycle' });
-      
+
       const activityCounts = [
         { type: 'motorbike', count: motorbikeCount },
         { type: 'bicycle', count: bicycleCount },
       ];
-  
+
       res.json(activityCounts);
     } catch (error) {
       console.error('Error retrieving monthly activity:', error);
       res.status(500).json({ error: 'Internal server error' });
     }
   }
-  
+
   index(req, res) {
     if (req.session && req.session.user) {
       return res.redirect('/dashboard');
@@ -104,8 +104,6 @@ class AdminController {
       res.status(statusCode).json({ message });
     }
   }
-
-
 
   getDashboard = async (req, res) => {
     try {
@@ -264,6 +262,17 @@ class AdminController {
       return res.status(500).json({ error: 'Internal server error' });
     }
   }
+
+getUserActivities = async (req, res) => {
+  try {
+    const activities = await UserActivity.find({}).sort({ timestamp: -1 }).lean().exec();
+    res.json(activities);
+  } catch (error) {
+    console.error('Error retrieving user activities:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 
 
 }

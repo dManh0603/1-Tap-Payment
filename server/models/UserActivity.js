@@ -29,6 +29,10 @@ const userActivitySchema = new mongoose.Schema({
       enum: ['motorbike', 'bicycle'],
       required: true,
     },
+    name: {
+      type: String,
+      require: true,
+    }
   },
 });
 
