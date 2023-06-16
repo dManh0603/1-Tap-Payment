@@ -46,7 +46,7 @@ const Login = () => {
       localStorage.setItem('userToken', data.user.token)
 
       toast({
-        title: 'Login successfully',
+        title: 'Welcome back',
         status: 'success',
         duration: 5000,
         isClosable: true,

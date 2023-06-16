@@ -2,8 +2,18 @@
 import React from 'react'
 import NotificationsDropdown from '../NotificationsDropdown'
 import MessagesDropdown from '../MessagesDropdown'
+import { useNavigate } from 'react-router-dom'
+import { UserState } from '../../contexts/UserProvider'
 
 const Topbar = () => {
+  const navigate = useNavigate();
+  const { setUser } = UserState();
+
+  const logoutHandler = () => {
+    localStorage.removeItem('userToken');
+    setUser(null);
+    navigate('/')
+  }
 
   return (
     <>
@@ -83,7 +93,7 @@ const Topbar = () => {
                 Activity Log
               </a>
               <div className="dropdown-divider"></div>
-              <a className="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+              <a className="dropdown-item" onClick={logoutHandler} data-toggle="modal" data-target="#logoutModal">
                 <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                 Logout
               </a>
