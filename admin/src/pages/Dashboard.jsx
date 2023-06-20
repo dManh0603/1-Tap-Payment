@@ -4,7 +4,7 @@ import axios from 'axios'
 import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom'
 
-const DashboardContent = () => {
+const Dashboard = () => {
 
   const storedToken = localStorage.getItem('userToken');
   const [monthlyIncome, setMonthlyIncome] = useState(0);
@@ -174,7 +174,7 @@ const DashboardContent = () => {
               <div className="card shadow mb-4">
                 {/* <!-- Card Header - Dropdown --> */}
                 <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 className="m-0 font-weight-bold text-primary">Revenue Sources</h6>
+                  <h6 className="m-0 font-weight-bold text-primary">Monthly traffic overview</h6>
                   <div className="dropdown no-arrow">
                     <a className="dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown"
                       aria-haspopup="true" aria-expanded="false">
@@ -192,7 +192,7 @@ const DashboardContent = () => {
                 </div>
                 {/* <!-- Card Body --> */}
                 <div className="card-body">
-                  <div className="chart-pie pt-4 pb-2">
+                  <div className="chart-pie pb-2">
                     <canvas id="myPieChart"></canvas>
                   </div>
                   <div className="mt-4 text-center small">
@@ -219,7 +219,7 @@ const DashboardContent = () => {
       <footer className="sticky-footer bg-white">
         <div className="container my-auto">
           <div className="copyright text-center my-auto">
-            <span>Copyright &copy; Your Website 2021</span>
+            <span>Copyright &copy; 1-Tap Payment 2023</span>
           </div>
         </div>
       </footer>
@@ -259,4 +259,4 @@ const DashboardContent = () => {
   )
 }
 
-export default DashboardContent
+export default Dashboard

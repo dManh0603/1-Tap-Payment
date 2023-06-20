@@ -1,7 +1,8 @@
 const User = require('../models/UserModel');
 const Transaction = require('../models/TransactionModel');
 const generateToken = require('../config/jwt');
-const UserActivity = require('../models/UserActivity')
+const UserActivity = require('../models/UserActivity');
+const Config = require('../models/ConfigModel');
 
 class AdminController {
 
@@ -48,23 +49,6 @@ class AdminController {
     const transaction = await Transaction.find();
     const transactionCount = transaction.length;
     return transactionCount;
-  }
-
-  async getMonthlyActivity(req, res) {
-    try {
-      const motorbikeCount = await UserActivity.countDocuments({ 'meta.type': 'motorbike' });
-      const bicycleCount = await UserActivity.countDocuments({ 'meta.type': 'bicycle' });
-
-      const activityCounts = [
-        { type: 'motorbike', count: motorbikeCount },
-        { type: 'bicycle', count: bicycleCount },
-      ];
-
-      res.json(activityCounts);
-    } catch (error) {
-      console.error('Error retrieving monthly activity:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
   }
 
   index(req, res) {
@@ -202,6 +186,7 @@ class AdminController {
       res.status(500).json('Internal Server Error');
     }
   }
+
   getUsers = async (req, res) => {
     try {
       // Find all users with the role "client" and exclude the password field
@@ -249,6 +234,10 @@ class AdminController {
         user.name = body.name;
       }
 
+      if (body.card_uid !== '') {
+        user.card_uid = body.card_uid;
+      }
+
       if (body.card_disabled !== undefined) {
         user.card_disabled = body.card_disabled;
       }
@@ -263,16 +252,97 @@ class AdminController {
     }
   }
 
-getUserActivities = async (req, res) => {
-  try {
-    const activities = await UserActivity.find({}).sort({ timestamp: -1 }).lean().exec();
-    res.json(activities);
-  } catch (error) {
-    console.error('Error retrieving user activities:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-};
+  getUserActivities = async (req, res) => {
+    try {
+      const activities = await UserActivity.find({}).sort({ timestamp: -1 }).lean().exec();
+      res.json(activities);
+    } catch (error) {
+      console.error('Error retrieving user activities:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  };
 
+  async getMonthlyActivity(req, res) {
+    try {
+      const currentMonth = new Date().getMonth() + 1; // Get current month (1-12)
+      const currentYear = new Date().getFullYear(); // Get current year
+
+      const activityCounts = await UserActivity.aggregate([
+        {
+          $addFields: {
+            month: { $month: '$timestamp' }, // Extract month from timestamp field
+            year: { $year: '$timestamp' }, // Extract year from timestamp field
+          },
+        },
+        {
+          $match: {
+            $expr: {
+              $and: [
+                { $eq: ['$month', currentMonth] }, // Match the current month
+                { $eq: ['$year', currentYear] }, // Match the current year
+              ],
+            },
+          },
+        },
+        {
+          $group: {
+            _id: '$meta.type',
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            type: '$_id',
+            count: 1,
+          },
+        },
+      ]).exec();
+
+      res.json(activityCounts);
+    } catch (error) {
+      console.error('Error retrieving monthly activity:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+
+  getConfig = async (req, res) => {
+    try {
+      const config = await Config.findOne({}); // Fetch the configuration document
+      if (!config) {
+        console.error('No config document found');
+        return;
+      }
+
+      res.json({
+        motorbikePrice: config.motorbike_price,
+        bicyclePrice: config.bicycle_price
+      });
+    } catch (error) {
+
+      console.error('Error retrieving config:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+
+  updateConfig = async (req, res) => {
+    try {
+      const { motorbikePrice, bicyclePrice } = req.body;
+
+      const config = {
+        motorbike_price: motorbikePrice,
+        bicycle_price: bicyclePrice,
+      };
+
+      await Config.findOneAndUpdate({}, config);
+      process.env.motorbikePrice = motorbikePrice;
+      process.env.bicyclePrice = bicyclePrice;
+
+      res.json({ message: 'Config updated successfully' });
+    } catch (error) {
+      res.status(500).json({ message: 'Failed to update config' });
+    }
+  };
 
 
 }

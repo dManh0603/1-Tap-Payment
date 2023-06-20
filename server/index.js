@@ -47,13 +47,12 @@ app.engine('hbs', handlebars.engine({
 }));
 
 
-
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 
 
-
-db.connect()
+db.connect();
+db.config();
 
 route(app)
 

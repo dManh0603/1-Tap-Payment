@@ -36,6 +36,14 @@ const Sidebar = () => {
           Resources
         </div>
 
+        {/* <!-- Nav Item - Configuration --> */}
+        <li className={`nav-item ${location.pathname === '/config' ? 'active' : ''}`}>
+          <a className="nav-link" href="/config">
+            <i className="fas fa-fw fa-cog"></i>
+            <span style={{ fontSize: '16px' }}>Configuration</span>
+          </a>
+        </li>
+
         {/* <!-- Nav Item - Transactions --> */}
         <li className={`nav-item ${location.pathname === '/transactions' ? 'active' : ''}`}>
           <a className="nav-link" href="/transactions">
@@ -61,7 +69,7 @@ const Sidebar = () => {
         </li>
 
         {/* <!-- Nav Item - Activities --> */}
-        <li className={`nav-item ${location.pathname === '/users' ? 'active' : ''}`}>
+        <li className={`nav-item ${location.pathname === '/activities' ? 'active' : ''}`}>
           <a className="nav-link" href="/activities">
             <i className="fas fa-fw fa-tags"></i>
             <span style={{ fontSize: '16px' }}>Activities</span>

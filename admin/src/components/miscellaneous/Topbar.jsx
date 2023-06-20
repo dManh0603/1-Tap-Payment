@@ -7,7 +7,7 @@ import { UserState } from '../../contexts/UserProvider'
 
 const Topbar = () => {
   const navigate = useNavigate();
-  const { setUser } = UserState();
+  const { user, setUser } = UserState();
 
   const logoutHandler = () => {
     localStorage.removeItem('userToken');
@@ -75,7 +75,7 @@ const Topbar = () => {
           <li className="nav-item dropdown no-arrow">
             <a className="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
               aria-haspopup="true" aria-expanded="false">
-              <span style={{ fontSize: '16px' }} className="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+              <span style={{ fontSize: '16px' }} className="mr-2 d-none d-lg-inline text-gray-600 small">{user.name}</span>
               <img alt='image404' className="img-profile rounded-circle" src="/img/undraw_profile.svg" />
             </a>
             {/* <!-- Dropdown - User Information --> */}

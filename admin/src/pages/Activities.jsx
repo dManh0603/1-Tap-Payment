@@ -75,7 +75,7 @@ const Activities = () => {
         :
         <div id="content-wrapper" className="d-flex flex-column">
           <div className="container-fluid px-4">
-            <h1 className="h3 mb-0 text-gray-800">Total transactions</h1>
+            <h1 className="h3 mb-0 text-gray-800">Total traffic</h1>
             <div className="card mb-4">
               <div className="card-body">
                 <table id="datatablesSimple" ref={tableRef}>
@@ -97,7 +97,7 @@ const Activities = () => {
                           </a>
                         </td>
                         <td>{a.message}</td>
-                        <td>{a.meta.amount}</td>
+                        <td>{a.meta.amount} $</td>
                         <td>{a.meta.type}</td>
                         <td>{formatDate(a.timestamp)}</td>
                       </tr>

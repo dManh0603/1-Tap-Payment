@@ -15,12 +15,12 @@ const route = (app) => {
   app.use('/api/admin', adminRouter)
   app.use('/api/card', cardRouter)
 
-  // handle 404
-  app.use((req, res, next) => {
-    return res.status(404).render('error', {
-      layout: 'blank'
-    })
-  })
+  // // handle 404
+  // app.use((req, res, next) => {
+  //   return res.status(404).render('error', {
+  //     layout: 'blank'
+  //   })
+  // })
 }
 
 module.exports = route

@@ -41,15 +41,14 @@ class BalanceController {
       if (user.card_disabled === true) {
         throw { statusCode: 403, error: 'Card disabled' };
       }
-
-      let amount;
+      let amount
       if (type === 'motorbike') {
-        amount = 3;
+        amount = process.env.motorbikePrice ?? 3;
         if (currentTime >= 19 || currentTime <= 6) {
           amount += 2;
         }
       } else if (type === 'bicycle') {
-        amount = 2;
+        amount = process.env.bicyclePrice ?? 2;
         if (currentTime >= 19 || currentTime <= 6) {
           amount += 1;
         }

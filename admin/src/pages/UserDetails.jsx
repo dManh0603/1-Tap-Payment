@@ -10,7 +10,8 @@ const UserDetails = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [balance, setBalance] = useState("");
-  const [isCardDisabled, setIsCardDisabled] = useState();
+  const [cardUid, setCardUid] = useState("");
+  const [isCardDisabled, setIsCardDisabled] = useState(null);
   const [isDisabled, setIsDisabled] = useState(true)
   const storedToken = localStorage.getItem('userToken')
   const toast = useToast();
@@ -22,6 +23,10 @@ const UserDetails = () => {
   const handleCheckboxChange = (value) => {
     setIsCardDisabled(value);
   };
+
+  const handleCancelClick = () => {
+    setIsDisabled(true);
+  }
 
   const handleSaveClick = async () => {
     try {
@@ -37,6 +42,7 @@ const UserDetails = () => {
         name: name,
         balance: balance,
         card_disabled: isCardDisabled === 'Disabled' ? true : false,
+        card_uid: cardUid,
       }
 
       const { data } = await axios.put(`/api/admin/user/${id}`, body, config)
@@ -74,11 +80,21 @@ const UserDetails = () => {
       const { data } = await axios.get(`/api/admin/user/${id}`, config);
       if (data) {
         setUserDetails(data);
-        setIsCardDisabled(data.card_disbaled ? 'Disabled' : 'Activate')
       }
     }
     fetchUserDetails();
   }, [])
+
+  useEffect(() => {
+    if (!userDetails) {
+      return;
+    }
+    setBalance(userDetails.balance);
+    setCardUid(userDetails.card_uid);
+    setName(userDetails.name);
+    setEmail(userDetails.email);
+    setIsCardDisabled(userDetails.card_disabled ? 'Disabled' : 'Activate')
+  }, [userDetails])
 
   return (
     <>
@@ -115,10 +131,17 @@ const UserDetails = () => {
                   style={{ opacity: 1 }}
                   isDisabled={isDisabled} />
 
+                <Text mb={0} as={'b'} fontSize={'md'}>Card uid</Text>
+                <Input pt='1' mb={4} fontSize='md' placeholder={userDetails.card_uid}
+                  value={cardUid}
+                  onChange={(e) => setCardUid(e.target.value)}
+                  style={{ opacity: 1 }}
+                  isDisabled={isDisabled} />
+
                 <Text mt={4} as={'b'} fontSize='md'>
                   Card status:
                   {isDisabled
-                    ? (userDetails.card_disbaled
+                    ? (userDetails.card_disabled
                       ? <Badge ml={2} variant='outline' colorScheme='red'>
                         Disabled
                       </Badge>
@@ -135,34 +158,22 @@ const UserDetails = () => {
                   }
                 </Text>
               </Box>
-              <Box>
-                <Heading size='md' textTransform='uppercase'>
-                  Lastest Activity
-                </Heading>
-                <Text pt='1' fontSize='md'>
-                  Check out the overview of your clients.
-                </Text>
-              </Box>
-              <Box>
-                <Heading size='xs' textTransform='uppercase'>
-                  Analysis
-                </Heading>
-                <Text pt='1' fontSize='md'>
-                  See a detailed analysis of all your business clients.
-                </Text>
-              </Box>
             </Stack>
           </CardBody>
           <CardFooter>
             <ButtonGroup spacing='2'>
-              <Button variant='solid' onClick={handleEditClick} colorScheme='blue'>
-                Edit
-              </Button>
               {!isDisabled
-                ? <Button variant='solid' onClick={handleSaveClick} colorScheme='blue'>
-                  Save
-                </Button>
-                : <></>}
+                ? <>
+                  <Button variant='solid' onClick={handleSaveClick} colorScheme='blue'>
+                    Save
+                  </Button>
+                  <Button variant='solid' onClick={handleCancelClick} colorScheme='gray'>
+                    Cancel
+                  </Button>
+                </>
+                : <Button variant='solid' onClick={handleEditClick} colorScheme='blue'>
+                  Edit
+                </Button>}
             </ButtonGroup>
           </CardFooter>
         </Card>

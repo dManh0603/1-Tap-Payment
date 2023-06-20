@@ -14,6 +14,7 @@ import axios from 'axios'
 import Users from './pages/Users';
 import UserDetails from './pages/UserDetails';
 import Activities from './pages/Activities';
+import Configuration from './pages/Configuration';
 
 const ENDPOINT = 'http://localhost:4000';
 
@@ -81,9 +82,11 @@ function App() {
           <Route path="/users" Component={Users}></Route>
           <Route path="/user/:id" Component={UserDetails}></Route>
           <Route path="/activities" Component={Activities}></Route>
+          <Route path="/config" Component={Configuration}></Route>
         </Routes>
       </div>
     </div>
   );
 }
+
 export default App;

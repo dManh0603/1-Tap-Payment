@@ -31,11 +31,15 @@ async function getData() {
 
 async function renderChart() {
   var ctx = document.getElementById("myPieChart");
-  
+
   try {
     const data = await getData();
-    console.log(data);
-    
+
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth() + 1;
+    const totalCheckout = data.counts.reduce((sum, count) => sum += count, 0)
+    const formattedDate = `${currentYear} - ${currentMonth}: ${totalCheckout} checkouts`;
     var myPieChart = new Chart(ctx, {
       type: 'doughnut',
       data: {
@@ -48,6 +52,12 @@ async function renderChart() {
         }],
       },
       options: {
+        responsive: true,
+        title: {
+          display: true,
+          text: formattedDate,
+          fontSize: 18,
+        },
         maintainAspectRatio: false,
         tooltips: {
           backgroundColor: "rgb(255,255,255)",
@@ -58,6 +68,17 @@ async function renderChart() {
           yPadding: 15,
           displayColors: false,
           caretPadding: 10,
+          callbacks: {
+            label: function (tooltipItem, data) {
+              var dataset = data.datasets[tooltipItem.datasetIndex];
+              var total = dataset.data.reduce(function (previousValue, currentValue, currentIndex, array) {
+                return previousValue + currentValue;
+              });
+              var currentValue = dataset.data[tooltipItem.index];
+              var percentage = Math.floor((currentValue / total) * 100 + 0.5);
+              return data.labels[tooltipItem.datasetIndex] + ': ' + currentValue + ' (' + percentage + '%)';
+            }
+          }
         },
         legend: {
           display: false
@@ -65,6 +86,7 @@ async function renderChart() {
         cutoutPercentage: 80,
       },
     });
+    console.log(myPieChart)
   } catch (error) {
     // Handle the error response
     console.error('Error:', error);
