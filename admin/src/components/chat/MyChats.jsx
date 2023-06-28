@@ -8,7 +8,7 @@ import { UserState } from '../../contexts/UserProvider';
 const MyChats = ({ fetchAgain }) => {
   const { user } = UserState();
   const [loggedUser, setLoggedUser] = useState();
-  const { chats, setChats, selectedChat, setSelectedChat } = ChatState();
+  const { chats, setChats, selectedChat, setSelectedChat, notification } = ChatState();
   const storedToken = localStorage.getItem('userToken');
   const toast = useToast();
 
@@ -36,11 +36,10 @@ const MyChats = ({ fetchAgain }) => {
       }
     };
 
-    // const user = JSON.parse(localStorage.getItem('userToken'));
     setLoggedUser(user);
     fetchChats();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetchAgain]);
+  }, [fetchAgain, notification]);
 
   const handleChatClick = (chat) => {
     setSelectedChat(chat);

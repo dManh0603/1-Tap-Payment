@@ -118,7 +118,7 @@ class ChatController {
           __v: latestMessage.__v,
           _id: latestMessage._id,
         };
-      });
+      }).filter(chat => chat !== null);
 
       return res.json(transformedChats);
     } catch (error) {

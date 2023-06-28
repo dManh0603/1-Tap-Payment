@@ -25,8 +25,7 @@ async function config() {
 
     process.env.motorbikePrice = config.motorbike_price; // Set the environment variable
     process.env.bicyclePrice = config.bicycle_price; // Set the environment variable
-    console.log('bicycle_price', process.env.bicyclePrice);
-    console.log('motorbike_price', process.env.motorbikePrice);
+
   } catch (error) {
     console.error('Error retrieving config:', error);
   }

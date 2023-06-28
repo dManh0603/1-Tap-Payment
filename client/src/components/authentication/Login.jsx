@@ -41,7 +41,7 @@ const Login = () => {
         { email, password },
         config
       );
-      
+
       setUser(data.user)
       localStorage.setItem('userToken', data.user.token)
 
@@ -58,7 +58,7 @@ const Login = () => {
     } catch (error) {
       console.log(error);
       toast({
-        title: error.message ?? 'Connection error',
+        title: error.response.data.message ?? 'Connection error',
         status: 'error',
         duration: 3000,
         isClosable: true,

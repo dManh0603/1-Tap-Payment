@@ -45,7 +45,10 @@ function App() {
         console.log(error);
       }
     }
+    if (!storedToken) return;
+
     fetchUnseenChats();
+
   }, [])
 
   useEffect(() => {

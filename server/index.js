@@ -64,12 +64,8 @@ const server = app.listen(PORT, () => {
   console.log('On your network: ' + chalk.blue(`${ip.address()}:${PORT}`))
 })
 
-
 const io = new Server(server, {
   pingTimeout: 60000,
-  cors: {
-    origin: `http://localhost:${process.env.FE_PORT}`
-  }
 })
 
 io.on("connection", (socket) => {
