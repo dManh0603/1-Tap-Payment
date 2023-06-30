@@ -3,9 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js'
 import Banner from '../components/miscellaneous/Banner';
-import Profile from '../components/miscellaneous/Profile';
 import axios from 'axios';
 import { UserState } from '../contexts/UserProvider';
+import ZaloPay from '../components/ZaloPay';
 
 const Depositpage = () => {
 
@@ -155,8 +155,9 @@ const Depositpage = () => {
 
               {/* <Profile user={user} /> */}
 
-              <Box mt={3} display={'flex'} justifyContent={'center'}>
-
+              <Box mt={3} w={'100%'} display={'inline-grid'} justifyContent={'center'}>
+                <ZaloPay amount={amount} />
+                <span>Hoặc thanh toán qua:</span>
                 <PayPalScriptProvider options={{
                   'client-id': process.env.REACT_APP_PAYPAL_CLIENT_ID,
                 }}>

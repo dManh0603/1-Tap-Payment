@@ -6,7 +6,6 @@ const path = require('path')
 const db = require('./config/db')
 const route = require('./routers')
 const chalk = require('chalk');
-const handlebars = require('express-handlebars');
 const ip = require("ip");
 const bodyParser = require('body-parser');
 const session = require('express-session');
@@ -39,17 +38,6 @@ app.use(express.json())
 
 // Use winston logger
 app.use(loggerMiddleware);
-
-// Set HBS as the view engine
-app.engine('hbs', handlebars.engine({
-  extname: '.hbs',
-  helpers: require('./helpers/HbsHelper'),
-}));
-
-
-app.set('view engine', 'hbs');
-app.set('views', path.join(__dirname, 'views'));
-
 
 db.connect();
 db.config();
