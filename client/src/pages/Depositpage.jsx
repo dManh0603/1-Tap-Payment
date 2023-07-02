@@ -4,7 +4,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js'
 import Banner from '../components/miscellaneous/Banner';
 import axios from 'axios';
-import { UserState } from '../contexts/UserProvider';
 import ZaloPay from '../components/ZaloPay';
 
 const Depositpage = () => {
@@ -15,7 +14,6 @@ const Depositpage = () => {
   const { amount } = location.state
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(true);
-  const { user } = UserState();
 
   const handleTransaction = async (captureDetails) => {
     console.log('paypal details captured', captureDetails);
@@ -118,7 +116,6 @@ const Depositpage = () => {
 
   useEffect(() => {
     if (userToken === null) {
-      console.log('no user token')
       navigate('/');
     }
 
@@ -151,7 +148,7 @@ const Depositpage = () => {
             borderWidth={'1px'}
           >
             <Box maxW='32rem'>
-              <Text fontSize={'3xl'} fontFamily={'Work sans'} textAlign={'center'}>You going to deposit to your balance {amount}$</Text>
+              <Text fontSize={'3xl'} fontFamily={'Work sans'} textAlign={'center'}>You going to deposit to your balance {amount} VND</Text>
 
               {/* <Profile user={user} /> */}
 

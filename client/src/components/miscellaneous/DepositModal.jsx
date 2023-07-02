@@ -1,13 +1,10 @@
 import React, { useState } from 'react'
-import { UserState } from '../../contexts/UserProvider';
 import { useNavigate } from 'react-router-dom';
-import { Box, Button, Container, FormControl, FormHelperText, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Text, useDisclosure } from '@chakra-ui/react'
-import { WarningIcon } from '@chakra-ui/icons';
+import { Button, FormControl, FormLabel, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, useDisclosure } from '@chakra-ui/react'
 
 const DepositModal = () => {
   const { isOpen: isDepositOpen, onOpen: onDepositOpen, onClose: onDepositClose } = useDisclosure();
   const [amount, setAmount] = useState(0);
-  // const { user } = UserState();
   const navigate = useNavigate();
 
   const goPay = () => {
@@ -28,7 +25,7 @@ const DepositModal = () => {
           <ModalBody>
 
             <FormControl>
-              <FormLabel>Amount ($)</FormLabel>
+              <FormLabel>Amount (VND)</FormLabel>
               <NumberInput min={1} onChange={e => setAmount(e)} value={amount}>
                 <NumberInputField />
                 <NumberInputStepper>

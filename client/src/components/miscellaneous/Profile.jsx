@@ -4,19 +4,18 @@ const Profile = ({ user }) => {
 
   return (
     <>
-      <Text fontSize={'3xl'} textAlign={'center'}>Your infomation</Text>
-      <Text fontSize={'xl'}>Username</Text>
+      <Text fontSize={'2xl'} textAlign={'center'}>Your infomation</Text>
+      <Text fontSize={'lg'}>Username</Text>
       <Input mb={3} variant='filled' placeholder='Username' value={user.name} isDisabled />
-      <Text fontSize={'xl'}>Email</Text>
+      <Text fontSize={'lg'}>Email</Text>
       <Input mb={3} variant='filled' placeholder='Email' value={user.email} isDisabled />
-      <Text fontSize={'xl'}>Balance</Text>
+      <Text fontSize={'lg'}>Balance</Text>
       <Input mb={3} variant='filled' placeholder='Balance' value={user.balance} isDisabled />
-      <Text fontSize={'xl'}>Status </Text>
+      <Text fontSize={'lg'}>Status </Text>
       {user.card_disabled
         ? <Alert status='error'>
           <AlertIcon />
           <AlertTitle>Your card is currently disabled</AlertTitle>
-          {/* <AlertDescription>Contact admin to reactivate it</AlertDescription> */}
         </Alert>
         : <Alert status='success'>
           <AlertIcon />
