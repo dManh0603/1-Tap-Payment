@@ -3,7 +3,7 @@ import { UserState } from '../contexts/UserProvider'
 import Banner from '../components/miscellaneous/Banner';
 
 import axios from 'axios';
-import TransactionItem from '../components/miscellaneous/TransactionItem';
+import TransactionItem from '../components/profile/TransactionItem';
 import { Box, Button, Card, CardBody, CardHeader, Container, Heading, Stack, StackDivider } from '@chakra-ui/react';
 
 const Transactionpage = () => {

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Box, Container, Tab, TabList, TabPanel, TabPanels, Tabs, Text, Image, useToast } from '@chakra-ui/react'
-import Login from '../components/authentication/Login'
-import Signup from '../components/authentication/Signup'
+import Login from '../components/Login'
+import Signup from '../components/Signup'
 import { useNavigate } from 'react-router-dom'
 import { UserState } from '../contexts/UserProvider'
 

@@ -2,7 +2,7 @@ import { Button, FormControl, FormLabel, Input, InputGroup, InputRightElement, V
 import React, { useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-import { UserState } from '../../contexts/UserProvider'
+import { UserState } from '../contexts/UserProvider'
 
 const Login = () => {
 
