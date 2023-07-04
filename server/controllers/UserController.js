@@ -140,6 +140,27 @@ class UserController {
     }
   }
 
+  async searchUser(req, res) {
+    try {
+      const keyword = req.params.keyword;
+
+      // Use a regular expression to perform a case-insensitive search for email or username
+      const regex = new RegExp(keyword, 'i');
+      const users = await User.find({
+        $or: [
+          { email: { $regex: regex } },
+          { name: { $regex: regex } }
+        ]
+      }).select('name email _id role').lean();
+
+      res.json(users);
+    } catch (error) {
+      // Handle any errors that occur during the search
+      res.status(500).json({ error: 'An error occurred while searching for users.' });
+    }
+  }
+
+
 }
 
 module.exports = new UserController();

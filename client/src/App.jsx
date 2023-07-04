@@ -10,7 +10,7 @@ import { ChatState } from './contexts/ChatProvider';
 import io from 'socket.io-client'
 import axios from 'axios';
 
-const ENDPOINT = 'http://localhost:3000';
+const ENDPOINT = process.env.SERVER_ENDPOINT;
 let socket, selectedChatCompare;
 socket = io(ENDPOINT);
 
@@ -21,8 +21,8 @@ function App() {
   const { notification, setNotification } = ChatState();
   const [fetchAgain, setFetchAgain] = useState(false);
   const storedToken = localStorage.getItem('userToken');
+
   useEffect(() => {
-    console.log(user)
     if (user) {
       console.log('app setup');
       socket.emit('setup', user);

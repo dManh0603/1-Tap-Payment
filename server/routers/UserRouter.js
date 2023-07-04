@@ -4,7 +4,8 @@ const authenticate = require('../middlewares/Authentication')
 
 const router = express.Router()
 
-router.get('/',authenticate, userController.findUser)
+router.get('/search/:keyword', authenticate, userController.searchUser)
+router.get('/', authenticate, userController.findUser)
 
 router.post('/login', userController.login)
 router.post('/signup', userController.signup)

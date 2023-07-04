@@ -83,6 +83,33 @@ class BalanceController {
     }
   }
 
+  async transfer(req, res) {
+
+    try {
+      const { password, amount, receiverId } = req.body
+      const user = await User.findById(req.user._id);
+      const passwordMatched = await user.matchPassword(password)
+
+      if (!passwordMatched) {
+        throw { statusCode: 401, message: "You have entered wrong password!" };
+      }
+      if (amount <= 0) {
+        throw { statusCode: 400, message: 'Amount must greater than 0' };
+      }
+
+      const receiver = await User.findById(receiverId);
+      receiver.balance += amount;
+      user.balance -= amount;
+      await user.save();
+      await receiver.save();
+      delete user.password;
+      user.toObject();
+      res.json({ message: "Transfer successfully", user })
+
+    } catch (error) {
+      res.status(error.statusCode || 500).json({ message: error.message || 'Internal server error' });
+    }
+  }
 }
 
 module.exports = new BalanceController();
