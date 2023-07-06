@@ -90,19 +90,35 @@ class BalanceController {
       const user = await User.findById(req.user._id);
       const passwordMatched = await user.matchPassword(password)
 
+      if (!user) {
+        throw { statusCode: 400, message: 'Unrecognized user id' }
+      }
       if (!passwordMatched) {
-        throw { statusCode: 401, message: "You have entered wrong password!" };
+        throw { statusCode: 401, message: 'You have entered wrong password!' };
       }
       if (amount <= 0) {
         throw { statusCode: 400, message: 'Amount must greater than 0' };
       }
 
+      if (user.balance < amount) {
+        throw { statusCode: 401, message: 'Insufficent balance' };
+      }
+
       const receiver = await User.findById(receiverId);
+      if (!receiver) {
+        throw { statusCode: 400, message: "unrecognized receiver id" }
+      }
+      req.logger.info
       receiver.balance += amount;
       user.balance -= amount;
       await user.save();
       await receiver.save();
       delete user.password;
+      req.logger.info(`${user.name} transfer money to ${receiver.name}`, {
+        sender_id: user._id.toString(),
+        receiver_id: receiver._id.toString(),
+        amount: amount
+      })
       user.toObject();
       res.json({ message: "Transfer successfully", user })
 

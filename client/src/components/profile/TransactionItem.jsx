@@ -21,13 +21,15 @@ const TransactionItem = (props) => {
 
   return (
     <Box>
-      <Heading size='xs' textTransform='uppercase'>
+      <Heading size='sm' textTransform='uppercase'>
         You deposited {transaction.amount} $
       </Heading>
       <Text pt='2' fontSize='sm'>
-        Pay by: {transaction.PP_info.payer_email_address}
+        Method: {transaction.method}
         <br />
-        Payment id: {transaction.PP_info.payment_id}
+        Pay by: {transaction.info.payer_email_address}
+        <br />
+        Payment id: {transaction.info.payment_id}
         <br />
         Transactions id: {transaction._id}
         <br />

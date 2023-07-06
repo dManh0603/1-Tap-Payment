@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 // Define the Transaction schema
 const TransactionSchema = mongoose.Schema(
   {
-    PP_info: {
+    method: { type: String, required: true },
+    info: {
       payment_id: { type: String, required: true },
       status: { type: String, required: true },
       create_time: { type: Date, required: true },

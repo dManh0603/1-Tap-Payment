@@ -3,14 +3,16 @@ class TransactionController {
 
   async create(req, res) {
     try {
-      const { payment_id, status, amount, create_time, update_time, email_address } = req.body;
+      const { payment_id, status, amount, create_time, update_time, email_address, method, payer_id } = req.body;
       const { _id: user_id } = req.user;
 
       const transaction = await Transaction.create({
-        PP_info: {
+        method,
+        info: {
           payment_id,
           status,
           create_time,
+          payer_id,
           update_time,
           payer_email_address: email_address
         },
@@ -70,7 +72,7 @@ class TransactionController {
       const transactions = await Transaction.find({ user_id: userId }).sort({ createdAt: -1 }).exec();
       const totalAmount = transactions.reduce((total, transaction) => total + transaction.amount, 0);
       res.json({ transactions, totalAmount });
-    
+
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Internal Server Error" });

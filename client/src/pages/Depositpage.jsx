@@ -24,6 +24,7 @@ const Depositpage = () => {
         amount: captureDetails.purchase_units[0].payments.captures[0].amount.value,
         create_time: captureDetails.purchase_units[0].payments.captures[0].create_time,
         update_time: captureDetails.purchase_units[0].payments.captures[0].update_time,
+        method: 'PAYPAL',
         payer_id: captureDetails.payer.payer_id,
         email_address: captureDetails.payer.email_address
       };

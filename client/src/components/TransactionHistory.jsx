@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { UserState } from '../contexts/UserProvider'
-import Banner from '../components/miscellaneous/Banner';
 
 import axios from 'axios';
 import TransactionItem from '../components/profile/TransactionItem';
@@ -10,7 +9,6 @@ const TransactionHistory = () => {
   const userToken = localStorage.getItem('userToken');
 
   const [transactions, setTransactions] = useState([]);
-  const { user } = UserState();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
 
