@@ -29,10 +29,6 @@ function DrawerButton() {
               Your profile <ArrowForwardIcon />
             </Link>
             <br />
-            <Link mb={3} href='/me/transactions'>
-              Your transactions <ArrowForwardIcon />
-            </Link>
-            <br />
             <Link mb={3} href='/me/chat'>
               Contact help<ArrowForwardIcon />
             </Link>
