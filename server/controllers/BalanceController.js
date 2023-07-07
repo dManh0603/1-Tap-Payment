@@ -108,17 +108,25 @@ class BalanceController {
       if (!receiver) {
         throw { statusCode: 400, message: "unrecognized receiver id" }
       }
-      req.logger.info
+
       receiver.balance += amount;
       user.balance -= amount;
-      await user.save();
+
       await receiver.save();
-      delete user.password;
-      req.logger.info(`${user.name} transfer money to ${receiver.name}`, {
-        sender_id: user._id.toString(),
-        receiver_id: receiver._id.toString(),
-        amount: amount
+      await user.save();
+
+      await Transaction.create({
+        method: 'CLIENT',
+        type: 'TRANSFER',
+        amount: parseFloat(amount),
+        created_by: user._id.toString(),
+        receiver: {
+          id: receiver._id.toString(),
+          name: receiver.name,
+          email: receiver.email,
+        }
       })
+      delete user.password;
       user.toObject();
       res.json({ message: "Transfer successfully", user })
 

@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { UserState } from '../contexts/UserProvider'
-
 import axios from 'axios';
 import TransactionItem from '../components/profile/TransactionItem';
-import { Box, Button, Card, CardBody, CardHeader, Container, Heading, Stack, StackDivider } from '@chakra-ui/react';
+import { Button, Card, CardBody, Stack, StackDivider } from '@chakra-ui/react';
 
 const TransactionHistory = () => {
   const userToken = localStorage.getItem('userToken');
@@ -11,18 +9,6 @@ const TransactionHistory = () => {
   const [transactions, setTransactions] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
-
-  useEffect(() => {
-    const fetchUserTransaction = async () => {
-      const response = await axios.get('/api/transaction/', {
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-        },
-      });
-      setTransactions(response.data.transactions);
-    };
-    fetchUserTransaction();
-  }, []);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -38,21 +24,27 @@ const TransactionHistory = () => {
     pageNumbers.push(i);
   }
 
+  useEffect(() => {
+    const fetchUserTransaction = async () => {
+      const depositTransaction = await axios.get('/api/transaction/', {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      });
+
+      setTransactions(depositTransaction.data.transactions);
+    };
+    fetchUserTransaction();
+  }, []);
+
   return (
     <>
       <Card>
-        {/* <CardHeader>
-          <Heading size='md'>Your transactions ({transactionLength})</Heading>
-          <Heading size='md'>Total: {totalDeposit} $</Heading>
-        </CardHeader> */}
-
         <CardBody>
           <Stack divider={<StackDivider />} spacing='4'>
-
             {currentItems.map((transaction) =>
               (<TransactionItem key={transaction._id} transaction={transaction} />)
             )}
-
           </Stack>
           <div>
             {pageNumbers.map((pageNumber) => (

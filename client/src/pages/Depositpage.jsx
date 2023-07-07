@@ -5,6 +5,7 @@ import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js'
 import Banner from '../components/miscellaneous/Banner';
 import axios from 'axios';
 import ZaloPay from '../components/ZaloPay';
+import { UserState } from '../contexts/UserProvider';
 
 const Depositpage = () => {
 
@@ -12,6 +13,7 @@ const Depositpage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { amount } = location.state
+  const { user } = UserState();
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -26,7 +28,9 @@ const Depositpage = () => {
         update_time: captureDetails.purchase_units[0].payments.captures[0].update_time,
         method: 'PAYPAL',
         payer_id: captureDetails.payer.payer_id,
-        email_address: captureDetails.payer.email_address
+        email_address: captureDetails.payer.email_address,
+        receiver_id: user._id,
+        type: 'DEPOSIT',
       };
 
       const createApiResponse = await axios.post('/api/transaction/create', data, {
@@ -36,7 +40,7 @@ const Depositpage = () => {
         }
       });
 
-      if (createApiResponse.status === 201) {
+      if (createApiResponse.status === 200) {
         const transaction = createApiResponse.data;
         console.log('/api/transaction/create data', transaction);
 

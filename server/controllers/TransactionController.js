@@ -1,13 +1,19 @@
 const Transaction = require('../models/TransactionModel');
+const User = require('../models/UserModel');
 class TransactionController {
 
   async create(req, res) {
     try {
-      const { payment_id, status, amount, create_time, update_time, email_address, method, payer_id } = req.body;
-      const { _id: user_id } = req.user;
+      const { payment_id, status, amount, create_time, update_time, email_address, method, payer_id, receiver_id, type } = req.body;
+
+      const receiver = await User.findById(receiver_id).select('name email _id').exec();
+      if (!receiver) {
+        throw { statusCode: 404, message: 'Unrecognized receiver id' }
+      }
 
       const transaction = await Transaction.create({
         method,
+        type,
         info: {
           payment_id,
           status,
@@ -17,13 +23,18 @@ class TransactionController {
           payer_email_address: email_address
         },
         amount: parseFloat(amount),
-        user_id
+        created_by: req.user._id,
+        receiver: {
+          id: receiver_id,
+          name: receiver.name,
+          email: receiver.email
+        }
       });
 
-      res.status(201).json(transaction);
+      res.json(transaction);
     } catch (error) {
       console.error('Error creating transaction:', error);
-      res.status(500).json({ error: 'Failed to create transaction' });
+      res.status(error.statusCode || 500).json({ error: error.message || 'Failed to create transaction' });
     }
   }
 
@@ -69,7 +80,7 @@ class TransactionController {
   async getUserTransactions(req, res) {
     try {
       const userId = req.user._id;
-      const transactions = await Transaction.find({ user_id: userId }).sort({ createdAt: -1 }).exec();
+      const transactions = await Transaction.find({ created_by: userId }).sort({ createdAt: -1 }).exec();
       const totalAmount = transactions.reduce((total, transaction) => total + transaction.amount, 0);
       res.json({ transactions, totalAmount });
 

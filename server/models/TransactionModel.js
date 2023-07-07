@@ -4,16 +4,22 @@ const mongoose = require('mongoose');
 const TransactionSchema = mongoose.Schema(
   {
     method: { type: String, required: true },
+    type: { type: String, required: true },
     info: {
-      payment_id: { type: String, required: true },
-      status: { type: String, required: true },
-      create_time: { type: Date, required: true },
-      update_time: { type: Date, required: true },
+      payment_id: { type: String },
+      status: { type: String },
+      create_time: { type: Date },
+      update_time: { type: Date },
       payer_id: { type: String },
       payer_email_address: { type: String },
     },
     amount: { type: Number, required: true },
-    user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    created_by: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    receiver: {
+      id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+      name: { type: String, required: true },
+      email: { type: String, required: true },
+    }
   },
   {
     timestamps: true, // Add timestamps for createdAt and updatedAt fields

@@ -21,20 +21,37 @@ const TransactionItem = (props) => {
 
   return (
     <Box>
-      <Heading size='sm' textTransform='uppercase'>
-        You deposited {transaction.amount} $
-      </Heading>
-      <Text pt='2' fontSize='sm'>
-        Method: {transaction.method}
-        <br />
-        Pay by: {transaction.info.payer_email_address}
-        <br />
-        Payment id: {transaction.info.payment_id}
-        <br />
-        Transactions id: {transaction._id}
-        <br />
-        {convertToGMT7(transaction.createdAt)}
-      </Text>
+      {transaction && transaction.type === 'TRANSFER'
+        ? <>
+          <Heading size='sm' textTransform='uppercase'>
+            You transfer {transaction.amount} VND to {transaction.receiver.name}
+          </Heading>
+          <Text fontSize='sm'>
+            <br />
+            Transactions id: {transaction._id}
+            <br />
+            Method: {transaction.method}
+            <br />
+            {convertToGMT7(transaction.createdAt)}
+          </Text>
+        </>
+        : <>
+          <Heading size='sm' textTransform='uppercase'>
+            You deposited {transaction.amount} VND
+          </Heading>
+          <Text fontSize='sm'>
+            <br />
+            Transactions id: {transaction._id}
+            Method: {transaction.method}
+            <br />
+            Pay by: {transaction.info.payer_email_address}
+            <br />
+            Payment id: {transaction.info.payment_id}
+            <br />
+            {convertToGMT7(transaction.createdAt)}
+          </Text>
+        </>}
+
     </Box>
   )
 }
