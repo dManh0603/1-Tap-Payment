@@ -68,7 +68,7 @@ const ChatButton = () => {
         />
         <ChatIcon />
       </Button>
-      <Drawer placement={'left'} onClose={onClose} isOpen={isOpen}>
+      <Drawer placement={'left'} onClose={onClose} isOpen={isOpen} size={'md'}>
         <DrawerOverlay />
         <DrawerContent>
           <DrawerHeader borderBottomWidth='1px'>Contact admin</DrawerHeader>

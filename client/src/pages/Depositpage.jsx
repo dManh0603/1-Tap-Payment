@@ -17,7 +17,7 @@ const Depositpage = () => {
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(true);
 
-  const handleTransaction = async (captureDetails) => {
+  const handlePaypalTransaction = async (captureDetails) => {
     console.log('paypal details captured', captureDetails);
     try {
       const data = {
@@ -33,7 +33,7 @@ const Depositpage = () => {
         type: 'DEPOSIT',
       };
 
-      const createApiResponse = await axios.post('/api/transaction/create', data, {
+      const createApiResponse = await axios.post('/api/transaction/paypal/create', data, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${userToken}`
@@ -43,7 +43,6 @@ const Depositpage = () => {
       if (createApiResponse.status === 200) {
         const transaction = createApiResponse.data;
         console.log('/api/transaction/create data', transaction);
-
 
         const payload = {
           amount: transaction.amount,
@@ -105,7 +104,7 @@ const Depositpage = () => {
 
   const handleApprove = async (data, actions) => {
     return actions.order.capture()
-      .then(handleTransaction);
+      .then(handlePaypalTransaction);
   };
 
   const handleError = error => {
@@ -131,57 +130,52 @@ const Depositpage = () => {
 
   return (
     <>
-      {isLoading ? (
-        <Container maxW={'xl'} centerContent mt={'16'}>
-          <Spinner
-            thickness='4px'
-            speed='0.65s'
-            emptyColor='gray.200'
-            color='blue.500'
-            size='xl'
-          />
-        </Container>
-      )
-        :
-        <Container maxW='xl' centerContent>
-          <Banner />
-          <Box
-            bg={'white'}
-            w={'100%'}
-            p={'3'}
-            borderRadius={'lg'}
-            borderWidth={'1px'}
-          >
-            <Box maxW='32rem'>
-              <Text fontSize={'3xl'} fontFamily={'Work sans'} textAlign={'center'}>You going to deposit to your balance {amount} VND</Text>
+      <Container maxW='xl' centerContent>
+        <Banner />
+        <Box
+          bg={'white'}
+          w={'100%'}
+          p={'3'}
+          borderRadius={'lg'}
+          borderWidth={'1px'}
+        >
+          <Box maxW='32rem'>
+            <Text fontSize={'3xl'} fontFamily={'Work sans'} textAlign={'center'}>Bạn đang nạp {amount} VND vào tài khoản</Text>
 
-              {/* <Profile user={user} /> */}
+            {/* <Profile user={user} /> */}
 
-              <Box mt={3} w={'100%'} display={'inline-grid'} justifyContent={'center'}>
-                <ZaloPay amount={amount} />
-                <span>Hoặc thanh toán qua:</span>
-                <PayPalScriptProvider options={{
-                  'client-id': process.env.REACT_APP_PAYPAL_CLIENT_ID,
-                }}>
-                  {isLoading
-                    ? <Spinner
-                      thickness='4px'
-                      speed='0.65s'
-                      emptyColor='gray.200'
-                      color='blue.500'
-                      size='xl'
-                    />
-                    : <PayPalButtons
+            <Box mt={3} w={'100%'} display={'inline-grid'} justifyContent={'center'}>
+              {!isLoading ?
+                <>
+                  <ZaloPay amount={amount} callback={setIsLoading} />
+                  <span>Hoặc thanh toán qua:</span>
+                  <PayPalScriptProvider
+                    options={{
+                      'client-id': process.env.REACT_APP_PAYPAL_CLIENT_ID,
+                    }}
+                  >
+                    <PayPalButtons
                       createOrder={handleCreateOrder}
                       onApprove={handleApprove}
                       onError={handleError}
-                    />}
-                </PayPalScriptProvider>
-              </Box>
+                    />
+                  </PayPalScriptProvider>
+                </>
+                :
+                <Spinner
+                  thickness='4px'
+                  speed='0.65s'
+                  emptyColor='gray.200'
+                  color='blue.500'
+                  size='xl'
+                />
+              }
             </Box>
+
+
           </Box>
-        </Container>
-      }
+        </Box>
+      </Container>
     </>
   )
 }

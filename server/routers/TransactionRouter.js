@@ -5,7 +5,8 @@ const adminAuthenticate = require('../middlewares/AdminAuthentication')
 
 const router = express.Router()
 
-router.post('/create', authenticate, transactionController.create)
+router.post('/paypal/create', authenticate, transactionController.paypalCreate)
+router.post('/zalopay/create', authenticate, transactionController.zalopayCreate)
 router.get('/fetchMonthly', adminAuthenticate, transactionController.fetchMonthly)
 router.get('/', authenticate, transactionController.getUserTransactions)
 

@@ -1,19 +1,20 @@
-import { Box, useToast } from '@chakra-ui/react'
+import { Box, Spinner, useToast } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import Helmet from 'react-helmet'
 import { Button } from '@chakra-ui/react'
 import axios from 'axios'
 
-const ZaloPay = ({ amount }) => {
+const ZaloPay = ({ amount, callback }) => {
 
   const userToken = localStorage.getItem('userToken');
-  const [paymentMethod, setPaymentMethod] = useState('ATM');
+  const [paymentMethod, setPaymentMethod] = useState('zalopayapp');
   const toast = useToast();
   const handleRadioChange = (event) => {
     setPaymentMethod(event.target.value);
   };
 
   const handleClick = async () => {
+    callback(true)
     try {
       const config = {
         headers: {
@@ -25,7 +26,7 @@ const ZaloPay = ({ amount }) => {
         paymentMethod
       }
       console.log(body)
-      const response = await axios.post('/api/zalopay/create', body, config)
+      const response = await axios.post('/api/transaction/zalopay/create', body, config)
       console.log(response)
       if (response.status === 200) {
         window.open(response.data.order_url, '_blank');
@@ -55,13 +56,13 @@ const ZaloPay = ({ amount }) => {
       <Box >
         <p>Vui lòng chọn hình thức thanh toán:</p>
         <div className="mb-1">
-          <label><input value={'zalopayapp'} onChange={handleRadioChange} type="radio" name="iCheck" className="iradio_flat-blue" /> Ví <img src="/images/logo-zalopay.svg" alt="" style={{ display: "inline" }} /></label>
+          <label><input value={'zalopayapp'} onChange={handleRadioChange} type="radio" name="iCheck" className="iradio_flat-blue" defaultChecked /> Ví <img src="/images/logo-zalopay.svg" alt="" style={{ display: "inline" }} /></label>
         </div>
         <div className="mb-1">
           <label><input value={'CC'} onChange={handleRadioChange} type="radio" name="iCheck" className="iradio_flat-blue" /> Visa, Mastercard, JCB <span className="txtGray">(qua cổng ZaloPay)</span></label>
         </div>
         <div className="mb-1">
-          <label><input value={'ATM'} onChange={handleRadioChange} type="radio" name="iCheck" className="iradio_flat-blue" defaultChecked /> Thẻ ATM <span className="txtGray">(qua cổng ZaloPay)</span></label>
+          <label><input value={'ATM'} onChange={handleRadioChange} type="radio" name="iCheck" className="iradio_flat-blue" /> Thẻ ATM <span className="txtGray">(qua cổng ZaloPay)</span></label>
         </div>
         <Button colorScheme='blue' mb={3} onClick={handleClick}>Tiếp tục với ZaloPay</Button>
       </Box>

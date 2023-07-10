@@ -42,6 +42,7 @@ const TransactionItem = (props) => {
           <Text fontSize='sm'>
             <br />
             Transactions id: {transaction._id}
+            <br />
             Method: {transaction.method}
             <br />
             Pay by: {transaction.info.payer_email_address}

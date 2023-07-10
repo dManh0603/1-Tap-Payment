@@ -5,9 +5,9 @@ const TransactionSchema = mongoose.Schema(
   {
     method: { type: String, required: true },
     type: { type: String, required: true },
+    status: { type: String },
     info: {
       payment_id: { type: String },
-      status: { type: String },
       create_time: { type: Date },
       update_time: { type: Date },
       payer_id: { type: String },
