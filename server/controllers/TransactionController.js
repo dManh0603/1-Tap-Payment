@@ -166,9 +166,11 @@ class TransactionController {
         mac,
       };
 
-      const { data } = await axios.post(process.env.ZALOPAY_SANDBOX_CREATE_ENDPOINT, body);
+      transaction.app_trans_id = app_trans_id;
 
-      res.json(data);
+      const { data } = await axios.post(process.env.ZALOPAY_SANDBOX_CREATE_ENDPOINT, body);
+      res.json({ ...data, app_trans_id });
+
     } catch (error) {
       if (error.response && error.response.data) {
         console.error('ZaloPay API Error:', error.response.data);
@@ -180,8 +182,60 @@ class TransactionController {
 
       if (transaction) {
         transaction.status = 'Canceled';
-        await transaction.save();
       }
+    } finally {
+      await transaction.save();
+    }
+  }
+
+  // [POST] /api/transaction/zalopay/query
+  async zalopayQuery(req, res) {
+    function delay(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    try {
+      const app_id = parseInt(process.env.ZALOPAY_APP_ID);
+      const app_trans_id = req.body.app_trans_id
+      const key1 = process.env.ZALOPAY_APP_KEY;
+      const hmac_input = app_id + "|" + app_trans_id + "|" + key1;
+      const hmac = CryptoJS.HmacSHA256(hmac_input, key1);
+      const mac = hmac.toString(CryptoJS.enc.Hex);
+
+      const body = {
+        app_id,
+        app_trans_id,
+        mac
+      }
+      let trialCount = 0;
+      let data;
+      do {
+        console.log('Trial number:', trialCount + 1);
+        await delay(30000);
+
+        const response = await axios.post(process.env.ZALOPAY_SANDBOX_QUERY_ENDPOINT, body);
+        data = response.data;
+        console.log(data)
+        trialCount++;
+      } while (data.return_code === 3 && trialCount < 15);
+
+      const transaction = await Transaction.findOne({ app_trans_id });
+
+      if (data.return_code === 2) {
+        transaction.status = 'CANCELED';
+      }
+      if (data.return_code === 1) {
+        transaction.status = 'SUCCEED';
+        await User.findByIdAndUpdate(
+          req.user._id,
+          { $inc: { balance: data.amount } },
+          { new: true }
+        );
+      }
+      await transaction.save();
+      res.json(transaction.status)
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: 'Internal server error' })
     }
   }
 }

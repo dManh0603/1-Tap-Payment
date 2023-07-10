@@ -3,12 +3,14 @@ import React, { useState } from 'react'
 import Helmet from 'react-helmet'
 import { Button } from '@chakra-ui/react'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 const ZaloPay = ({ amount, callback }) => {
 
   const userToken = localStorage.getItem('userToken');
   const [paymentMethod, setPaymentMethod] = useState('zalopayapp');
   const toast = useToast();
+  const navigate = useNavigate();
   const handleRadioChange = (event) => {
     setPaymentMethod(event.target.value);
   };
@@ -26,10 +28,37 @@ const ZaloPay = ({ amount, callback }) => {
         paymentMethod
       }
       console.log(body)
-      const response = await axios.post('/api/transaction/zalopay/create', body, config)
-      console.log(response)
-      if (response.status === 200) {
-        window.open(response.data.order_url, '_blank');
+      const transaction = await axios.post('/api/transaction/zalopay/create', body, config)
+
+      if (transaction.status === 200) {
+        window.open(transaction.data.order_url, '_blank');
+
+        const transactionData = {
+          app_trans_id: transaction.data.app_trans_id
+        }
+
+        const { data } = await axios.post('/api/transaction/zalopay/query', transactionData, config);
+
+        if (data === 'SUCCEED') {
+          toast({
+            title: 'Successfully deposited',
+            status: 'success',
+            isClosable: true,
+            duration: 3000,
+            position: 'top-right',
+          })
+          navigate('/me')
+        }
+        else{
+          toast({
+            title: 'Your deposit has been canceled. Please try again.',
+            status: 'error',
+            isClosable: true,
+            duration: 3000,
+            position: 'top-right',
+          })
+          navigate('/me')
+        }
       }
       // Open a new tab with the order URL
     } catch (error) {
@@ -42,11 +71,10 @@ const ZaloPay = ({ amount, callback }) => {
         position: 'top-right',
       });
     } finally {
+      callback(false)
       console.log("end of request")
     }
-
   }
-
   return (
     <>
       <Helmet>

@@ -5,6 +5,7 @@ const TransactionSchema = mongoose.Schema(
   {
     method: { type: String, required: true },
     type: { type: String, required: true },
+    app_trans_id: { type: String },
     status: { type: String },
     info: {
       payment_id: { type: String },
