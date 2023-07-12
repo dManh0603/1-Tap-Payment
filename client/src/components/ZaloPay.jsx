@@ -1,4 +1,4 @@
-import { Box, Spinner, useToast } from '@chakra-ui/react'
+import { Box,  useToast } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import Helmet from 'react-helmet'
 import { Button } from '@chakra-ui/react'

@@ -206,17 +206,15 @@ class TransactionController {
         app_trans_id,
         mac
       }
-      let trialCount = 0;
       let data;
       do {
-        console.log('Trial number:', trialCount + 1);
+        console.log('Trial:');
         await delay(30000);
 
         const response = await axios.post(process.env.ZALOPAY_SANDBOX_QUERY_ENDPOINT, body);
         data = response.data;
         console.log(data)
-        trialCount++;
-      } while (data.return_code === 3 && trialCount < 15);
+      } while (data.return_code === 3);
 
       const transaction = await Transaction.findOne({ app_trans_id });
 

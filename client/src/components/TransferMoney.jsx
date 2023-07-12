@@ -5,9 +5,9 @@ import axios from 'axios'
 import UserListItem from './profile/UserListItem';
 import ScrollableFeed from 'react-scrollable-feed';
 import { UserState } from '../contexts/UserProvider'
+import { useNavigate } from 'react-router-dom';
 
 const TransferMoney = () => {
-  const { setUser } = UserState();
   const [searchValue, setSearchValue] = useState('');
   const [amount, setAmount] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -20,6 +20,8 @@ const TransferMoney = () => {
   const [transferError, setTransferError] = useState();
   const [receiver, setReceiver] = useState(null);
   const toast = useToast();
+  const { navigate } = UserState();
+
   const handleClick = () => setShow(!show)
 
   const handleClose = () => {
@@ -53,8 +55,7 @@ const TransferMoney = () => {
         duration: 3000,
         position: 'top-right',
       })
-      setUser(data.user);
-      // window.location.reload();
+      window.location.reload()
     } catch (error) {
       console.log(error);
       setTransferError(error.response.data.message);

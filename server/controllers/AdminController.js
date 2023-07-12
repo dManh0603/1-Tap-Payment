@@ -1,7 +1,7 @@
 const User = require('../models/UserModel');
 const Transaction = require('../models/TransactionModel');
 const generateToken = require('../config/jwt');
-const UserActivity = require('../models/UserActivity');
+const UserActivity = require('../models/UserActivityModel');
 const Config = require('../models/ConfigModel');
 
 class AdminController {

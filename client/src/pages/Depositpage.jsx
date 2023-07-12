@@ -1,4 +1,4 @@
-import { Box, Container, Spinner, Text, useToast } from '@chakra-ui/react';
+import { Box, Button, Container, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spinner, Text, useDisclosure, useToast } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js'
@@ -6,7 +6,8 @@ import Banner from '../components/miscellaneous/Banner';
 import axios from 'axios';
 import ZaloPay from '../components/ZaloPay';
 import { UserState } from '../contexts/UserProvider';
-
+import { formatAmount } from '../helpers/Utils';
+import { CloseIcon } from '@chakra-ui/icons';
 const Depositpage = () => {
 
   const userToken = localStorage.getItem('userToken');
@@ -16,6 +17,7 @@ const Depositpage = () => {
   const { user } = UserState();
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(true);
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const handlePaypalTransaction = async (captureDetails) => {
     console.log('paypal details captured', captureDetails);
@@ -118,6 +120,10 @@ const Depositpage = () => {
     console.log(error);
   };
 
+  const onCancelClick = () => {
+    navigate('/me')
+  }
+
   useEffect(() => {
     if (userToken === null) {
       navigate('/');
@@ -130,50 +136,66 @@ const Depositpage = () => {
 
   return (
     <>
-      <Container maxW='xl' centerContent>
+      <Container maxW='4xl' centerContent>
         <Banner />
         <Box
           bg={'white'}
           w={'100%'}
-          p={'3'}
           borderRadius={'lg'}
           borderWidth={'1px'}
         >
-          <Box maxW='32rem'>
-            <Text fontSize={'3xl'} fontFamily={'Work sans'} textAlign={'center'}>Bạn đang nạp {amount} VND vào tài khoản</Text>
+          <Box>
+            <Button ml={3} colorScheme='blue' onClick={onOpen}>
+              <CloseIcon />
+            </Button>
+            <Modal isOpen={isOpen} onClose={onClose}>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader>You want to cancel ?</ModalHeader>
+                <ModalCloseButton />
 
-            {/* <Profile user={user} /> */}
-
-            <Box mt={3} w={'100%'} display={'inline-grid'} justifyContent={'center'}>
-              {!isLoading ?
-                <>
-                  <ZaloPay amount={amount} callback={setIsLoading} />
-                  <span>Hoặc thanh toán qua:</span>
-                  <PayPalScriptProvider
-                    options={{
-                      'client-id': process.env.REACT_APP_PAYPAL_CLIENT_ID,
-                    }}
-                  >
-                    <PayPalButtons
-                      createOrder={handleCreateOrder}
-                      onApprove={handleApprove}
-                      onError={handleError}
-                    />
-                  </PayPalScriptProvider>
-                </>
-                :
-                <Spinner
-                  thickness='4px'
-                  speed='0.65s'
-                  emptyColor='gray.200'
-                  color='blue.500'
-                  size='xl'
-                />
-              }
-            </Box>
-
-
+                <ModalFooter>
+                  <Button colorScheme='red' mr={3} onClick={onCancelClick}>
+                    Cancel
+                  </Button>
+                  <Button variant='ghost' onClick={onClose}>Continue</Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
+            <Text fontSize={'3xl'} fontFamily={'Work sans'} textAlign={'center'}>Bạn đang nạp {formatAmount(amount)} VND vào tài khoản</Text>
           </Box>
+
+          {/* <Profile user={user} /> */}
+
+          <Box mt={3} w={'100%'} display={'inline-grid'} justifyContent={'center'}>
+            {!isLoading ?
+              <>
+                <ZaloPay amount={amount} callback={setIsLoading} />
+                <span>Hoặc thanh toán qua:</span>
+                <PayPalScriptProvider
+                  options={{
+                    'client-id': process.env.REACT_APP_PAYPAL_CLIENT_ID,
+                  }}
+                >
+                  <PayPalButtons
+                    createOrder={handleCreateOrder}
+                    onApprove={handleApprove}
+                    onError={handleError}
+                  />
+                </PayPalScriptProvider>
+              </>
+              :
+              <Spinner
+                thickness='4px'
+                speed='0.65s'
+                emptyColor='gray.200'
+                color='blue.500'
+                size='xl'
+              />
+            }
+          </Box>
+
+
         </Box>
       </Container>
     </>

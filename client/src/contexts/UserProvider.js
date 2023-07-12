@@ -46,7 +46,6 @@ const UserProvider = ({ children }) => {
 
       } catch (error) {
         console.error(error);
-        navigate('/');
       }
     };
 
@@ -57,7 +56,8 @@ const UserProvider = ({ children }) => {
   const userContextValue = {
     user,
     setUser,
-    logout
+    logout,
+    navigate
   };
 
   return (

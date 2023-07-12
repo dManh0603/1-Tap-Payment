@@ -119,6 +119,7 @@ class BalanceController {
         method: 'CLIENT',
         type: 'TRANSFER',
         amount: parseFloat(amount),
+        status: 'SUCCEED',
         created_by: user._id.toString(),
         receiver: {
           id: receiver._id.toString(),
