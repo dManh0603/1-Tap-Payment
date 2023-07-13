@@ -45,62 +45,59 @@ const ChatList = ({ fetchAgain }) => {
   };
 
   return (
-    <Box
-      flexDir="column"
-      alignItems="center"
-      bg="white"
-      w={'100%'}
-    >
-      <Box
-        fontSize={'30px'}
-        fontFamily="Work sans"
-        w="100%"
-        justifyContent="space-between"
-        alignItems="center"
-      >
-        My chats
-      </Box>
+    <>
+      <Box>
+        <Text
+          fontSize={'30px'}
+          fontFamily="Work sans"
+          w="100%"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          My chats
+        </Text>
 
-      <Box
-        display="flex"
-        flexDir="column"
-        p={3}
-        bg="#F8F8F8"
-        w="100%"
-        h="100%"
-        borderRadius="lg"
-        overflow="hidden"
-      >
-        {chats.length > 0
-          ? (
-            <Stack overflowY="scroll">
-              {chats.map((chat) => (
-                <Box
-                  key={chat._id}
-                  onClick={() => handleChatClick(chat)}
-                  cursor="pointer"
-                  bg={selectedChat === chat ? '#38B2AC' : '#E8E8E8'}
-                  color={selectedChat === chat ? 'white' : 'black'}
-                  p={3}
-                  borderRadius="lg"
-                >
-                  <Text fontSize={'lg'}>
-                    {!chat.isGroupChat
-                      ? getSender(loggedUser, chat.users)
-                      : chat.chatName}
-                  </Text>
-                </Box>
-              ))}
-            </Stack>
-          )
-          : (
-            // <ChatLoading />
-            <div>
-              You have no chats.
-            </div>
-          )}
+        <Box
+          display="flex"
+          flexDir="column"
+          p={3}
+          bg="#F8F8F8"
+          w="100%"
+          h="100%"
+          borderRadius="lg"
+          overflow="hidden"
+        >
+          {chats.length > 0
+            ? (
+              <Stack overflowY="scroll">
+                {chats.map((chat) => (
+                  <Box
+                    key={chat._id}
+                    onClick={() => handleChatClick(chat)}
+                    cursor="pointer"
+                    bg={selectedChat === chat ? '#38B2AC' : '#E8E8E8'}
+                    color={selectedChat === chat ? 'white' : 'black'}
+                    p={3}
+                    borderRadius="lg"
+                  >
+                    <Text fontSize={'lg'}>
+                      {!chat.isGroupChat
+                        ? getSender(loggedUser, chat.users)
+                        : chat.chatName}
+                    </Text>
+                  </Box>
+                ))}
+              </Stack>
+            )
+            : (
+              // <ChatLoading />
+              <div>
+                You have no chats.
+              </div>
+            )}
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 };
 

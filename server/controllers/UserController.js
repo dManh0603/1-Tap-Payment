@@ -97,7 +97,7 @@ class UserController {
     }
   }
 
-  async findUser(req, res) {
+  async getUser(req, res) {
     try {
       const user = await User.findById(req.user._id).select('-password')
 
