@@ -211,11 +211,12 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           alignItems={'center'}
         >
           <IconButton
-            display={{ base: 'flex', md: 'none' }}
+            display={{ base: 'flex' }}
             icon={<ArrowBackIcon />}
             onClick={() => setSelectedChat('')}
           />
           {getSender(user, selectedChat.users)}
+          <ProfileModal user={getSenderFull(user, selectedChat.users)} />
 
         </Text>
         <Box

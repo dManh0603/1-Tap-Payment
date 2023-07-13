@@ -4,14 +4,14 @@ import React, { useState } from 'react'
 import ChatBox from './ChatBox'
 import axios from 'axios'
 import { UserState } from '../../contexts/UserProvider'
-import { ChatState } from '../../contexts/ChatProvider'
+import ChatProvider, { ChatState } from '../../contexts/ChatProvider'
 import NotificationBadge from 'react-notification-badge'
 import { Effect } from 'react-notification-badge'
+import ChatList from './ChatList'
 
 const ChatButton = () => {
   const [fetchAgain, setFetchAgain] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure()
-
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState(false);
   const { selectedChat, setSelectedChat, chats, setChats, notification, setNotification } = ChatState();
@@ -54,10 +54,10 @@ const ChatButton = () => {
 
   const handleChatClick = () => {
     onOpen();
-    accessChat('6475d74a202e98a518cbca9b');
-    setNotification([])
+    // accessChat('6475d74a202e98a518cbca9b');
+    // setNotification([])
   }
-  
+
   return (
     <>
 
@@ -70,10 +70,14 @@ const ChatButton = () => {
       </Button>
       <Drawer placement={'left'} onClose={onClose} isOpen={isOpen} size={'md'}>
         <DrawerOverlay />
+        
         <DrawerContent>
-          <DrawerHeader borderBottomWidth='1px'>Contact admin</DrawerHeader>
+          <DrawerHeader borderBottomWidth='1px'>Let's have a conversation.</DrawerHeader>
           <DrawerBody >
-            <ChatBox fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
+            {selectedChat
+              ? <ChatBox fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
+              : <ChatList fetchAgain={fetchAgain} />
+            }
           </DrawerBody>
         </DrawerContent>
       </Drawer></>

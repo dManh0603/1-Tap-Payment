@@ -13,7 +13,7 @@ class ChatController {
       let chats = await Chat.find({
         users: { $all: [req.user._id, userId] }
       })
-        .populate('users', '-password')
+        .populate('users', '-password -card_uid -card_balance')
         .populate('latestMessage')
         .populate({
           path: 'latestMessage.sender',
@@ -28,7 +28,7 @@ class ChatController {
         const createdChat = await Chat.create(chatData);
 
         const fullChat = await Chat.findById(createdChat)
-          .populate('users', '-password')
+          .populate('users', '-password -card_uid -card_balance')
           .populate({
             path: 'latestMessage.sender',
             select: 'name avt email'

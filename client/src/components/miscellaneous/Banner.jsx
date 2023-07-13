@@ -16,10 +16,10 @@ const Banner = () => {
         p={3}
         bg={'white'}
         w={'100%'}
-        m={'0 0 12px 0'}
+        mb={'12px'}
         borderWidth={'1px'}
       >
-        <Text fontSize={'4xl'} textAlign={'center'}>
+        <Text fontSize={'4xl'} textAlign={'center'} mb={0}>
           NEU 1-Tap Parking Payment
         </Text>
         <Box display={'flex'} justifyContent={'space-between'}>

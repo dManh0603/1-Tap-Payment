@@ -1,4 +1,4 @@
-import { Box,  useToast } from '@chakra-ui/react'
+import { Box, Text, useToast } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import Helmet from 'react-helmet'
 import { Button } from '@chakra-ui/react'
@@ -49,7 +49,7 @@ const ZaloPay = ({ amount, callback }) => {
           })
           navigate('/me')
         }
-        else{
+        else {
           toast({
             title: 'Your deposit has been canceled. Please try again.',
             status: 'error',
@@ -82,7 +82,7 @@ const ZaloPay = ({ amount, callback }) => {
         <link rel="stylesheet" href="/css/blue.css" />
       </Helmet>
       <Box >
-        <p>Vui lòng chọn hình thức thanh toán:</p>
+        <Text fontSize={'xl'}>Vui lòng chọn hình thức thanh toán:</Text>
         <div className="mb-1">
           <label><input value={'zalopayapp'} onChange={handleRadioChange} type="radio" name="iCheck" className="iradio_flat-blue" defaultChecked /> Ví <img src="/images/logo-zalopay.svg" alt="" style={{ display: "inline" }} /></label>
         </div>

@@ -1,4 +1,4 @@
-import { Box, Button, Container, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spinner, Text, useDisclosure, useToast } from '@chakra-ui/react';
+import { Box, Button, Container, Modal, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spinner, Text, useDisclosure, useToast } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js'
@@ -16,7 +16,7 @@ const Depositpage = () => {
   const { amount } = location.state
   const { user } = UserState();
   const toast = useToast();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const handlePaypalTransaction = async (captureDetails) => {
@@ -109,7 +109,7 @@ const Depositpage = () => {
       .then(handlePaypalTransaction);
   };
 
-  const handleError = error => {
+  const handleError = (error) => {
     toast({
       title: 'Error happened. Please contact admin or try again later',
       duration: 5000,
@@ -129,9 +129,6 @@ const Depositpage = () => {
       navigate('/');
     }
 
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000)
   }, [])
 
   return (
@@ -143,9 +140,10 @@ const Depositpage = () => {
           w={'100%'}
           borderRadius={'lg'}
           borderWidth={'1px'}
+          p={3}
         >
           <Box>
-            <Button ml={3} colorScheme='blue' onClick={onOpen}>
+            <Button colorScheme='blue' onClick={onOpen}>
               <CloseIcon />
             </Button>
             <Modal isOpen={isOpen} onClose={onClose}>
@@ -162,16 +160,16 @@ const Depositpage = () => {
                 </ModalFooter>
               </ModalContent>
             </Modal>
-            <Text fontSize={'3xl'} fontFamily={'Work sans'} textAlign={'center'}>Bạn đang nạp {formatAmount(amount)} VND vào tài khoản</Text>
+            <Text fontSize={'3xl'} textAlign={'center'}>Bạn đang nạp {formatAmount(amount)} VND vào tài khoản</Text>
           </Box>
 
           {/* <Profile user={user} /> */}
 
-          <Box mt={3} w={'100%'} display={'inline-grid'} justifyContent={'center'}>
+          <Box mt={3} display={'flex'} alignItems={'center'} flexDirection={'column'}>
             {!isLoading ?
-              <>
+              <Box>
                 <ZaloPay amount={amount} callback={setIsLoading} />
-                <span>Hoặc thanh toán qua:</span>
+                <Text fontSize={'xl'}>Hoặc thanh toán qua:</Text>
                 <PayPalScriptProvider
                   options={{
                     'client-id': process.env.REACT_APP_PAYPAL_CLIENT_ID,
@@ -183,19 +181,15 @@ const Depositpage = () => {
                     onError={handleError}
                   />
                 </PayPalScriptProvider>
-              </>
+              </Box>
               :
-              <Spinner
-                thickness='4px'
-                speed='0.65s'
-                emptyColor='gray.200'
-                color='blue.500'
-                size='xl'
-              />
+              <>
+                <Spinner display={'block'} thickness="4px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="xl" />
+                <Text fontSize="md">Giao dịch đang được thực hiện, hãy giữ nguyên cửa sổ này.</Text>
+                <Text fontSize="md" color={'red'} as={'i'}>Nếu đóng cửa sổ này, giao dịch sẽ bị hủy.</Text>
+              </>
             }
           </Box>
-
-
         </Box>
       </Container>
     </>

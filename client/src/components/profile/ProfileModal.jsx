@@ -1,30 +1,13 @@
-import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, useToast } from '@chakra-ui/react'
+import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react'
 import React from 'react'
-import { SettingsIcon } from '@chakra-ui/icons'
-import { useNavigate } from 'react-router-dom'
-import { UserState } from '../../contexts/UserProvider'
-const ProfileModal = () => {
+import { ViewIcon, WarningIcon } from '@chakra-ui/icons'
+const ProfileModal = ({ user }) => {
 
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const navigate = useNavigate();
-  const { user } = UserState();
-  const toast = useToast();
-
-  const logoutHandler = () => {
-    localStorage.removeItem('userToken');
-    toast({
-      title: 'Logout succesfully',
-      status: 'success',
-      duration: 3000,
-      isClosable: true,
-      position: 'top-right'
-    })
-    navigate('/')
-  }
 
   return (
     <>
-      <Button onClick={onOpen}><SettingsIcon /></Button>
+      <Button onClick={onOpen}><ViewIcon /></Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -32,14 +15,13 @@ const ProfileModal = () => {
           <ModalHeader>{user.name}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            
-            Email: {user.email}
+            <Text fontSize={'md'}>Email: {user.email}</Text>
+            {user.role === 'admin' && <Text textTransform={'uppercase'} fontSize={'md'}>{user.role}</Text>}
           </ModalBody>
-
-          <ModalFooter>
-            <Button variant='ghost' onClick={logoutHandler}>Logout</Button>
-          </ModalFooter>
         </ModalContent>
+        <ModalFooter>
+
+        </ModalFooter>
       </Modal>
     </>
   )
