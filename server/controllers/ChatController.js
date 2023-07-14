@@ -104,19 +104,20 @@ class ChatController {
 
       // Transform the response to the desired structure
       const transformedChats = unseenChats.map(chat => {
-        const { _id, users, createdAt, updatedAt, __v, latestMessage } = chat;
+        const { _id, users, latestMessage } = chat;
         if (!latestMessage) {
           return;
         }
         return {
-          chat: { _id, users, createdAt, updatedAt, __v },
-          content: latestMessage.content,
-          createdAt: latestMessage.createdAt,
-          seen: latestMessage.seen,
-          sender: latestMessage.sender,
-          updatedAt: latestMessage.updatedAt,
+          chat: { _id, users },
           __v: latestMessage.__v,
-          _id: latestMessage._id,
+          latestMessage: {
+            sender: latestMessage.sender,
+            _id: latestMessage._id,
+            content: latestMessage.content,
+            seen: latestMessage.seen,
+          }
+
         };
       }).filter(chat => chat !== null);
 

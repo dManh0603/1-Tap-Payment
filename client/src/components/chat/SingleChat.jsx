@@ -265,7 +265,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                       onChange={typingHandler}
                       value={newMessage}
                     />
-                    <InputRightElement onClick={sendMessage} className='text-hover'>
+                    <InputRightElement onClick={() => { sendMessage({ key: 'Enter' }) }} className='text-hover'>
                       <ArrowForwardIcon color='green.500' boxSize={6} />
                     </InputRightElement>
                   </InputGroup>

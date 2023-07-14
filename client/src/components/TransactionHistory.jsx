@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import TransactionItem from '../components/profile/TransactionItem';
-import { Button, Card, CardBody, Stack, StackDivider } from '@chakra-ui/react';
+import { Button, Card, CardBody, Stack, StackDivider, Text } from '@chakra-ui/react';
 
 const TransactionHistory = () => {
   const userToken = localStorage.getItem('userToken');
@@ -41,18 +41,24 @@ const TransactionHistory = () => {
     <>
       <Card>
         <CardBody>
-          <Stack divider={<StackDivider />} spacing='4'>
-            {currentItems.map((transaction) =>
-              (<TransactionItem key={transaction._id} transaction={transaction} />)
-            )}
-          </Stack>
-          <div>
-            {pageNumbers.map((pageNumber) => (
-              <Button mr={2} mt={4} key={pageNumber} onClick={() => handlePageChange(pageNumber)}>
-                {pageNumber}
-              </Button>
-            ))}
-          </div>
+          {transactions?.length === 0
+            ? <Text fontSize={'lg'}>You have no recent transaction.</Text>
+            : <>
+              <Stack divider={<StackDivider />} spacing='4'>
+                {currentItems.map((transaction) =>
+                  (<TransactionItem key={transaction._id} transaction={transaction} />)
+                )}
+              </Stack>
+              <div>
+                {pageNumbers.map((pageNumber) => (
+                  <Button mr={2} mt={4} key={pageNumber} onClick={() => handlePageChange(pageNumber)}>
+                    {pageNumber}
+                  </Button>
+                ))}
+              </div>
+            </>
+          }
+
         </CardBody>
       </Card>
     </>

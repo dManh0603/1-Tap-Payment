@@ -14,8 +14,8 @@ const ChatButton = () => {
   const [fetchAgain, setFetchAgain] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { selectedChat, setSelectedChat, chats, setChats, notification, setNotification } = ChatState();
-  const [searchValue, setSearchValue] = useState(null);
-  const [searchResult, setSearchResult] = useState(null);
+  const [searchValue, setSearchValue] = useState('');
+  const [searchResult, setSearchResult] = useState([]);
   const [searchLoading, setSearchLoading] = useState(false);
   const toast = useToast();
   const storedToken = localStorage.getItem('userToken');
@@ -60,7 +60,7 @@ const ChatButton = () => {
       toast({
         title: 'Please enter name or email to search',
         status: 'warning',
-        duration: 1000,
+        duration: 3000,
         isClosable: true,
         position: 'top-left',
       });
@@ -75,6 +75,17 @@ const ChatButton = () => {
         },
       };
       const { data } = await axios.get(`/api/user/search/${searchValue}`, config);
+
+      if (data.length === 0) {
+        toast({
+          title: 'No results found',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        return;
+      }
 
       setSearchResult(data);
     } catch (error) {
@@ -92,16 +103,16 @@ const ChatButton = () => {
   }
 
   const onDrawerClose = () => {
-    setSearchValue(null)
-    setSearchResult(null)
+    setSearchValue('')
+    setSearchResult([])
     onClose()
   }
 
   useEffect(() => {
     if (searchValue === '') {
-      setSearchResult(null)
+      setSearchResult([])
     }
-    return setSearchResult(null)
+    return setSearchResult([])
   }, [searchValue])
 
   return (
@@ -136,30 +147,34 @@ const ChatButton = () => {
               </InputRightElement>
             </InputGroup>
 
-            {searchLoading &&
-              <Stack>
+            {searchLoading
+              ? <Stack mt={3}>
+                <Skeleton height='50px' />
+                <Skeleton height='50px' />
+                <Skeleton height='50px' />
                 <Skeleton height='50px' />
                 <Skeleton height='50px' />
                 <Skeleton height='50px' />
               </Stack>
+              : <Box mt={3}>
+                <ScrollableFeed>
+                  {
+                    searchResult?.map(u => (
+                      <UserListItem
+                        mt={2}
+                        key={u._id}
+                        user={u}
+                        handleFunction={() => { setSearchResult([]); accessChat(u._id) }}
+                      />
+                    ))
+                  }
+                </ScrollableFeed>
+              </Box>
+
             }
-            <Box mt={3}>
-              <ScrollableFeed>
-                {
-                  searchResult?.map(u => (
-                    <UserListItem
-                      mt={2}
-                      key={u._id}
-                      user={u}
-                      handleFunction={() => { setSearchResult(null); accessChat(u._id) }}
-                    />
-                  ))
-                }
-              </ScrollableFeed>
-            </Box>
           </DrawerHeader>
           {
-            !searchResult &&
+            (!searchLoading) && (searchResult.length === 0) &&
             <DrawerBody >
               {selectedChat
                 ? <ChatBox fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
