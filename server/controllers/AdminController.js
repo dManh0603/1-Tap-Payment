@@ -148,19 +148,11 @@ class AdminController {
 
   getTransactions = async (req, res) => {
     try {
-      const transactions = await Transaction.find();
+      const transactions = await Transaction.find().populate('created_by', 'email name');
 
-      const userIds = transactions.map(transaction => transaction.user_id);
-      const users = await User.find({ _id: { $in: userIds } });
-
-      const transactionsWithUserEmail = transactions.map(transaction => {
-        const user = users.find(user => user._id.toString() === transaction.user_id.toString());
-        const email = user ? user.email : 'Unknown'; // Handle case where user is not found
-        return {
-          ...transaction.toObject(),
-          email: email
-        };
-      });
+      const transactionsWithUserEmail = transactions.map((transaction) => ({
+        ...transaction.toObject(),
+      }));
 
       res.json({ transactions: transactionsWithUserEmail });
     } catch (error) {

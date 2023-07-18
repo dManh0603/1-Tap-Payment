@@ -7,10 +7,7 @@ import ProfileModal from '../profile/ProfileModal'
 import axios from 'axios'
 import ScrollableChat from './ScrollableChat'
 import io from 'socket.io-client'
-import Lottie from 'react-lottie'
-import animationData from '../../animations/typing.json'
 import { UserState } from '../../contexts/UserProvider'
-
 const ENDPOINT = 'http://localhost:3000';
 
 let socket, selectedChatCompare;
@@ -29,15 +26,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const { selectedChat, setSelectedChat, notification, setNotification } = ChatState();
 
   const storedToken = localStorage.getItem('userToken');
-
-  const defaultOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: animationData,
-    rendererSettings: {
-      preserveAspectRatio: 'xMidYMid slice'
-    }
-  }
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
@@ -247,15 +235,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 </div>
 
                 <FormControl onKeyDown={sendMessage}>
-                  {isTyping
-                    ? <div>
-                      <Lottie
-                        options={defaultOptions}
-                        width={44}
-
-                      />
-                    </div>
-                    : <></>}
+               
 
                   <InputGroup mt={2}>
                     <Input

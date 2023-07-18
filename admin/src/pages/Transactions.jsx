@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState, useRef } from 'react';
-import { Box, Spinner } from '@chakra-ui/react'
+import { Badge, Box, Spinner } from '@chakra-ui/react'
 import { formatDate } from '../helpers/ViewHelper';
 import { DataTable } from 'simple-datatables';
 import { useNavigate } from 'react-router-dom';
@@ -32,8 +32,8 @@ const Transactions = () => {
     };
 
     fetchTransactions();
-    
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -74,7 +74,7 @@ const Transactions = () => {
         :
         <div id="content-wrapper" className="d-flex flex-column">
           <div className="container-fluid px-4">
-          <h1 className="h3 mb-0 text-gray-800">Total transactions</h1>
+            <h1 className="h3 mb-0 text-gray-800">Total transactions</h1>
             <div className="card mb-4">
               <div className="card-body">
                 <table id="datatablesSimple" ref={tableRef}>
@@ -82,6 +82,8 @@ const Transactions = () => {
                     <tr>
                       <th>Actions</th>
                       <th>Name</th>
+                      <th>Email</th>
+                      <th>Type</th>
                       <th>Status</th>
                       <th>Amount</th>
                       <th>Created at</th>
@@ -96,9 +98,17 @@ const Transactions = () => {
                             <i className="fas fa-eye"></i>
                           </a>
                         </td>
-                        <td>{t.email}</td>
-                        <td>{t.PP_info.status}</td>
-                        <td>{t.amount} $</td>
+                        <td>{t.created_by.name}</td>
+                        <td>{t.created_by.email}</td>
+                        <td>{t.type}</td>
+                        <td>{t.status === 'SUCCEED'
+                          ? <Badge variant='outline' colorScheme='green'>
+                            Succeed
+                          </Badge>
+                          : <Badge variant='outline' colorScheme='red'>
+                            Canceled
+                          </Badge>}</td>
+                        <td>{t.amount} VND</td>
                         <td>{formatDate(t.createdAt)}</td>
                         <td>{formatDate(t.updatedAt)}</td>
                       </tr>

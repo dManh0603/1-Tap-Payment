@@ -4,6 +4,7 @@ import Helmet from 'react-helmet'
 import { Button } from '@chakra-ui/react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import CryptoJS from 'crypto-js';
 
 const ZaloPay = ({ amount, callback }) => {
 
@@ -23,9 +24,12 @@ const ZaloPay = ({ amount, callback }) => {
           Authorization: `Bearer ${userToken}`,
         },
       }
+      const KEY = process.env.REACT_APP_KEY;
+      const user_mac = CryptoJS.SHA256(`${KEY}|${amount}|${paymentMethod}`).toString();
       const body = {
-        amount: parseFloat(amount),
-        paymentMethod
+        amount,
+        paymentMethod,
+        user_mac
       }
       console.log(body)
       const transaction = await axios.post('/api/transaction/zalopay/create', body, config)

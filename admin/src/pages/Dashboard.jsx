@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom'
+import { formatAmount } from '../helpers/ViewHelper';
 
 const Dashboard = () => {
 
@@ -10,7 +11,6 @@ const Dashboard = () => {
   const [monthlyIncome, setMonthlyIncome] = useState(0);
   const [annualIncome, setAnnualIncome] = useState(0);
   const [transactionCount, setTransactionCount] = useState(0);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -64,7 +64,7 @@ const Dashboard = () => {
                         Earnings (Monthly)</div>
                       <div className="h5 mb-0 font-weight-bold text-gray-800">
 
-                        {monthlyIncome} $
+                        {formatAmount(monthlyIncome)} VND
 
                       </div>
                     </div>
@@ -84,7 +84,7 @@ const Dashboard = () => {
                     <div className="col mr-2">
                       <div className="text-xs font-weight-bold text-success text-uppercase mb-1">
                         Earnings (Annual)</div>
-                      <div className="h5 mb-0 font-weight-bold text-gray-800">{annualIncome} $</div>
+                      <div className="h5 mb-0 font-weight-bold text-gray-800">{formatAmount(annualIncome)} VND</div>
                     </div>
                     <div className="col-auto">
                       <i className="fas fa-dollar-sign fa-2x text-gray-300"></i>

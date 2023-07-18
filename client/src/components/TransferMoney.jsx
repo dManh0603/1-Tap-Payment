@@ -6,6 +6,7 @@ import UserListItem from './profile/UserListItem';
 import ScrollableFeed from 'react-scrollable-feed';
 import { UserState } from '../contexts/UserProvider'
 import { useNavigate } from 'react-router-dom';
+import CryptoJS from 'crypto-js';
 
 const TransferMoney = () => {
   const [searchValue, setSearchValue] = useState('');
@@ -39,10 +40,15 @@ const TransferMoney = () => {
           Authorization: `Bearer ${storedToken}`
         }
       }
+
+      const KEY = process.env.REACT_APP_KEY;
+      const receiverId = receiver._id;
+      const user_mac = CryptoJS.SHA256(`${KEY}|${amount}|${password}|${receiverId}`).toString();
       const body = {
         password,
-        receiverId: receiver._id,
-        amount
+        receiverId,
+        amount,
+        user_mac
       }
 
       const { data } = await axios.post('/api/balance/transfer', body, config)

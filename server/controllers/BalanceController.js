@@ -1,5 +1,6 @@
 const Transaction = require('../models/TransactionModel');
 const User = require('../models/UserModel')
+const CryptoJS = require('crypto-js');
 
 class BalanceController {
   async add(req, res) {
@@ -20,13 +21,14 @@ class BalanceController {
       }
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: error.message });
+      res.status(error.statusCode || 500).json({ message: error.message || 'Internal server error' });
     }
   }
 
 
   async deduct(req, res) {
     try {
+      console.log('it here')
       const card_uid = req.params.card_uid;
       const type = req.body.type;
       const currentTime = new Date().getHours();
@@ -77,16 +79,21 @@ class BalanceController {
       res.status(200).json(user);
     } catch (error) {
       console.error('Error deducting amount:', error);
-      const statusCode = error.statusCode || 500;
-      const message = error.message || 'Internal server error';
-      res.status(statusCode).json({ error: message });
+      res.status(error.statusCode || 500).json({ message: error.message || 'Internal server error' });
+
     }
   }
 
   async transfer(req, res) {
 
     try {
-      const { password, amount, receiverId } = req.body
+      const { password, amount, receiverId, user_mac } = req.body
+
+      const CLIENT_KEY = process.env.CLIENT_KEY;
+      const isIntact = user_mac === CryptoJS.SHA256(`${CLIENT_KEY}|${amount}|${password}|${receiverId}`).toString();
+      if (!isIntact) {
+        throw { statusCode: 400, message: 'Invalid mac' };
+      }
       const user = await User.findById(req.user._id);
       const passwordMatched = await user.matchPassword(password)
 
@@ -132,6 +139,7 @@ class BalanceController {
       res.json({ message: "Transfer successfully", user })
 
     } catch (error) {
+      console.log(error)
       res.status(error.statusCode || 500).json({ message: error.message || 'Internal server error' });
     }
   }

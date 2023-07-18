@@ -99,7 +99,10 @@ class TransactionController {
   async zalopayCreate(req, res) {
     let transaction;
     try {
-      const { paymentMethod, amount, } = req.body;
+      const { paymentMethod, amount, user_mac } = req.body;
+      const CLIENT_KEY = process.env.CLIENT_KEY;
+      const isIntact = user_mac === CryptoJS.SHA256(`${CLIENT_KEY}|${amount}|${paymentMethod}`).toString();
+
       let embed_data = null;
       let bank_code = null;
 
@@ -140,6 +143,10 @@ class TransactionController {
         }
       });
 
+      if (!isIntact) {
+        throw new Error('Invalid mac');
+      }
+
       const currentDate = getAppTime();
       const user_id = req.user._id.toString();
       const app_id = parseInt(process.env.ZALOPAY_APP_ID);
@@ -177,7 +184,7 @@ class TransactionController {
         res.status(error.response.status).json({ error: 'ZaloPay API Error' });
       } else {
         console.error('Internal Server Error:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(error.statusCode || 500).json({ message: error.message || 'Internal server error' });
       }
 
       if (transaction) {
@@ -233,7 +240,7 @@ class TransactionController {
       res.json(transaction.status)
     } catch (error) {
       console.log(error);
-      res.status(500).json({ message: 'Internal server error' })
+      res.status(error.statusCode || 500).json({ message: error.message || 'Internal server error' });
     }
   }
 }

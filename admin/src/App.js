@@ -37,7 +37,6 @@ function App() {
       }
       try {
         const { data } = await axios.get('/api/chat/unseen', config)
-        console.log('unseen chat', data);
         setNotification([...data, ...notification]);
       } catch (error) {
         console.log(error);
@@ -48,9 +47,7 @@ function App() {
   }, [])
 
   useEffect(() => {
-    console.log(user)
     if (user) {
-      console.log('app setup');
       socket.emit('setup', user);
       socket.on('connected', () => setSocketConennected(true));
     }
@@ -58,8 +55,8 @@ function App() {
 
   useEffect(() => {
     if (!socketConennected) return;
+
     socket.on('message received', (newMessage) => {
-      console.log('message received')
       if (!selectedChatCompare || selectedChatCompare._id !== newMessage.chat._id) {
         if (!notification.includes(newMessage)) {
           setNotification([newMessage, ...notification]);
