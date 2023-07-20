@@ -1,5 +1,5 @@
 import { SearchIcon } from '@chakra-ui/icons';
-import { Box, Input, InputGroup, InputRightElement, Skeleton, Stack, Text, useToast } from '@chakra-ui/react';
+import { Box, Button, Input, InputGroup, InputRightElement, Skeleton, Stack, Text, useToast } from '@chakra-ui/react';
 import React, { useState } from 'react'
 import ScrollableFeed from 'react-scrollable-feed';
 import UserListItem from '../profile/UserListItem';
@@ -8,40 +8,13 @@ import { ChatState } from '../../contexts/ChatProvider';
 
 const ChatSearch = ({ setSearchLoading, searchLoading }) => {
 
-  const { setSelectedChat, chats, setChats } = ChatState();
+  const { accessChat } = ChatState();
   const [searchValue, setSearchValue] = useState('');
   const [searchResult, setSearchResult] = useState([]);
   const storedToken = localStorage.getItem('userToken');
   const toast = useToast();
 
-  const accessChat = async (userId) => {
-    try {
-      const config = {
-        headers: {
-          'Content-type': 'application/json',
-          Authorization: `Bearer ${storedToken}`,
-        },
-      };
-
-      const { data } = await axios.post('/api/chat', { userId }, config);
-
-      if (!chats.find((c) => c._id === data._id)) {
-        setChats([data, ...chats]);
-      }
-
-      setSelectedChat(data);
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: 'Error retrieving your chats',
-        description: error.message,
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-        position: 'bottom-left',
-      });
-    }
-  };
+  
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
@@ -96,13 +69,15 @@ const ChatSearch = ({ setSearchLoading, searchLoading }) => {
     }
   }
 
+  const handleContactAdmin = () => {
+    accessChat('6475d74a202e98a518cbca9b')
+  }
+
   return (
     <>
       <Text>Let's have a conversation.</Text>
 
       <InputGroup mt={3}>
-
-
         <Input placeholder='Search for friends and more ...' size='md'
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
@@ -138,8 +113,8 @@ const ChatSearch = ({ setSearchLoading, searchLoading }) => {
             }
           </ScrollableFeed>
         </Box>
-
       }
+      <Button color='black' variant={'link'} fontSize={'md'} fontFamily={'Work Sans'} onClick={handleContactAdmin}>Contact admin</Button>
     </>
   )
 }

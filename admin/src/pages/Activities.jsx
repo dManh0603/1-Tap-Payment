@@ -97,7 +97,7 @@ const Activities = () => {
                           </a>
                         </td>
                         <td>{a.message}</td>
-                        <td>{a.meta.amount} $</td>
+                        <td>{a.meta.amount} VND</td>
                         <td>{a.meta.type}</td>
                         <td>{formatDate(a.timestamp)}</td>
                       </tr>

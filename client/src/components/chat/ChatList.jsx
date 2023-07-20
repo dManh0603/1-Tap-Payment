@@ -56,7 +56,7 @@ const ChatList = ({ fetchAgain }) => {
       <Box>
         <Text
           fontSize={'30px'}
-          fontFamily="Work sans"
+          // fontFamily="Work sans"
           w="100%"
           justifyContent="space-between"
           alignItems="center"

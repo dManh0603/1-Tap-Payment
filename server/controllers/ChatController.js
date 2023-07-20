@@ -3,13 +3,13 @@ const User = require('../models/UserModel');
 const Message = require('../models/MessageModel')
 class ChatController {
   async accessChat(req, res, next) {
-    const { userId } = req.body;
-
-    if (!userId) {
-      throw { statusCode: 400, message: 'No user id was provided!' }
-    }
-
     try {
+      const { userId } = req.body;
+
+      if (!userId) {
+        throw { statusCode: 400, message: 'No user id was provided!' }
+      }
+
       let chats = await Chat.find({
         users: { $all: [req.user._id, userId] }
       })

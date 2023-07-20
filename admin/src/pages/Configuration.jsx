@@ -1,4 +1,4 @@
-import { Box, Button, ButtonGroup, Card, CardBody, CardFooter, CardHeader, Heading, Input, Stack, StackDivider, Text, useToast } from '@chakra-ui/react'
+import { Box, Button, ButtonGroup, Card, CardBody, CardFooter, CardHeader, InputGroup, Input, InputRightAddon, Stack, StackDivider, Text, useToast } from '@chakra-ui/react'
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 
@@ -84,25 +84,29 @@ const Configuration = () => {
         <CardHeader>
           {/* <Heading size='xl'>Configuration for checkout</Heading> */}
           <h1 className="h3 mb-0 text-gray-800">Configuration for checkout</h1>
-
         </CardHeader>
         <CardBody>
           <Stack divider={<StackDivider />} spacing='4'>
             <Box width={'30vw'}>
               <Text mb={0} as={'b'} fontSize={'md'}>Motorbike price</Text>
-              <Input pt='1' mb={4} fontSize='md' placeholder={motorbikePrice}
-                value={motorbikePrice}
-                onChange={(e) => setMotorbikePrice(e.target.value)}
-                style={{ opacity: 1 }}
-                isDisabled={isDisabled} />
+              <InputGroup>
+                <Input pt='1' mb={4} fontSize='md' placeholder={motorbikePrice}
+                  value={motorbikePrice}
+                  onChange={(e) => setMotorbikePrice(e.target.value)}
+                  style={{ opacity: 1 }}
+                  isDisabled={isDisabled} />
+                <InputRightAddon children='VND' />
+              </InputGroup>
 
               <Text mb={0} as={'b'} fontSize={'md'}>Bicycle price</Text>
-              <Input pt='1' mb={4} fontSize='md' placeholder={bicyclePrice}
-                value={bicyclePrice}
-                onChange={(e) => setBicyclePrice(e.target.value)}
-                style={{ opacity: 1 }}
-                isDisabled={isDisabled} />
-
+              <InputGroup>
+                <Input pt='1' mb={4} fontSize='md' placeholder={bicyclePrice}
+                  value={bicyclePrice}
+                  onChange={(e) => setBicyclePrice(e.target.value)}
+                  style={{ opacity: 1 }}
+                  isDisabled={isDisabled} />
+                <InputRightAddon children='VND' />
+              </InputGroup>
             </Box>
           </Stack>
         </CardBody>
