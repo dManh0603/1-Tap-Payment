@@ -164,14 +164,10 @@ class AdminController {
   getTransactionDetails = async (req, res) => {
     const transactionId = req.params.id;
     try {
-      const transaction = await Transaction.findById(transactionId).lean().exec();
+      const transaction = await Transaction.findById(transactionId).populate('created_by', 'email name').lean().exec();
       console.log(transaction);
 
-      const userId = transaction.user_id;
-      const user = await User.findById(userId).select('-password -balance -card_uid').lean().exec();
-      console.log(user);
-
-      res.json({ transaction: transaction, user: user });
+      res.json(transaction);
     } catch (error) {
       // Handle any errors that occur during the database operation
       console.error(error);

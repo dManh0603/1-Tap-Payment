@@ -8,7 +8,6 @@ const TransactionDetails = () => {
 
   const { id } = useParams();
   const [transaction, setTransaction] = useState(null);
-  const [user, setUser] = useState(null);
   const storedToken = localStorage.getItem('userToken')
 
   useEffect(() => {
@@ -21,8 +20,7 @@ const TransactionDetails = () => {
       const { data } = await axios.get(`/api/admin/transaction/${id}`, config);
       console.log(data);
       if (data) {
-        setTransaction(data.transaction);
-        setUser(data.user);
+        setTransaction(data);
       }
     }
     fetchTransaction();
@@ -43,33 +41,39 @@ const TransactionDetails = () => {
                 <Stack divider={<StackDivider />} spacing='4'>
                   <Box>
                     <Heading size='md' textTransform='uppercase'>
-                      User information
+                      Payer information
                     </Heading>
-                    <Text pt='2' fontSize='sm'>
-                      User name: {user && user.name}
+                    <Text pt='2' fontSize='md'>
+                      User name: {transaction.created_by.name}
                     </Text>
-                    <Text pt='2' fontSize='sm'>
-                      User email: {user && user.email}
+                    <Text pt='2' fontSize='md'>
+                      User email: {transaction.created_by.email}
                     </Text>
                   </Box>
                   <Box>
                     <Heading size='md' textTransform='uppercase'>
                       Transaction information
                     </Heading>
-                    <Text pt='2' fontSize='sm'>
-                      Status: {transaction.PP_info.status}
+                    <Text pt='2' fontSize='md'>
+                      App transaction id: {transaction.app_trans_id}
                     </Text>
-                    <Text pt='2' fontSize='sm'>
-                      Amount: {transaction.amount}
+                    <Text pt='2' fontSize='md'>
+                      Type: {transaction.type}
                     </Text>
-                    <Text pt='2' fontSize='sm'>
-                      Pay at: {formatDate(transaction.createdAt)}
+                    <Text pt='2' fontSize='md'>
+                      Status: {transaction.status}
                     </Text>
-                    <Text pt='2' fontSize='sm'>
-                      Payment id: {transaction.PP_info.payment_id}
+                    <Text pt='2' fontSize='md'>
+                      Amount: {transaction.amount} VND
                     </Text>
-                    <Text pt='2' fontSize='sm'>
-                      Payer email: {transaction.PP_info.payer_email_address}
+                    <Text pt='2' fontSize='md'>
+                      Happened at: {formatDate(transaction.createdAt)}
+                    </Text>
+                    <Text pt='2' fontSize='md'>
+                      Receiver name: {transaction.receiver.name}
+                    </Text>
+                    <Text pt='2' fontSize='md'>
+                      Receiver email: {transaction.receiver.email}
                     </Text>
                   </Box>
                   <Box></Box>

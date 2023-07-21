@@ -8,7 +8,7 @@ import CryptoJS from 'crypto-js';
 
 const ZaloPay = ({ amount, callback }) => {
 
-  const userToken = localStorage.getItem('userToken');
+  const storedToken = localStorage.getItem('userToken');
   const [paymentMethod, setPaymentMethod] = useState('zalopayapp');
   const toast = useToast();
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ const ZaloPay = ({ amount, callback }) => {
     try {
       const config = {
         headers: {
-          Authorization: `Bearer ${userToken}`,
+          Authorization: `Bearer ${storedToken}`,
         },
       }
       const KEY = process.env.REACT_APP_KEY;

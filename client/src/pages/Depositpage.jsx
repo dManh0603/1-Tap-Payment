@@ -169,7 +169,7 @@ const Depositpage = () => {
             {!isLoading ?
               <Box>
                 <ZaloPay amount={amount} callback={setIsLoading} />
-                <Text fontSize={'xl'}>Hoặc thanh toán qua:</Text>
+                {/* <Text fontSize={'xl'}>Hoặc thanh toán qua:</Text>
                 <PayPalScriptProvider
                   options={{
                     'client-id': process.env.REACT_APP_PAYPAL_CLIENT_ID,
@@ -180,7 +180,7 @@ const Depositpage = () => {
                     onApprove={handleApprove}
                     onError={handleError}
                   />
-                </PayPalScriptProvider>
+                </PayPalScriptProvider> */}
               </Box>
               :
               <>

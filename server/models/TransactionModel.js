@@ -5,15 +5,9 @@ const TransactionSchema = mongoose.Schema(
   {
     method: { type: String, required: true },
     type: { type: String, required: true },
-    app_trans_id: { type: String },
+    app_trans_id: { type: String, default: 'Failed before go to Zalopay' },
+    ZP_trans_id: { type: String, default: 'Failed before go to Zalopay' },
     status: { type: String },
-    info: {
-      payment_id: { type: String },
-      create_time: { type: Date },
-      update_time: { type: Date },
-      payer_id: { type: String },
-      payer_email_address: { type: String },
-    },
     amount: { type: Number, required: true },
     created_by: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     receiver: {

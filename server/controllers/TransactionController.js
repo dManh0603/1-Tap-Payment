@@ -7,41 +7,41 @@ const axios = require('axios');
 class TransactionController {
 
   // [POST] /api/transaction/paypal/create
-  async paypalCreate(req, res) {
-    try {
-      const { payment_id, status, amount, create_time, update_time, email_address, payer_id, receiver_id } = req.body;
+  // async paypalCreate(req, res) {
+  //   try {
+  //     const { payment_id, status, amount, create_time, update_time, email_address, payer_id, receiver_id } = req.body;
 
-      const receiver = await User.findById(receiver_id).select('name email _id').exec();
-      if (!receiver) {
-        throw { statusCode: 404, message: 'Unrecognized receiver id' }
-      }
+  //     const receiver = await User.findById(receiver_id).select('name email _id').exec();
+  //     if (!receiver) {
+  //       throw { statusCode: 404, message: 'Unrecognized receiver id' }
+  //     }
 
-      const transaction = await Transaction.create({
-        method: 'PAYPAL',
-        type: 'DEPOSIT',
-        status,
-        info: {
-          payment_id,
-          create_time,
-          payer_id,
-          update_time,
-          payer_email_address: email_address
-        },
-        amount: parseFloat(amount),
-        created_by: req.user._id,
-        receiver: {
-          id: req.user._id,
-          name: req.user.name,
-          email: req.user.email
-        }
-      });
+  //     const transaction = await Transaction.create({
+  //       method: 'PAYPAL',
+  //       type: 'DEPOSIT',
+  //       status,
+  //       info: {
+  //         payment_id,
+  //         create_time,
+  //         payer_id,
+  //         update_time,
+  //         payer_email_address: email_address
+  //       },
+  //       amount: parseFloat(amount),
+  //       created_by: req.user._id,
+  //       receiver: {
+  //         id: req.user._id,
+  //         name: req.user.name,
+  //         email: req.user.email
+  //       }
+  //     });
 
-      res.json(transaction);
-    } catch (error) {
-      console.error('Error creating transaction:', error);
-      res.status(error.statusCode || 500).json({ error: error.message || 'Failed to create transaction' });
-    }
-  }
+  //     res.json(transaction);
+  //   } catch (error) {
+  //     console.error('Error creating transaction:', error);
+  //     res.status(error.statusCode || 500).json({ error: error.message || 'Failed to create transaction' });
+  //   }
+  // }
 
   async fetchMonthly(req, res) {
     try {
@@ -200,9 +200,13 @@ class TransactionController {
     function delay(ms) {
       return new Promise(resolve => setTimeout(resolve, ms));
     }
+    const app_trans_id = req.body.app_trans_id;
+    const onlyQuery = req.body.onlyQuery ?? false;
+    if (!app_trans_id) {
+      throw { statusCode: 400, message: 'Bad request' }
+    }
     try {
       const app_id = parseInt(process.env.ZALOPAY_APP_ID);
-      const app_trans_id = req.body.app_trans_id
       const key1 = process.env.ZALOPAY_APP_KEY;
       const hmac_input = app_id + "|" + app_trans_id + "|" + key1;
       const hmac = CryptoJS.HmacSHA256(hmac_input, key1);
@@ -215,14 +219,15 @@ class TransactionController {
       }
       let data;
       do {
-        console.log('Trial:');
-        await delay(30000);
-
         const response = await axios.post(process.env.ZALOPAY_SANDBOX_QUERY_ENDPOINT, body);
         data = response.data;
-        console.log(data)
+        if (data.return_code !== 3) break;
+        await delay(30000);
       } while (data.return_code === 3);
 
+      if (onlyQuery) {
+        return res.json(data);
+      }
       const transaction = await Transaction.findOne({ app_trans_id });
 
       if (data.return_code === 2) {
@@ -236,6 +241,8 @@ class TransactionController {
           { new: true }
         );
       }
+
+      transaction.zp_trans_id = data.zp_trans_id;
       await transaction.save();
       res.json(transaction.status)
     } catch (error) {

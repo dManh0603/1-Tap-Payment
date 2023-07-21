@@ -15,7 +15,7 @@ import Users from './pages/Users';
 import UserDetails from './pages/UserDetails';
 import Activities from './pages/Activities';
 import Configuration from './pages/Configuration';
-
+import Zalopay from './pages/Zalopay';
 const ENDPOINT = 'http://localhost:4000';
 
 let socket, selectedChatCompare;
@@ -81,6 +81,7 @@ function App() {
           <Route path="/user/:id" Component={UserDetails}></Route>
           <Route path="/activities" Component={Activities}></Route>
           <Route path="/config" Component={Configuration}></Route>
+          <Route path="/zalopay" Component={Zalopay}></Route>
         </Routes>
       </div>
     </div>

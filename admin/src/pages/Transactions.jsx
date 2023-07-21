@@ -4,6 +4,7 @@ import { Badge, Box, Spinner } from '@chakra-ui/react'
 import { formatDate } from '../helpers/ViewHelper';
 import { DataTable } from 'simple-datatables';
 import { useNavigate } from 'react-router-dom';
+import { formatAmount } from '../helpers/ViewHelper';
 import Helmet from 'react-helmet'
 
 const Transactions = () => {
@@ -87,7 +88,7 @@ const Transactions = () => {
                       <th>Status</th>
                       <th>Amount</th>
                       <th>Created at</th>
-                      <th>Updated at</th>
+                      <th>Zalopay trans id</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -108,9 +109,9 @@ const Transactions = () => {
                           : <Badge variant='outline' colorScheme='red'>
                             Canceled
                           </Badge>}</td>
-                        <td>{t.amount} VND</td>
+                        <td>{formatAmount(t.amount)} VND</td>
                         <td>{formatDate(t.createdAt)}</td>
-                        <td>{formatDate(t.updatedAt)}</td>
+                        <td>{t.zp_trans_id}</td>
                       </tr>
                     ))}
                   </tbody>
