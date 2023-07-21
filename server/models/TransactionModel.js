@@ -6,7 +6,7 @@ const TransactionSchema = mongoose.Schema(
     method: { type: String, required: true },
     type: { type: String, required: true },
     app_trans_id: { type: String, default: 'Failed before go to Zalopay' },
-    ZP_trans_id: { type: String, default: 'Failed before go to Zalopay' },
+    zp_trans_id: { type: String, default: 'Failed before go to Zalopay' },
     status: { type: String },
     amount: { type: Number, required: true },
     created_by: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },

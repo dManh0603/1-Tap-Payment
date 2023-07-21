@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
-import { formatDate } from '../helpers/ViewHelper';
+import { formatAmount, formatDate } from '../helpers/ViewHelper';
 import axios from 'axios';
 import { Box, Card, CardBody, CardHeader, Heading, Stack, StackDivider, Text } from '@chakra-ui/react';
 
@@ -58,13 +58,16 @@ const TransactionDetails = () => {
                       App transaction id: {transaction.app_trans_id}
                     </Text>
                     <Text pt='2' fontSize='md'>
+                      Zalopay transaction id: {transaction.zp_trans_id}
+                    </Text>
+                    <Text pt='2' fontSize='md'>
                       Type: {transaction.type}
                     </Text>
                     <Text pt='2' fontSize='md'>
                       Status: {transaction.status}
                     </Text>
                     <Text pt='2' fontSize='md'>
-                      Amount: {transaction.amount} VND
+                      Amount: {formatAmount(transaction.amount)} VND
                     </Text>
                     <Text pt='2' fontSize='md'>
                       Happened at: {formatDate(transaction.createdAt)}
