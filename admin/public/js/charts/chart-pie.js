@@ -15,7 +15,6 @@ async function getData() {
 
     if (response.ok) {
       const data = await response.json();
-      debugger
       // Extract just the count values from the response array
       const counts = data.map(({ count }) => count);
       const labels = data.map(({ type }) => type);

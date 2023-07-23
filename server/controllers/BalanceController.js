@@ -74,6 +74,7 @@ class BalanceController {
         amount: amount,
         type: type,
         name: user.name.toString(),
+        email: user.email.toString()
       });
 
       res.status(200).json(user);

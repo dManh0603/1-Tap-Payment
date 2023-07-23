@@ -16,6 +16,7 @@ import UserDetails from './pages/UserDetails';
 import Activities from './pages/Activities';
 import Configuration from './pages/Configuration';
 import Zalopay from './pages/Zalopay';
+import _404 from './components/_404';
 const ENDPOINT = 'http://localhost:4000';
 
 let socket, selectedChatCompare;
@@ -68,22 +69,33 @@ function App() {
 
   return (
     <div className="App" id='wrapper'>
-      {user && <Sidebar />}
-      <div id="content-wrapper" className='d-flex flex-column'>
-        {user && <Topbar />}
-        <Routes>
-          <Route path="/" Component={Homepage}></Route>
-          <Route path="/dashboard" Component={Dashboard}></Route>
-          <Route path="/transactions" Component={Transactions}></Route>
-          <Route path="/transaction/:id" Component={TransactionDetails}></Route>
-          <Route path="/chats" Component={Chats}></Route>
-          <Route path="/users" Component={Users}></Route>
-          <Route path="/user/:id" Component={UserDetails}></Route>
-          <Route path="/activities" Component={Activities}></Route>
-          <Route path="/config" Component={Configuration}></Route>
-          <Route path="/zalopay" Component={Zalopay}></Route>
-        </Routes>
-      </div>
+      {user
+        ? <>
+          <Sidebar />
+          <div id="content-wrapper" className='d-flex flex-column'>
+            <Topbar />
+            <Routes>
+              <Route exact path="/dashboard" Component={Dashboard}></Route>
+              <Route exact path="/transactions" Component={Transactions}></Route>
+              <Route exact path="/transaction/:id" Component={TransactionDetails}></Route>
+              <Route exact path="/chats" Component={Chats}></Route>
+              <Route exact path="/users" Component={Users}></Route>
+              <Route exact path="/user/:id" Component={UserDetails}></Route>
+              <Route exact path="/activities" Component={Activities}></Route>
+              <Route exact path="/config" Component={Configuration}></Route>
+              <Route exact path="/zalopay" Component={Zalopay}></Route>
+              <Route path='*' Component={_404}></Route>
+            </Routes>
+          </div>
+        </>
+        : <>
+          <div id="content-wrapper" className='d-flex flex-column'>
+            <Routes>
+              <Route path="/" Component={Homepage}></Route>
+              <Route path='*' Component={_404}></Route>
+            </Routes>
+          </div>
+        </>}
     </div>
   );
 }
