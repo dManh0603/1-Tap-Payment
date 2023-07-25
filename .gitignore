@@ -2,3 +2,5 @@
 /node_modules
 .vscode
 /ESP32
+/admin
+/client
