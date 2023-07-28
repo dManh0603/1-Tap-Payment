@@ -79,7 +79,7 @@ const Sidebar = () => {
         {/* <!-- Nav Item - Zalopay --> */}
         <li className={`nav-item ${location.pathname === '/zalopay' ? 'active' : ''}`}>
           <a className="nav-link" href="/zalopay">
-            <i className="fas fa-fw fa-tags"></i>
+            <i className="fas fa-fw fa-money-bill"></i>
             <span style={{ fontSize: '16px' }}>Zalopay</span>
           </a>
         </li>

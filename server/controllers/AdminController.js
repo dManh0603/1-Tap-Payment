@@ -15,7 +15,8 @@ class AdminController {
     const endDate = new Date(currentYear, currentMonth + 1, 0, 23, 59, 59);
 
     const monthlyTransactions = await Transaction.find({
-      "createdAt": { $gte: startDate.toISOString(), $lte: endDate.toISOString() },
+      createdAt: { $gte: startDate.toISOString(), $lte: endDate.toISOString() },
+      status: "SUCCEED",
     });
 
     let monthlyIncome = 0;
@@ -35,6 +36,7 @@ class AdminController {
 
     const yearlyTransactions = await Transaction.find({
       createdAt: { $gte: startDate, $lte: endDate },
+      status: "SUCCEED",
     });
 
     let annualIncome = 0;
@@ -45,8 +47,16 @@ class AdminController {
     return annualIncome;
   }
 
+  async getSucceedTransactionCount() {
+    const transaction = await Transaction.find({
+      status: 'SUCCEED'
+    });
+    const transactionCount = transaction.length;
+    return transactionCount;
+  }
+
   async getTransactionCount() {
-    const transaction = await Transaction.find();
+    const transaction = await Transaction.find({});
     const transactionCount = transaction.length;
     return transactionCount;
   }
@@ -95,16 +105,16 @@ class AdminController {
       const monthlyIncomePromise = this.getMonthlyIncome();
       const annualIncomePromise = this.getAnnualIncome();
       const transactionCountPromise = this.getTransactionCount();
+      const succeedTransactionCountPromise = this.getSucceedTransactionCount();
 
-      const [monthlyIncome, annualIncome, transactionCount] = await Promise.all([
+      const [monthlyIncome, annualIncome, transactionCount, succeedTransactionCount] = await Promise.all([
         monthlyIncomePromise,
         annualIncomePromise,
-        transactionCountPromise
+        transactionCountPromise,
+        succeedTransactionCountPromise
       ]);
 
-      //pie chart
-
-      return res.status(200).json({ monthlyIncome, annualIncome, transactionCount });
+      return res.status(200).json({ monthlyIncome, annualIncome, transactionCount,succeedTransactionCount });
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: 'Internal Server Error' });

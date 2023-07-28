@@ -54,6 +54,9 @@ class TransactionController {
       // Query the transactions collection and calculate the sums for each month
       const result = await Transaction.aggregate([
         {
+          $match: { status: "SUCCEED" } // Filter transactions with status 'SUCCEED'
+        },
+        {
           $group: {
             _id: { $month: "$createdAt" },
             monthlyIncome: { $sum: "$amount" }
@@ -197,15 +200,13 @@ class TransactionController {
 
   // [POST] /api/transaction/zalopay/query
   async zalopayQuery(req, res) {
-    function delay(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
-    }
-    const app_trans_id = req.body.app_trans_id;
-    const onlyQuery = req.body.onlyQuery ?? false;
-    if (!app_trans_id) {
-      throw { statusCode: 400, message: 'Bad request' }
-    }
     try {
+      const { app_trans_id, onlyQuery = false } = req.body;
+
+      if (!app_trans_id) {
+        throw { statusCode: 400, message: 'Bad request' };
+      }
+
       const app_id = parseInt(process.env.ZALOPAY_APP_ID);
       const key1 = process.env.ZALOPAY_APP_KEY;
       const hmac_input = app_id + "|" + app_trans_id + "|" + key1;
@@ -216,25 +217,29 @@ class TransactionController {
         app_id,
         app_trans_id,
         mac
+      };
+
+      if (onlyQuery) {
+        const response = await axios.post(process.env.ZALOPAY_SANDBOX_QUERY_ENDPOINT, body);
+        return res.json(response.data);
       }
+
       let data;
       do {
         const response = await axios.post(process.env.ZALOPAY_SANDBOX_QUERY_ENDPOINT, body);
         data = response.data;
-        if (data.return_code !== 3) break;
-        await delay(30000);
+        if (response.data.return_code !== 3) break;
+        await new Promise(resolve => setTimeout(resolve, 30000));
       } while (data.return_code === 3);
 
-      if (onlyQuery) {
-        return res.json(data);
-      }
-      const transaction = await Transaction.findOne({ app_trans_id });
+      const transactionUpdate = {
+        zp_trans_id: data.zp_trans_id
+      };
 
       if (data.return_code === 2) {
-        transaction.status = 'CANCELED';
-      }
-      if (data.return_code === 1) {
-        transaction.status = 'SUCCEED';
+        transactionUpdate.status = 'CANCELED';
+      } else if (data.return_code === 1) {
+        transactionUpdate.status = 'SUCCEED';
         await User.findByIdAndUpdate(
           req.user._id,
           { $inc: { balance: data.amount } },
@@ -242,11 +247,11 @@ class TransactionController {
         );
       }
 
-      transaction.zp_trans_id = data.zp_trans_id;
-      await transaction.save();
-      res.json(transaction.status)
+      await Transaction.findOneAndUpdate({ app_trans_id }, transactionUpdate);
+
+      res.json(transactionUpdate.status);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       res.status(error.statusCode || 500).json({ message: error.message || 'Internal server error' });
     }
   }

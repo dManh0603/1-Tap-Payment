@@ -61,8 +61,7 @@ const Zalopay = () => {
                 {queryLoading
                     ? <>
                         <Spinner display={'block'} thickness="4px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="xl" />
-                        <Text fontSize="md">Giao dịch đang được thực hiện, hãy giữ nguyên cửa sổ này.</Text>
-                        <Text fontSize="md" color={'red'} as={'i'}>Nếu đóng cửa sổ này, giao dịch sẽ bị hủy.</Text>
+                        <Text fontSize="md">Thao tác đang được thực hiện, vui lòng đợi 1 chút.</Text>
                     </>
                     : <>
                         {queryResult &&

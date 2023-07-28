@@ -105,7 +105,7 @@ const Users = () => {
                             Activated
                           </Badge>}
                         </td>
-                        <td>{u.balance} $</td>
+                        <td>{u.balance} VND</td>
                         <td>{formatDate(u.updatedAt)}</td>
                       </tr>
                     ))}

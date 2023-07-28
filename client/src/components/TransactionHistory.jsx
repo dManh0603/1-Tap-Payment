@@ -39,7 +39,7 @@ const TransactionHistory = () => {
       <Card>
         <CardHeader>
           <HStack spacing={4}>
-            <Text>Search for anything ?</Text>
+            {/* <Text>Search for anything ?</Text> */}
             <Input variant='filled' placeholder='Method ?' type="date" />
           </HStack>
         </CardHeader>
@@ -55,12 +55,12 @@ const TransactionHistory = () => {
 
                 if (previousDate !== currentDate) {
                   return (
-                    <>
+                    <Box key={transaction._id}>
                       <Text fontSize="xl" fontWeight="bold">
                         {currentDate}
                       </Text>
-                      <TransactionItem key={transaction._id} transaction={transaction} />
-                    </>
+                      <TransactionItem transaction={transaction} />
+                    </Box>
                   );
                 }
 
