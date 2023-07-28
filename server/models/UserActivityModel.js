@@ -1,21 +1,12 @@
 const mongoose = require('mongoose');
 
 // Define the schema for user activities
-const userActivitySchema = new mongoose.Schema({
-  _id: mongoose.Schema.Types.ObjectId,
-  timestamp: {
-    type: Date,
-    default: Date.now,
-  },
-  level: {
-    type: String,
-    required: true,
-  },
-  message: {
-    type: String,
-    required: true,
-  },
-  meta: {
+const userActivitySchema = new mongoose.Schema(
+  {
+    message: {
+      type: String,
+      required: true,
+    },
     userId: {
       type: String,
       required: true,
@@ -34,7 +25,10 @@ const userActivitySchema = new mongoose.Schema({
       require: true,
     }
   },
-});
+  {
+    timestamps: true
+  }
+);
 
 // Create the UserActivity model
 const UserActivity = mongoose.model('UserActivity', userActivitySchema, 'userActivities');

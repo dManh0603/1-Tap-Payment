@@ -92,14 +92,14 @@ const Activities = () => {
                     {userActivities.map((a) => (
                       <tr key={a._id}>
                         <td>
-                          <a href={`/user/${a.meta.userId}`}>
+                          <a href={`/user/${a.userId}`}>
                             <i className="fas fa-eye"></i>
                           </a>
                         </td>
                         <td>{a.message}</td>
-                        <td>{a.meta.amount} VND</td>
-                        <td>{a.meta.type}</td>
-                        <td>{formatDate(a.timestamp)}</td>
+                        <td>{a.amount} VND</td>
+                        <td>{a.type}</td>
+                        <td>{formatDate(a.createdAt)}</td>
                       </tr>
                     ))}
                   </tbody>

@@ -1,7 +1,7 @@
 const Transaction = require('../models/TransactionModel');
 const User = require('../models/UserModel')
 const CryptoJS = require('crypto-js');
-
+const UserActivity = require('../models/UserActivityModel');
 class BalanceController {
   async add(req, res) {
     try {
@@ -69,19 +69,26 @@ class BalanceController {
       // Save the updated user
       await user.save();
 
-      req.logger.info(`${user.name} checkout`, {
-        userId: user._id.toString(),
+      await UserActivity.create({
+        message: `${user.name} checkout`,
+        userId: user._id,
         amount: amount,
         type: type,
-        name: user.name.toString(),
-        email: user.email.toString()
-      });
+        name: user.name,
+      })
+
+      // req.logger.info(`${user.name} checkout`, {
+      //   userId: user._id.toString(),
+      //   amount: amount,
+      //   type: type,
+      //   name: user.name.toString(),
+      //   email: user.email.toString()
+      // });
 
       res.status(200).json(user);
     } catch (error) {
       console.error('Error deducting amount:', error);
       res.status(error.statusCode || 500).json({ message: error.message || 'Internal server error' });
-
     }
   }
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Helmet } from 'react-helmet';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const Sidebar = () => {
   const location = useLocation();
@@ -11,21 +11,21 @@ const Sidebar = () => {
       <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
         {/* <!-- Sidebar - Brand --> */}
-        <a className="sidebar-brand d-flex align-items-center justify-content-center" href="/dashboard">
+        <Link className="sidebar-brand d-flex align-items-center justify-content-center" to="/dashboard">
           <div className="sidebar-brand-icon rotate-n-15">
             <i className="fas fa-laugh-wink"></i>
           </div>
           <div className="sidebar-brand-text mx-3">1-Tap Admin</div>
-        </a>
+        </Link>
 
         {/* <!-- Divider --> */}
         <hr className="sidebar-divider my-0" />
 
         {/* <!-- Nav Item - Dashboard --> */}
         <li className={`nav-item ${location.pathname === '/dashboard' ? 'active' : ''}`}>
-          <a className="nav-link" id="dashboard-atag" href="/dashboard">
+          <Link className="nav-link" id="dashboard-atag" to="/dashboard">
             <i className="fas fa-fw fa-tachometer-alt"></i>
-            <span style={{ fontSize: '16px' }}>Dashboard</span></a>
+            <span style={{ fontSize: '16px' }}>Dashboard</span></Link>
         </li>
 
         {/* <!-- Divider --> */}
@@ -38,50 +38,50 @@ const Sidebar = () => {
 
         {/* <!-- Nav Item - Configuration --> */}
         <li className={`nav-item ${location.pathname === '/config' ? 'active' : ''}`}>
-          <a className="nav-link" href="/config">
+          <Link className="nav-link" to="/config">
             <i className="fas fa-fw fa-cog"></i>
             <span style={{ fontSize: '16px' }}>Configuration</span>
-          </a>
+          </Link>
         </li>
 
         {/* <!-- Nav Item - Transactions --> */}
         <li className={`nav-item ${location.pathname === '/transactions' ? 'active' : ''}`}>
-          <a className="nav-link" href="/transactions">
+          <Link className="nav-link" to="/transactions">
             <i className="fas fa-fw fa-table"></i>
             <span style={{ fontSize: '16px' }}>Transactions</span>
-          </a>
+          </Link>
         </li>
 
         {/* <!-- Nav Item - Chats --> */}
         <li className={`nav-item ${location.pathname === '/chats' ? 'active' : ''}`}>
-          <a className="nav-link" href="/chats">
+          <Link className="nav-link" to="/chats">
             <i className="fas fa-fw fa-comment"></i>
             <span style={{ fontSize: '16px' }}>Chats</span>
-          </a>
+          </Link>
         </li>
 
         {/* <!-- Nav Item - Users --> */}
         <li className={`nav-item ${location.pathname === '/users' ? 'active' : ''}`}>
-          <a className="nav-link" href="/users">
+          <Link className="nav-link" to="/users">
             <i className="fas fa-fw fa-user"></i>
             <span style={{ fontSize: '16px' }}>Users</span>
-          </a>
+          </Link>
         </li>
 
         {/* <!-- Nav Item - Activities --> */}
         <li className={`nav-item ${location.pathname === '/activities' ? 'active' : ''}`}>
-          <a className="nav-link" href="/activities">
+          <Link className="nav-link" to="/activities">
             <i className="fas fa-fw fa-tags"></i>
             <span style={{ fontSize: '16px' }}>Activities</span>
-          </a>
+          </Link>
         </li>
 
         {/* <!-- Nav Item - Zalopay --> */}
         <li className={`nav-item ${location.pathname === '/zalopay' ? 'active' : ''}`}>
-          <a className="nav-link" href="/zalopay">
+          <Link className="nav-link" to="/zalopay">
             <i className="fas fa-fw fa-money-bill"></i>
             <span style={{ fontSize: '16px' }}>Zalopay</span>
-          </a>
+          </Link>
         </li>
 
         {/* <!-- Divider --> */}
