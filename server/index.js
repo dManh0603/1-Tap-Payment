@@ -12,7 +12,6 @@ const cors = require('cors');
 const app = express()
 const loggerMiddleware = require('./middlewares/LoggerMiddleware')
 const initSocketIO = require('./config/socketio')
-const ErrorHandler = require('./middlewares/ErrorHandler')
 
 // Using cors middleware
 app.use(cors({
@@ -30,9 +29,6 @@ app.use(express.json())
 
 // Use winston logger
 app.use(loggerMiddleware);
-
-//Error handling middleware
-app.use(ErrorHandler)
 
 db.connect();
 db.config();

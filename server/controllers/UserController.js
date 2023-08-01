@@ -62,23 +62,23 @@ class UserController {
     }
   }
 
-  async login(req, res) {
+  async login(req, res, next) {
     const { email, password } = req.body;
 
     try {
       const user = await User.findOne({ email });
       if (!user) {
-        throw { statusCode: 401, message: "You have entered wrong email or password!" };
+        res.status(401);
+        throw new Error('You have entered wrong email or password!')
       }
 
       const passwordMatched = await user.matchPassword(password)
 
       if (!passwordMatched) {
-        throw { statusCode: 401, message: "You have entered wrong password!" };
-
+        res.status(401);
+        throw new Error('You have entered wrong password!')
       }
 
-      console.log(`User: ${user._id} logged in.`)
       res.status(200).json({
         message: 'User login successfully',
         user: {
@@ -90,10 +90,11 @@ class UserController {
         }
       });
     } catch (err) {
-      console.error(err);
-      const statusCode = err.statusCode || 500;
-      const message = err.message || 'Internal server error';
-      res.status(statusCode).json({ message });
+      next(err)
+      // const statusCode = err.statusCode || 500;
+      // const message = err.message || 'Internal server error';
+      // req.logger.error(message, { stack: err.stack })
+      // res.status(statusCode).json({ message });
     }
   }
 

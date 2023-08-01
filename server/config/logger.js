@@ -1,36 +1,27 @@
 const winston = require('winston');
 const { format } = require('winston');
-require('winston-mongodb');
+const winstonDailyRotateFile = require('winston-daily-rotate-file');
 
-// Configure MongoDB transport
-winston.add(new winston.transports.MongoDB({
-  db: process.env.MONGODB_URI, // MongoDB connection string
-  collection: 'userActivities', // Collection name to store logs
-  options: { useNewUrlParser: true, useUnifiedTopology: true },
+// Configure the file transport
+const fileTransport = new winstonDailyRotateFile({
+  filename: 'logs/application-%DATE%.log',
+  datePattern: 'YYYY-MM-DD',
+  maxSize: '20m', // Maximum size of each log file
+  maxFiles: '7d', // Keep logs for 7 days
   format: format.combine(
-    format.timestamp(),
-    format.metadata(), // Include metadata in the log message
+    format.metadata(),
+    format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
     format.printf(({ timestamp, level, message, metadata }) => {
+      delete metadata.timestamp;
       return `[${timestamp}] ${level}: ${message} ${JSON.stringify(metadata)}`;
     })
   )
-}));
+});
 
 // Create and export the logger instance
 const logger = winston.createLogger({
   transports: [
-    new winston.transports.Console(), // Optional: Log to the console as well
-    new winston.transports.MongoDB({
-      db: process.env.MONGODB_URI, // MongoDB connection string
-      collection: 'userActivities', // Collection name to store logs
-      options: { useNewUrlParser: true, useUnifiedTopology: true },
-      format: format.combine(
-        format.metadata(), // Include metadata in the log message
-        format.printf(({ timestamp, level, message, metadata }) => {
-          return `[${timestamp}] ${level}: ${message} ${JSON.stringify(metadata)}`;
-        })
-      )
-    })
+    fileTransport
   ]
 });
 

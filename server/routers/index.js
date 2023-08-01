@@ -15,12 +15,27 @@ const route = (app) => {
   app.use('/api/admin', adminRouter)
   app.use('/api/card', cardRouter)
 
-  // // handle 404
-  // app.use((req, res, next) => {
-  //   return res.status(404).render('error', {
-  //     layout: 'blank'
-  //   })
-  // })
+  //error handler
+  app.use((err, req, res, next) => {
+
+    const statusCode = res.statusCode === 200 ? 500 : (res.statusCode || 500);
+    const message = err.message || 'Internal server error';
+    if (statusCode === 500) {
+      const requestInfo = {
+        method: req.method,
+        url: req.originalUrl,
+        headers: req.headers,
+        params: req.params,
+        query: req.query,
+      };
+
+      req.logger.error(message, {
+        request: requestInfo,
+        stack: err.stack,
+      });
+    }
+    return res.status(statusCode).json({ message });
+  })
 }
 
 module.exports = route
