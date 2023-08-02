@@ -61,45 +61,7 @@ class AdminController {
     return transactionCount;
   }
 
-  index(req, res) {
-    if (req.session && req.session.user) {
-      return res.redirect('/dashboard');
-    }
-    return res.render('index', {
-      layout: 'blank.hbs',
-    });
-  }
-
-  getToken = async (req, res) => {
-    const { email, password } = req.body;
-
-    try {
-      const user = await User.findOne({ email, role: "admin" });
-      if (!user) {
-        throw { statusCode: 401, message: "Wrong email or password!" };
-      }
-
-      const passwordMatched = await user.matchPassword(password)
-
-      if (!passwordMatched) {
-        throw { statusCode: 401, message: "Wrong password!" };
-      }
-
-      console.log(`Admin: ${user._id} get token successfully.`)
-      res.status(200).json({
-        message: 'Admin get token successfully',
-        token: generateToken(user._id),
-
-      });
-    } catch (err) {
-      console.error(err);
-      const statusCode = err.statusCode || 500;
-      const message = err.message || 'Internal server error';
-      res.status(statusCode).json({ message });
-    }
-  }
-
-  getDashboard = async (req, res) => {
+  getDashboard = async (req, res, next) => {
     try {
       // line chart
       const monthlyIncomePromise = this.getMonthlyIncome();
@@ -114,30 +76,32 @@ class AdminController {
         succeedTransactionCountPromise
       ]);
 
-      return res.status(200).json({ monthlyIncome, annualIncome, transactionCount,succeedTransactionCount });
+      return res.status(200).json({ monthlyIncome, annualIncome, transactionCount, succeedTransactionCount });
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: 'Internal Server Error' });
+      next(error)
     }
   };
 
-  login = async (req, res) => {
-    const { email, password } = req.body;
-
+  login = async (req, res, next) => {
     try {
+      const { email, password } = req.body;
+      if (!email || !password) {
+        res.status(400);
+        throw new Error('Bad request');
+      }
+
       const user = await User.findOne({ email, role: 'admin' });
       if (!user) {
-        throw { statusCode: 401, message: "You have entered wrong email or password!" };
+        res.status(401);
+        throw new Error('You have entered wrong email or password!');
       }
 
       const passwordMatched = await user.matchPassword(password)
-
       if (!passwordMatched) {
-        throw { statusCode: 401, message: "You have entered wrong password!" };
-
+        res.status(401);
+        throw new Error('You have entered wrong password!');
       }
 
-      console.log(`User: ${user._id} logged in.`)
       res.status(200).json({
         message: 'User login successfully',
         user: {
@@ -149,14 +113,11 @@ class AdminController {
         }
       });
     } catch (err) {
-      console.error(err);
-      const statusCode = err.statusCode || 500;
-      const message = err.message || 'Internal server error';
-      res.status(statusCode).json({ message });
+      next(err)
     }
   }
 
-  getTransactions = async (req, res) => {
+  getTransactions = async (req, res, next) => {
     try {
       const transactions = await Transaction.find().populate('created_by', 'email name');
 
@@ -166,66 +127,73 @@ class AdminController {
 
       res.json({ transactions: transactionsWithUserEmail });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Internal Server Error' });
+      next(error)
     }
   };
 
-  getTransactionDetails = async (req, res) => {
+  getTransactionDetails = async (req, res, next) => {
     const transactionId = req.params.id;
     try {
       const transaction = await Transaction.findById(transactionId).populate('created_by', 'email name').lean().exec();
-      console.log(transaction);
-
-      res.json(transaction);
+      if (!transaction) {
+        res.status(404);
+        throw new Error('No transaction found with the provided id')
+      }
+      res.status(200).json(transaction);
     } catch (error) {
-      // Handle any errors that occur during the database operation
-      console.error(error);
-      res.status(500).json('Internal Server Error');
+      next(error)
     }
   }
 
-  getUsers = async (req, res) => {
+  getUsers = async (req, res, next) => {
     try {
-      // Find all users with the role "client" and exclude the password field
       const users = await User.find({ role: { $ne: 'admin' } }).select('-password');
 
       return res.json(users);
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: 'Internal server error' });
-
+      next(error)
     }
   }
 
-  getUserDetails = async (req, res) => {
+  getUserDetails = async (req, res, next) => {
     const userId = req.params.id;
     try {
       const user = await User.findById(userId).lean().select('-password').exec();
-      console.log(user);
-      res.json(user);
+      if (!user) {
+        res.status(404);
+        throw new Error('No user found with the provided id');
+      }
+      res.status(200).json(user);
     } catch (error) {
-      console.log(error)
-      res.status(500).json({ error: 'Internal server error' })
+      next(error)
     }
   }
 
-  updateUserDetails = async (req, res) => {
-    const userId = req.params.id;
-    const body = req.body;
+  updateUserDetails = async (req, res, next) => {
     try {
+      const userId = req.params.id;
+      if (!userId) {
+        res.status(400);
+        throw new Error('Bad request');
+      }
+
+      const body = req.body;
+      if (!body) {
+        res.status(400);
+        throw new Error('Bad request');
+      }
+
       const user = await User.findById(userId);
-
       if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+        res.status(404);
+        throw new Error('No user found with the provided id.');
       }
 
-      if (body.balance !== '') {
+      if (!isNaN(body.balance) && Number(body.balance) >= 0) {
         user.balance = body.balance;
-      }
-
-      if (body.email !== '') {
-        user.email = body.email;
+      } else {
+        res.status(400);
+        throw new Error('Bad request');
       }
 
       if (body.name !== '') {
@@ -243,20 +211,18 @@ class AdminController {
       // Save the updated user document
       await user.save();
 
-      return res.json({ user: user, message: 'User details updated successfully' });
+      res.json({ user: user, message: 'User details updated successfully' });
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: 'Internal server error' });
+      next(error)
     }
   }
 
-  getUserActivities = async (req, res) => {
+  getUserActivities = async (req, res, next) => {
     try {
       const activities = await UserActivity.find({}).sort({ timestamp: -1 }).lean().exec();
       res.json(activities);
     } catch (error) {
-      console.error('Error retrieving user activities:', error);
-      res.status(500).json({ error: 'Internal server error' });
+      next(error)
     }
   };
 
@@ -299,17 +265,16 @@ class AdminController {
 
       res.json(activityCounts);
     } catch (error) {
-      console.error('Error retrieving monthly activity:', error);
-      res.status(500).json({ error: 'Internal server error' });
+      next(error)
     }
   }
 
-  getConfig = async (req, res) => {
+  getConfig = async (req, res, next) => {
     try {
       const config = await Config.findOne({}); // Fetch the configuration document
       if (!config) {
-        console.error('No config document found');
-        return;
+        res.status(404);
+        throw new Error('No config found');
       }
 
       res.json({
@@ -317,13 +282,11 @@ class AdminController {
         bicyclePrice: config.bicycle_price
       });
     } catch (error) {
-
-      console.error('Error retrieving config:', error);
-      res.status(500).json({ error: 'Internal server error' });
+      next(error)
     }
   }
 
-  updateConfig = async (req, res) => {
+  updateConfig = async (req, res, next) => {
     try {
       const { motorbikePrice, bicyclePrice } = req.body;
 
@@ -332,17 +295,19 @@ class AdminController {
         bicycle_price: bicyclePrice,
       };
 
-      await Config.findOneAndUpdate({}, config);
+      const updatedConfig = await Config.findOneAndUpdate({}, config);
+
+      if (!updatedConfig) {
+        throw new Error('Update config failed.');
+      }
       process.env.motorbikePrice = motorbikePrice;
       process.env.bicyclePrice = bicyclePrice;
 
-      res.json({ message: 'Config updated successfully' });
+      res.status(200).json({ message: 'Config updated successfully' });
     } catch (error) {
-      res.status(500).json({ message: 'Failed to update config' });
+      next(error)
     }
   };
-
-
 }
 
 module.exports = new AdminController();

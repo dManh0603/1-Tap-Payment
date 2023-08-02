@@ -122,7 +122,7 @@ const UserDetails = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   style={{ opacity: 1 }}
-                  isDisabled={isDisabled} />
+                  isDisabled />
 
                 <Text mb={0} as={'b'} fontSize={'md'}>Balance</Text>
                 <Input pt='1' mb={4} fontSize='md' placeholder={userDetails.balance}

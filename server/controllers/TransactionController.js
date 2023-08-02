@@ -7,7 +7,7 @@ const axios = require('axios');
 class TransactionController {
 
   // [POST] /api/transaction/paypal/create
-  // async paypalCreate(req, res) {
+  // async paypalCreate(req, res, next) {
   //   try {
   //     const { payment_id, status, amount, create_time, update_time, email_address, payer_id, receiver_id } = req.body;
 
@@ -43,7 +43,7 @@ class TransactionController {
   //   }
   // }
 
-  async fetchMonthly(req, res) {
+  async fetchMonthly(req, res, next) {
     try {
       const currentDate = new Date();
       const currentMonth = currentDate.getMonth() + 1;
@@ -85,7 +85,7 @@ class TransactionController {
     }
   }
 
-  async getUserTransactions(req, res) {
+  async getUserTransactions(req, res, next) {
     try {
       const userId = req.user._id;
       const transactions = await Transaction.find({ created_by: userId }).sort({ createdAt: -1 }).exec();
@@ -99,7 +99,7 @@ class TransactionController {
   }
 
   // [POST] /api/transaction/zalopay/create
-  async zalopayCreate(req, res) {
+  async zalopayCreate(req, res, next) {
     let transaction;
     try {
       const { paymentMethod, amount, user_mac } = req.body;
@@ -199,7 +199,7 @@ class TransactionController {
   }
 
   // [POST] /api/transaction/zalopay/query
-  async zalopayQuery(req, res) {
+  async zalopayQuery(req, res, next) {
     try {
       const { app_trans_id, onlyQuery = false } = req.body;
 

@@ -7,7 +7,8 @@ class ChatController {
       const { userId } = req.body;
 
       if (!userId) {
-        throw { statusCode: 400, message: 'No user id was provided!' }
+        res.status(400);
+        throw new Error('Bad request');
       }
 
       let chats = await Chat.find({
@@ -37,12 +38,9 @@ class ChatController {
         chats = [fullChat];
       }
 
-      res.send(chats[0]);
+      res.status(200).send(chats[0]);
     } catch (error) {
-      console.error(error);
-      const statusCode = error.statusCode || 500;
-      const message = error.message || 'Internal server error';
-      res.status(statusCode).json({ error: message });
+      next(error)
     }
   }
 
@@ -65,13 +63,12 @@ class ChatController {
 
       res.status(200).json(results);
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: error.message });
+      next(error)
     }
   }
 
   // [GET] /api/chat/unseen
-  async fetchUnseenChats(req, res) {
+  async fetchUnseenChats(req, res, next) {
     try {
       const userId = req.user._id;
 
@@ -99,7 +96,7 @@ class ChatController {
 
       if (!hasUnseenMessages) {
         // No messages with seen set to false, return an empty array
-        return res.json([]);
+        return res.status(200).json([]);
       }
 
       // Transform the response to the desired structure
@@ -121,29 +118,26 @@ class ChatController {
         };
       }).filter(chat => chat !== null);
 
-      return res.json(transformedChats);
+      return res.status(200).json(transformedChats);
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: 'Internal server error' });
+      next(error)
     }
   }
 
   // [PUT] /api/chat/seen
-  async seenChat(req, res) {
+  async seenChat(req, res, next) {
 
     try {
       const { chatId } = req.body;
-      console.log(chatId)
       // Update all messages in the chat to seen
-      const result = await Message.updateMany(
+      await Message.updateMany(
         { chat: chatId },
         { seen: true }
       );
-      console.log('update success')
-      res.json({ message: 'Messages updated to seen' });
+
+      res.status(200).json({ message: 'Messages updated to seen' });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Internal server error' });
+      next(error)
     }
   }
 }

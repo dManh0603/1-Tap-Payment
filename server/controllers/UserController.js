@@ -15,34 +15,31 @@ passwordSchema
 
 class UserController {
 
-  async signup(req, res) {
-    const { name, email, password } = req.body;
-
+  async signup(req, res, next) {
     try {
+      const { name, email, password } = req.body;
       if (!name || !email || !password) {
-        throw { statusCode: 400, message: 'Please fill in all the required fields' };
+        res.status(400);
+        throw new Error('Bad request');
       }
 
       if (!validator.isEmail(email)) {
-        throw { statusCode: 400, message: 'Please provide a valid email' };
+        res.status(400);
+        throw new Error('Invalid email');
       }
 
       if (!passwordSchema.validate(password)) {
-        throw { statusCode: 400, message: 'Password should be at least 8 characters long and contain uppercase, lowercase, and numeric characters with no whitespace' };
+        res.status(400);
+        throw new Error('Password should be at least 8 characters long and contain uppercase, lowercase, and numeric characters with no whitespace');
       }
 
       const emailExisted = await User.findOne({ email });
       if (emailExisted) {
-        throw { statusCode: 400, message: 'Email already exists' };
+        res.status(400);
+        throw new Error('Email already exists')
       }
 
       const user = await User.create({ name, email, password, });
-
-      if (!user) {
-        throw { statusCode: 500, message: 'Failed to create new user' };
-      }
-
-      console.log('Created new user!');
 
       res.status(200).json({
         message: 'User registered successfully',
@@ -54,11 +51,8 @@ class UserController {
         }
       });
 
-    } catch (err) {
-      console.error(err);
-      const statusCode = err.statusCode || 500;
-      const message = err.message || 'Internal server error';
-      res.status(statusCode).json({ error: message });
+    } catch (error) {
+      next(error)
     }
   }
 
@@ -91,60 +85,56 @@ class UserController {
       });
     } catch (err) {
       next(err)
-      // const statusCode = err.statusCode || 500;
-      // const message = err.message || 'Internal server error';
-      // req.logger.error(message, { stack: err.stack })
-      // res.status(statusCode).json({ message });
     }
   }
 
-  async getUser(req, res) {
+  async getUser(req, res, next) {
     try {
       const user = await User.findById(req.user._id).select('-password')
 
       if (!user) {
-        throw { statusCode: 400, message: 'Something went wrong, please try again later!' }
+        res.status(404)
+        throw new Error('No user found with the provided id');
       }
-      return res.json(user)
+      res.json(user)
 
-    } catch (err) {
-      console.error(err);
-      const statusCode = err.statusCode || 500;
-      const message = err.message || 'Internal server error';
-      res.status(statusCode).json({ message });
+    } catch (error) {
+      next(error)
     }
   }
 
-  async disableCard(req, res) {
-    const userId = req.user._id;
-    const password = req.body.password
+  async disableCard(req, res, next) {
     try {
+      const userId = req.user._id;
+      const password = req.body.password
+      if (!userId || !password) {
+        res.status(400);
+        throw new Error('Bad request');
+      }
       // Find the user by their _id and update the card_disable field to true
       const user = await User.findByIdAndUpdate(userId, { card_disabled: true });
       if (!user) {
-        // User with the given _id not found
-        return res.status(404).json({ message: 'User not found' });
+        res.status(404);
+        throw new Error('No user found with the provided id')
       }
       const passwordMatched = await user.matchPassword(password)
       if (!passwordMatched) {
-        throw { statusCode: 401, message: "You have entered wrong password!" };
-
+        res.status(401);
+        throw new Error('You have entered wrong password!');
       }
-      // Card disabled successfully
-      return res.json({ message: 'Card disabled successfully' });
-    } catch (err) {
-      // Handle error
-      console.error(err);
-      const statusCode = err.statusCode || 500;
-      const message = err.message || 'Internal server error';
-      res.status(statusCode).json({ message });
+      res.json({ message: 'Card disabled successfully' });
+    } catch (error) {
+      next(error)
     }
   }
 
-  async searchUser(req, res) {
+  async searchUser(req, res, next) {
     try {
       const keyword = req.params.keyword;
-
+      if (!keyword) {
+        res.status(400);
+        throw new Error('Bad request');
+      }
       // Use a regular expression to perform a case-insensitive search for email or username
       const regex = new RegExp(keyword, 'i');
       const users = await User.find({
@@ -156,12 +146,9 @@ class UserController {
 
       res.json(users);
     } catch (error) {
-      // Handle any errors that occur during the search
-      res.status(500).json({ error: 'An error occurred while searching for users.' });
+      next(error)
     }
   }
-
-
 }
 
 module.exports = new UserController();

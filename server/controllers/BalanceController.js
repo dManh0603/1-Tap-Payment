@@ -3,45 +3,51 @@ const User = require('../models/UserModel')
 const CryptoJS = require('crypto-js');
 const UserActivity = require('../models/UserActivityModel');
 class BalanceController {
-  async add(req, res) {
+  async add(req, res, next) {
     try {
       const { amount, transactionId } = req.body;
-
+      if (!amount || !transactionId) {
+        res.status(400);
+        throw new Error('Bad request.')
+      }
       const coresponseTransaction = await Transaction.findById(transactionId);
 
-      if (parseFloat(amount) === coresponseTransaction.amount) {
-        const user = await User.findByIdAndUpdate(
-          req.user._id,
-          { $inc: { balance: parseFloat(amount) } },
-          { new: true }
-        );
-        res.json(user);
-      } else {
-        res.status(400).json('No corresponding transaction found');
+      if (parseFloat(amount) !== coresponseTransaction.amount) {
+        res.status(400);
+        throw new Error('No corresponding transaction found');
       }
+      const user = await User.findByIdAndUpdate(
+        req.user._id,
+        { $inc: { balance: parseFloat(amount) } },
+        { new: true }
+      );
+      res.status(200).json(user);
     } catch (error) {
-      console.error(error);
-      res.status(error.statusCode || 500).json({ message: error.message || 'Internal server error' });
+      next(error)
     }
   }
 
 
-  async deduct(req, res) {
+  async deduct(req, res, next) {
     try {
-      console.log('it here')
       const card_uid = req.params.card_uid;
       const type = req.body.type;
+      if (!card_uid || !type) {
+        res.status(400);
+        throw new Error('Bad request');
+      }
+
       const currentTime = new Date().getHours();
 
-      // Find the user by card_uid
       const user = await User.findOne({ card_uid });
-
       if (!user) {
-        throw { statusCode: 404, error: 'User not found' };
+        res.status(404)
+        throw new Error('User not found');
       }
 
       if (user.card_disabled === true) {
-        throw { statusCode: 403, error: 'Card disabled' };
+        res.status(403)
+        throw new Error('Card disabled');
       }
       let amount
       if (type === 'motorbike') {
@@ -55,12 +61,14 @@ class BalanceController {
           amount += 1;
         }
       } else {
-        throw { statusCode: 400, error: 'Invalid type' };
+        res.status(400);
+        throw new Error('Invalid type');
       }
 
       // Check if the balance has enough funds
       if (user.balance < amount) {
-        throw { statusCode: 402, error: 'Insufficient balance' };
+        res.status(402);
+        throw new Error('Insufficient balance');
       }
 
       // Deduct the amount from the balance field
@@ -77,51 +85,50 @@ class BalanceController {
         name: user.name,
       })
 
-      // req.logger.info(`${user.name} checkout`, {
-      //   userId: user._id.toString(),
-      //   amount: amount,
-      //   type: type,
-      //   name: user.name.toString(),
-      //   email: user.email.toString()
-      // });
-
       res.status(200).json(user);
     } catch (error) {
-      console.error('Error deducting amount:', error);
-      res.status(error.statusCode || 500).json({ message: error.message || 'Internal server error' });
+      next(error)
     }
   }
 
-  async transfer(req, res) {
-
+  async transfer(req, res, next) {
     try {
       const { password, amount, receiverId, user_mac } = req.body
-
+      if (!password || !amount || !receiverId || !user_mac) {
+        res.status(400);
+        throw new Error('Bad request');
+      }
       const CLIENT_KEY = process.env.CLIENT_KEY;
       const isIntact = user_mac === CryptoJS.SHA256(`${CLIENT_KEY}|${amount}|${password}|${receiverId}`).toString();
       if (!isIntact) {
-        throw { statusCode: 400, message: 'Invalid mac' };
+        res.status(400);
+        throw new Error('Invalid mac')
       }
       const user = await User.findById(req.user._id);
       const passwordMatched = await user.matchPassword(password)
 
       if (!user) {
-        throw { statusCode: 400, message: 'Unrecognized user id' }
+        res.status(404);
+        throw new Error('Unrecognized user id');
       }
       if (!passwordMatched) {
-        throw { statusCode: 401, message: 'You have entered wrong password!' };
+        res.status(401);
+        throw new Error('You have entered wrong password!');
       }
       if (amount <= 0) {
-        throw { statusCode: 400, message: 'Amount must greater than 0' };
+        res.status(400);
+        throw new Error('Amount must greater than 0');
       }
 
       if (user.balance < amount) {
-        throw { statusCode: 401, message: 'Insufficent balance' };
+        res.status(401);
+        throw new Error('Insufficent balance');
       }
 
       const receiver = await User.findById(receiverId);
       if (!receiver) {
-        throw { statusCode: 400, message: "unrecognized receiver id" }
+        res.status(400);
+        throw new Error('Unrecognized receiver id');
       }
 
       receiver.balance += amount;
@@ -144,11 +151,9 @@ class BalanceController {
       })
       delete user.password;
       user.toObject();
-      res.json({ message: "Transfer successfully", user })
-
+      res.status(200).json({ message: "Transfer successfully", user });
     } catch (error) {
-      console.log(error)
-      res.status(error.statusCode || 500).json({ message: error.message || 'Internal server error' });
+      next(error)
     }
   }
 }

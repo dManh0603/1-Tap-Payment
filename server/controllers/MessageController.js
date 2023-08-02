@@ -4,21 +4,20 @@ const User = require('../models/UserModel');
 
 class MessageController {
 
-  sendMessage = async (req, res) => {
-
-    const { content, chatId } = req.body;
-    if (!content || !chatId) {
-      console.log('Invalid data passed into request');
-      return res.status(400).json({ message: 'Invalid data passed into request' });
-    }
-
-    const newMessage = {
-      sender: req.user._id,
-      content,
-      chat: chatId
-    }
-
+  sendMessage = async (req, res, next) => {
     try {
+      const { content, chatId } = req.body;
+      if (!content || !chatId) {
+        res.status(400);
+        throw new Error('Bad request');
+      }
+
+      const newMessage = {
+        sender: req.user._id,
+        content,
+        chat: chatId
+      }
+
       let message = await Message.create(newMessage);
       message = await message.populate('sender', 'name avt');
       message = await message.populate('chat');
@@ -31,24 +30,21 @@ class MessageController {
         latestMessage: message,
       });
 
-      res.json(message);
+      res.status(200).json(message);
     } catch (error) {
-      res.status(500);
-      throw new Error(error.message);
+      next(error)
     }
   }
 
-  fetchMessages = async (req, res) => {
+  fetchMessages = async (req, res, next) => {
     try {
       const messages = await Message.find({ chat: req.params.id })
         .populate('sender', 'name avt email')
         .populate('chat')
 
-      res.json(messages);
+      res.status(200).json(messages);
     } catch (error) {
-      console.error(error)
-      res.status(500)
-      throw new Error(error.message)
+      next(error)
     }
   }
 }
