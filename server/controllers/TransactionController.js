@@ -45,16 +45,25 @@ class TransactionController {
 
   async fetchMonthly(req, res, next) {
     try {
-      const currentDate = new Date();
-      const currentMonth = currentDate.getMonth() + 1;
+      let { year } = req.params;
 
-      // Initialize an array to store the monthly sums
-      const monthlySums = Array(currentMonth).fill(0);
+      if (!year) {
+        // If the year parameter is not provided, set it to the current year
+        const currentDate = new Date();
+        year = currentDate.getFullYear().toString();
+      }
 
-      // Query the transactions collection and calculate the sums for each month
+      const monthlySums = Array(12).fill(0); // Initialize an array for 12 months of the year
+
       const result = await Transaction.aggregate([
         {
-          $match: { status: "SUCCEED" } // Filter transactions with status 'SUCCEED'
+          $match: {
+            status: "SUCCEED",
+            createdAt: {
+              $gte: new Date(`${year}-01-01`),
+              $lte: new Date(`${year}-12-31 23:59:59`)
+            }
+          }
         },
         {
           $group: {
@@ -72,18 +81,18 @@ class TransactionController {
       });
 
       // Fill in zeros for missing months
-      for (let i = 0; i < currentMonth; i++) {
+      for (let i = 0; i < 12; i++) {
         if (monthlySums[i] === 0) {
           monthlySums[i] = 0;
         }
       }
 
-      return res.json(monthlySums);
+      res.status(200).send(monthlySums);
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: "Internal server error" });
+      next(error)
     }
   }
+
 
   async getUserTransactions(req, res, next) {
     try {

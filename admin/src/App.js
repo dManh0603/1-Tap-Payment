@@ -75,7 +75,6 @@ function App() {
           <div id="content-wrapper" className='d-flex flex-column'>
             <Topbar />
             <Routes>
-              <Route path="/dashboard" Component={Dashboard}></Route>
               <Route path="/transactions" Component={Transactions}></Route>
               <Route path="/transaction/:id" Component={TransactionDetails}></Route>
               <Route path="/chats" Component={Chats}></Route>
@@ -84,6 +83,7 @@ function App() {
               <Route path="/activities" Component={Activities}></Route>
               <Route path="/config" Component={Configuration}></Route>
               <Route path="/zalopay" Component={Zalopay}></Route>
+              <Route path="/" Component={Dashboard}></Route>
 
               <Route path="*" Component={_404}></Route>
             </Routes>

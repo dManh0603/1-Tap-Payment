@@ -22,8 +22,8 @@ const Sidebar = () => {
         <hr className="sidebar-divider my-0" />
 
         {/* <!-- Nav Item - Dashboard --> */}
-        <li className={`nav-item ${location.pathname === '/dashboard' ? 'active' : ''}`}>
-          <Link className="nav-link" id="dashboard-atag" to="/dashboard">
+        <li className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
+          <Link className="nav-link" id="dashboard-atag" to="/">
             <i className="fas fa-fw fa-tachometer-alt"></i>
             <span style={{ fontSize: '16px' }}>Dashboard</span></Link>
         </li>

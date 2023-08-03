@@ -85,7 +85,6 @@ async function renderChart() {
         cutoutPercentage: 80,
       },
     });
-    console.log(myPieChart)
   } catch (error) {
     // Handle the error response
     console.error('Error:', error);

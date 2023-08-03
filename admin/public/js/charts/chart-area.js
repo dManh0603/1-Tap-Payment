@@ -37,15 +37,22 @@ function get_labels() {
   return labels;
 }
 
-async function getData() {
+async function getData(year = null) {
   const token = localStorage.getItem('userToken');
+  let endpoint = '';
+  if (year) {
+    endpoint = '/api/transaction/fetchMonthly/' + year;
+  } else {
+    endpoint = '/api/transaction/fetchMonthly';
+  }
+
   try {
-    const response = await fetch('/api/transaction/fetchMonthly', {
+    const response = await fetch(endpoint, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-type': 'application/json'
-      }
+      },
     });
 
     if (response.ok) {
@@ -61,7 +68,9 @@ async function getData() {
 }
 
 async function initChart() {
-  const data = await getData();
+
+  const selectedDate = document.getElementById('yearInput').value;
+  const data = await getData(selectedDate);
 
   // Area Chart Example
   var ctx = document.getElementById("myAreaChart");
@@ -154,6 +163,6 @@ async function initChart() {
     }
   });
 }
-
+// module.exports = initChart;
 initChart();
 

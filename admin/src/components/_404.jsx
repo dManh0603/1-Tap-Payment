@@ -16,7 +16,7 @@ const _404 = () => {
 
   useEffect(() => {
     if (countdown === 0) {
-      navigate('/dashboard');
+      navigate('/');
     }
   }, [countdown, navigate]);
 
