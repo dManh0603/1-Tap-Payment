@@ -34,6 +34,7 @@ const route = (app) => {
         stack: err.stack,
       });
     }
+    console.log(err)
     return res.status(statusCode).json({ message });
   })
 }

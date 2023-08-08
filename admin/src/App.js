@@ -17,8 +17,7 @@ import Activities from './pages/Activities';
 import Configuration from './pages/Configuration';
 import Zalopay from './pages/Zalopay';
 import _404 from './components/_404';
-const ENDPOINT = 'http://localhost:4000';
-
+const ENDPOINT = process.env.REACT_APP_API_SERVER;
 let socket, selectedChatCompare;
 socket = io(ENDPOINT);
 
@@ -93,7 +92,7 @@ function App() {
           <div id="content-wrapper" className='d-flex flex-column'>
             <Routes>
               <Route path="/" Component={Homepage}></Route>
-              
+
               <Route path="*" Component={_404}></Route>
             </Routes>
           </div>

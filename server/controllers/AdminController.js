@@ -226,16 +226,24 @@ class AdminController {
     }
   };
 
-  async getMonthlyActivity(req, res) {
+  async getMonthlyActivity(req, res, next) {
     try {
-      const currentMonth = new Date().getMonth() + 1; // Get current month (1-12)
-      const currentYear = new Date().getFullYear(); // Get current year
+      let currentMonth;
+      let currentYear;
+      if (req.params.date) {
+        const [year, month] = req.params.date.split('-');
+        currentMonth = parseInt(month, 10);
+        currentYear = parseInt(year, 10);
+      } else {
+        currentMonth = new Date().getMonth() + 1; // Get current month (1-12)
+        currentYear = new Date().getFullYear(); // Get current year
+      }
 
       const activityCounts = await UserActivity.aggregate([
         {
           $addFields: {
-            month: { $month: '$timestamp' }, // Extract month from timestamp field
-            year: { $year: '$timestamp' }, // Extract year from timestamp field
+            month: { $month: '$createdAt' }, // Extract month from timestamp field
+            year: { $year: '$createdAt' }, // Extract year from timestamp field
           },
         },
         {
@@ -250,7 +258,7 @@ class AdminController {
         },
         {
           $group: {
-            _id: '$meta.type',
+            _id: '$type',
             count: { $sum: 1 },
           },
         },
@@ -263,7 +271,7 @@ class AdminController {
         },
       ]).exec();
 
-      res.json(activityCounts);
+      res.json({ currentMonth, currentYear, activityCounts });
     } catch (error) {
       next(error)
     }

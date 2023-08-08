@@ -19,15 +19,15 @@ async function config() {
   try {
     const config = await Config.findOne({}); // Fetch the configuration document
     if (!config) {
-      console.error('No config document found');
-      return;
+      resizeBy.status(404)
+      throw new Error('No config document found')
     }
 
-    process.env.motorbikePrice = config.motorbike_price; // Set the environment variable
-    process.env.bicyclePrice = config.bicycle_price; // Set the environment variable
+    process.env.motorbikePrice = config.motorbike_price;
+    process.env.bicyclePrice = config.bicycle_price;
 
   } catch (error) {
-    console.error('Error retrieving config:', error);
+    next(error)
   }
 }
 

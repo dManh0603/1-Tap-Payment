@@ -2,6 +2,7 @@ const validator = require('validator');
 const passwordValidator = require('password-validator');
 const User = require('../models/UserModel');
 const generateToken = require('../config/jwt');
+const Transaction = require('../models/TransactionModel')
 
 const passwordSchema = new passwordValidator();
 
@@ -149,6 +150,36 @@ class UserController {
       next(error)
     }
   }
+
+  async getMonthlyTransaction(req, res, next) {
+    try {
+      const userId = req.user._id;
+      const date = req.params.date;
+
+      // Assuming the date parameter is in the format "YYYY-MM"
+      const year = date.split('-')[0];
+      const month = date.split('-')[1];
+
+      // Construct the start and end dates for the given month
+      const startDate = new Date(year, month - 1, 1); // Month is 0-indexed, so subtract 1
+      const endDate = new Date(year, month, 0);
+
+      const transactions = await Transaction.find({
+        created_by: userId,
+        createdAt: { $gte: startDate, $lte: endDate }
+      })
+        .sort({ createdAt: -1 })
+        .exec();
+
+      const totalAmount = transactions.reduce((total, transaction) => total + transaction.amount, 0);
+
+      res.status(200).json({ transactions, totalAmount });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+
 }
 
 module.exports = new UserController();

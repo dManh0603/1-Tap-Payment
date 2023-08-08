@@ -99,11 +99,10 @@ class TransactionController {
       const userId = req.user._id;
       const transactions = await Transaction.find({ created_by: userId }).sort({ createdAt: -1 }).exec();
       const totalAmount = transactions.reduce((total, transaction) => total + transaction.amount, 0);
-      res.json({ transactions, totalAmount });
+      res.status(200).json({ transactions, totalAmount });
 
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Internal Server Error" });
+      next(error)
     }
   }
 
