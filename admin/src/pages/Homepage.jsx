@@ -20,7 +20,7 @@ const Homepage = () => {
         isClosable: true,
         position: 'top-right',
       });
-      navigate('/dashboard')
+      navigate('/')
     };
   })
 
@@ -55,7 +55,7 @@ const Homepage = () => {
         <Tabs variant='soft-rounded' colorScheme='blue'>
           <TabList mb={'1em'}>
             <Tab w={'50%'}>Login</Tab>
-            <Tab w={'50%'}>Forgot password</Tab>
+            <Tab w={'50%'}>Signup</Tab>
           </TabList>
           <TabPanels>
             <TabPanel>

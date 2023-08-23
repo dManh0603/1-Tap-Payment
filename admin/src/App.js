@@ -4,8 +4,8 @@ import Homepage from './pages/Homepage';
 import Transactions from './pages/Transactions';
 import TransactionDetails from './pages/TransactionDetails';
 import Chats from './pages/Chats';
-import Sidebar from './components/miscellaneous/Sidebar';
-import Topbar from './components/miscellaneous/Topbar';
+import Sidebar from './components/Sidebar';
+import Topbar from './components/Topbar';
 import { UserState } from './contexts/UserProvider';
 import { useEffect, useState } from 'react';
 import io from 'socket.io-client'

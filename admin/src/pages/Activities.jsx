@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Box, Spinner } from '@chakra-ui/react'
 import { formatDate } from '../helpers/ViewHelper';
 import { DataTable } from 'simple-datatables';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Helmet from 'react-helmet'
 
 const Activities = () => {
@@ -92,9 +92,9 @@ const Activities = () => {
                     {userActivities.map((a) => (
                       <tr key={a._id}>
                         <td>
-                          <a href={`/user/${a.userId}`}>
+                          <Link to={`/user/${a.userId}`}>
                             <i className="fas fa-eye"></i>
-                          </a>
+                          </Link>
                         </td>
                         <td>{a.message}</td>
                         <td>{a.amount} VND</td>

@@ -53,7 +53,7 @@ const Login = () => {
         position: 'top-right',
       });
 
-      navigate('/dashboard')
+      navigate('/')
 
     } catch (error) {
       console.log(error);
