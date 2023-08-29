@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Badge, Box, Button, ButtonGroup, Card, CardBody, CardFooter, CardHeader, Checkbox, Heading, Input, Radio, RadioGroup, Stack, StackDivider, Text, useToast } from '@chakra-ui/react';
+import { Badge, Box, Button, ButtonGroup, Card, CardBody, CardFooter, CardHeader, Heading, Input, Radio, RadioGroup, Stack, StackDivider, Text, useToast } from '@chakra-ui/react';
 
 const UserDetails = () => {
 
@@ -44,7 +44,6 @@ const UserDetails = () => {
         card_disabled: isCardDisabled === 'Disabled' ? true : false,
         card_uid: cardUid,
       }
-
       const { data } = await axios.put(`/api/admin/user/${id}`, body, config)
       setUserDetails(data.user);
 
@@ -55,19 +54,17 @@ const UserDetails = () => {
         isClosable: true,
         status: 'success'
       })
+      setIsDisabled(true);
     } catch (error) {
       console.log(error);
       toast({
-        title: 'Please try again later !',
+        title: error.response.data.message,
         duration: 5000,
         status: 'error',
         isClosable: true,
         position: 'top-right'
       })
-    } finally {
-      setIsDisabled(true);
     }
-
   }
 
   useEffect(() => {
@@ -89,10 +86,10 @@ const UserDetails = () => {
     if (!userDetails) {
       return;
     }
-    setBalance(userDetails.balance);
-    setCardUid(userDetails.card_uid);
-    setName(userDetails.name);
-    setEmail(userDetails.email);
+    setBalance(userDetails.balance ?? '');
+    setCardUid(userDetails.card_uid ?? '');
+    setName(userDetails.name ?? '');
+    setEmail(userDetails.email ?? '');
     setIsCardDisabled(userDetails.card_disabled ? 'Disabled' : 'Activate')
   }, [userDetails])
 

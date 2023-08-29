@@ -5,6 +5,7 @@ import { formatDate } from '../helpers/ViewHelper';
 import { DataTable } from 'simple-datatables';
 import { useNavigate } from 'react-router-dom';
 import Helmet from 'react-helmet'
+import { Link } from 'react-router-dom';
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -24,8 +25,8 @@ const Users = () => {
       };
       try {
         const { data } = await axios.get('/api/admin/users', config);
+        console.log(data)
         setUsers(data);
-        console.log('user:', data);
         setIsLoading(false);
       } catch (error) {
         console.log(error);
@@ -40,9 +41,7 @@ const Users = () => {
   useEffect(() => {
     if (!isLoading) {
       const table = new DataTable(tableRef.current, {
-        // Configure the options for the table here
       });
-      // Custom search bar styles
       const searchInput = tableRef.current.querySelector('.dataTables_filter input');
       if (searchInput) {
         searchInput.style.border = '1px solid black';
@@ -93,7 +92,10 @@ const Users = () => {
                     {users.map((u) => (
                       <tr key={u._id}>
                         <td>
-                          <a href={`/user/${u._id}`}><i className="fas fa-eye"></i></a>
+                          <Link to={`/users/${u._id}`} onClick={(e) => {
+                            e.preventDefault();
+                            navigate(e.currentTarget.getAttribute('href'))
+                          }}><i className="fas fa-eye"></i></Link>
                         </td>
                         <td>{u.email}</td>
                         <td>{u.name}</td>

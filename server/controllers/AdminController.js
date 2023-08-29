@@ -200,10 +200,8 @@ class AdminController {
         user.name = body.name;
       }
 
-      if (body.card_uid !== '') {
-        user.card_uid = body.card_uid;
-      }
-
+      user.card_uid = body.card_uid;
+      
       if (body.card_disabled !== undefined) {
         user.card_disabled = body.card_disabled;
       }

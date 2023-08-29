@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Badge, Box, Spinner } from '@chakra-ui/react'
 import { formatDate } from '../helpers/ViewHelper';
 import { DataTable } from 'simple-datatables';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { formatAmount } from '../helpers/ViewHelper';
 import Helmet from 'react-helmet'
 
@@ -95,9 +95,12 @@ const Transactions = () => {
                     {transactions.map((t) => (
                       <tr key={t._id}>
                         <td>
-                          <a href={`/transaction/${t._id}`}>
+                          <Link to={`/transactions/${t._id}`} onClick={(e) => {
+                            e.preventDefault();
+                            navigate(e.currentTarget.getAttribute('href'))
+                          }}>
                             <i className="fas fa-eye"></i>
-                          </a>
+                          </Link>
                         </td>
                         <td>{t.created_by.name}</td>
                         <td>{t.created_by.email}</td>

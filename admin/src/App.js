@@ -68,35 +68,32 @@ function App() {
 
   return (
     <div className="App" id='wrapper'>
-      {user
-        ? <>
+      {user ? (
+        <>
           <Sidebar />
           <div id="content-wrapper" className='d-flex flex-column'>
             <Topbar />
             <Routes>
+              <Route path="/" Component={Dashboard}></Route>
               <Route path="/transactions" Component={Transactions}></Route>
-              <Route path="/transaction/:id" Component={TransactionDetails}></Route>
+              <Route path="/transactions/:id" Component={TransactionDetails}></Route>
               <Route path="/chats" Component={Chats}></Route>
               <Route path="/users" Component={Users}></Route>
-              <Route path="/user/:id" Component={UserDetails}></Route>
+              <Route path="/users/:id" Component={UserDetails}></Route>
               <Route path="/activities" Component={Activities}></Route>
               <Route path="/config" Component={Configuration}></Route>
               <Route path="/zalopay" Component={Zalopay}></Route>
-              <Route path="/" Component={Dashboard}></Route>
-
-              <Route path="*" Component={_404}></Route>
+              {/* <Route path="*" Component={_404}></Route> Catch-all route for 404 */}
             </Routes>
           </div>
         </>
-        : <>
-          <div id="content-wrapper" className='d-flex flex-column'>
-            <Routes>
-              <Route path="/" Component={Homepage}></Route>
-
-              <Route path="*" Component={_404}></Route>
-            </Routes>
-          </div>
-        </>}
+      ) : (
+        <div id="content-wrapper" className='d-flex flex-column'>
+          <Routes>
+            <Route path="/" Component={Homepage} />
+          </Routes>
+        </div>
+      )}
     </div>
   );
 }

@@ -10,7 +10,6 @@ const Chatpage = () => {
 
   return (
     <>
-
         <Box
           display={'flex'}
           justifyContent={'space-between'}

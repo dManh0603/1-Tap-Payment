@@ -7,8 +7,8 @@ const UserSchema = mongoose.Schema(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     balance: { type: Number, default: 0, min: 0 },
-    card_uid: { type: String, default: null },
-    card_disabled: { type: Boolean, default: false },
+    card_uid: { type: String, unique: true, default: null, sparse: true },
+    card_disabled: { type: Boolean, default: true },
     role: { type: String, default: 'client' }
   },
   {
@@ -21,6 +21,15 @@ UserSchema.methods.matchPassword = async function (enteredPassword) {
 }
 
 UserSchema.pre('save', async function (next) {
+
+  // Check for duplicate card_uid
+  if (this.card_uid !== null) {
+    const existingUser = await mongoose.model('User').findOne({ card_uid: this.card_uid });
+    if (existingUser) {
+      throw new Error('Duplicated card');
+    }
+  }
+
   if (!this.isModified('password')) {
     next()
   }
