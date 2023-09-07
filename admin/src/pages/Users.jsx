@@ -84,6 +84,7 @@ const Users = () => {
                       <th>Email</th>
                       <th>Name</th>
                       <th>Card status</th>
+                      <th>Card UID</th>
                       <th>Balance</th>
                       <th>Updated at</th>
                     </tr>
@@ -107,6 +108,7 @@ const Users = () => {
                             Activated
                           </Badge>}
                         </td>
+                        <td>{u.card_uid}</td>
                         <td>{u.balance} VND</td>
                         <td>{formatDate(u.updatedAt)}</td>
                       </tr>

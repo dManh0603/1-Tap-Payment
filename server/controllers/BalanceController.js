@@ -31,6 +31,7 @@ class BalanceController {
   async deduct(req, res, next) {
     try {
       const card_uid = req.params.card_uid;
+      console.log(card_uid)
       const type = req.body.type;
       if (!card_uid || !type) {
         res.status(400);

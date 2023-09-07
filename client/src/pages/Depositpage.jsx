@@ -1,7 +1,6 @@
 import { Box, Button, Container, Modal, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spinner, Text, useDisclosure, useToast } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js'
 import Banner from '../components/miscellaneous/Banner';
 import axios from 'axios';
 import ZaloPay from '../components/ZaloPay';

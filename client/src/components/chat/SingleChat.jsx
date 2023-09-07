@@ -8,7 +8,6 @@ import axios from 'axios'
 import ScrollableChat from './ScrollableChat'
 import io from 'socket.io-client'
 import { UserState } from '../../contexts/UserProvider'
-const ENDPOINT = 'http://localhost:3000';
 
 let socket, selectedChatCompare;
 
@@ -158,7 +157,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   }, [selectedChat]);
 
   useEffect(() => {
-    socket = io(ENDPOINT);
+    socket = io(process.env.REACT_APP_SERVER_ENDPOINT);
     socket.emit('setup', user);
     socket.on('connected', () => setSocketConented(true));
     socket.on('typing', () => setIsTyping(true))
@@ -233,10 +232,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 <div className='messages'>
                   <ScrollableChat messages={messages} />
                 </div>
-
                 <FormControl onKeyDown={sendMessage}>
-               
-
                   <InputGroup mt={2}>
                     <Input
                       // mt={2}
@@ -252,7 +248,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 </FormControl>
               </>
             )}
-
         </Box>
       </>
     ) : (

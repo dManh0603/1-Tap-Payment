@@ -1,5 +1,4 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-
 import { Route, Routes } from 'react-router-dom';
 import Homepage from './pages/Homepage'
 import Mepage from './pages/Mepage'
@@ -73,15 +72,12 @@ function App() {
         <Routes>
           <Route path="/me/deposit" Component={Depositpage}></Route>
           <Route path="/" Component={Mepage}></Route>
-
           <Route path="*" Component={_404}></Route>
-
         </Routes>
         :
         <Routes>
           <Route path="/" Component={Homepage}></Route>
           <Route path="*" Component={_404}></Route>
-
         </Routes>
       }
     </div>

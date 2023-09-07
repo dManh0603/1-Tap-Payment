@@ -11,7 +11,7 @@ const Mepage = () => {
 
   const navigate = useNavigate();
   const { user } = UserState();
-
+  console.log(user)
   useEffect(() => {
     const storedToken = localStorage.getItem('userToken');
     if (storedToken === null) return navigate('/');
@@ -28,7 +28,6 @@ const Mepage = () => {
               <Tab>Summary</Tab>
               <Tab>Transfer money</Tab>
               <Tab>Transaction history</Tab>
-              <Tab>Other actions</Tab>
             </TabList>
 
             <TabPanels>
@@ -44,9 +43,6 @@ const Mepage = () => {
               </TabPanel>
               <TabPanel>
                 <TransactionHistory />
-              </TabPanel>
-              <TabPanel>
-                <p>Other actions!</p>
               </TabPanel>
             </TabPanels>
           </Tabs>

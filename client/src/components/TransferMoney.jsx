@@ -4,8 +4,6 @@ import { CloseIcon, SearchIcon } from '@chakra-ui/icons'
 import axios from 'axios'
 import UserListItem from './profile/UserListItem';
 import ScrollableFeed from 'react-scrollable-feed';
-import { UserState } from '../contexts/UserProvider'
-import { useNavigate } from 'react-router-dom';
 import CryptoJS from 'crypto-js';
 
 const TransferMoney = () => {
@@ -21,7 +19,6 @@ const TransferMoney = () => {
   const [transferError, setTransferError] = useState();
   const [receiver, setReceiver] = useState(null);
   const toast = useToast();
-  const { navigate } = UserState();
 
   const handleClick = () => setShow(!show)
 

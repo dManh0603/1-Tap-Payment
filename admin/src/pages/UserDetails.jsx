@@ -64,6 +64,7 @@ const UserDetails = () => {
         isClosable: true,
         position: 'top-right'
       })
+      window.location.reload()
     }
   }
 

@@ -25,6 +25,7 @@ const Transactions = () => {
       };
       try {
         const { data } = await axios.get('/api/admin/transactions', config);
+        console.log(data)
         setTransactions(data.transactions);
         setIsLoading(false);
       } catch (error) {

@@ -7,7 +7,7 @@ const UserSchema = mongoose.Schema(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     balance: { type: Number, default: 0, min: 0 },
-    card_uid: { type: String, unique: true, default: null, sparse: true },
+    card_uid: { type: String, default: null, sparse: true },
     card_disabled: { type: Boolean, default: true },
     role: { type: String, default: 'client' }
   },
@@ -21,21 +21,25 @@ UserSchema.methods.matchPassword = async function (enteredPassword) {
 }
 
 UserSchema.pre('save', async function (next) {
-
   // Check for duplicate card_uid
-  if (this.card_uid !== null) {
-    const existingUser = await mongoose.model('User').findOne({ card_uid: this.card_uid });
-    if (existingUser) {
-      throw new Error('Duplicated card');
+  if (this.isModified('card_uid')) {
+    if (this.card_uid !== null && this.card_uid !== '') {
+      const existingUser = await mongoose.model('User').findOne({ card_uid: this.card_uid });
+      if (existingUser) {
+        throw new Error('Duplicated card');
+      }
+    } else {
+      console.log('here')
+      this.card_uid = null
     }
   }
 
-  if (!this.isModified('password')) {
-    next()
+  if (this.isModified('password')) {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt)
   }
+  next()
 
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt)
 })
 
 const User = mongoose.model('User', UserSchema)

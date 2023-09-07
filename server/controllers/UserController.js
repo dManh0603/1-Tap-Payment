@@ -81,6 +81,7 @@ class UserController {
           name: user.name,
           email: user.email,
           balance: user.balance,
+          card_disabled: user.card_disabled,
           token: generateToken(user._id)
         }
       });
