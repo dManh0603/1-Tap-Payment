@@ -1,5 +1,5 @@
 import { Box, Container, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { UserState } from '../contexts/UserProvider';
 import Banner from '../components/miscellaneous/Banner';
@@ -11,7 +11,6 @@ const Mepage = () => {
 
   const navigate = useNavigate();
   const { user } = UserState();
-  console.log(user)
   useEffect(() => {
     const storedToken = localStorage.getItem('userToken');
     if (storedToken === null) return navigate('/');

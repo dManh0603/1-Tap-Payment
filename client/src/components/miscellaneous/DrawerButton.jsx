@@ -1,7 +1,7 @@
 import { IconButton, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import React from "react";
 import { UserState } from "../../contexts/UserProvider";
-import { ExternalLinkIcon, HamburgerIcon } from "@chakra-ui/icons";
+import { HamburgerIcon } from "@chakra-ui/icons";
 
 function DrawerButton() {
   const { logout } = UserState();

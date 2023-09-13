@@ -67,15 +67,10 @@ function App() {
 
   return (
     <div className="App">
-      {user
-        ?
+      {
         <Routes>
           <Route path="/me/deposit" Component={Depositpage}></Route>
-          <Route path="/" Component={Mepage}></Route>
-          <Route path="*" Component={_404}></Route>
-        </Routes>
-        :
-        <Routes>
+          <Route path="/me" Component={Mepage}></Route>
           <Route path="/" Component={Homepage}></Route>
           <Route path="*" Component={_404}></Route>
         </Routes>

@@ -53,7 +53,7 @@ const Login = () => {
         position: 'top-right',
       });
 
-      navigate('/')
+      navigate('/me')
 
     } catch (error) {
       console.log(error);

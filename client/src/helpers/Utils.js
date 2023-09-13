@@ -17,7 +17,15 @@ function convertToGMT7(dateString) {
   return formattedDate;
 }
 
+function formatPaymentRef(str) {
+  if (str.length < 7) {
+    return str;
+  }
+  return str.slice(0, 6) + '_' + str.slice(6);
+}
+
 module.exports = {
   formatAmount,
-  convertToGMT7
+  convertToGMT7,
+  formatPaymentRef,
 }

@@ -1,6 +1,6 @@
 import { Box, Heading, Text } from '@chakra-ui/react'
 import React from 'react'
-import { convertToGMT7, formatAmount } from '../../helpers/Utils';
+import { convertToGMT7, formatAmount, formatPaymentRef } from '../../helpers/Utils';
 
 const TransactionItem = ({ transaction }) => {
   return (
@@ -25,7 +25,9 @@ const TransactionItem = ({ transaction }) => {
             You deposited {formatAmount(transaction.amount)} VND
           </Heading>
           <Text fontSize='sm'>
-            Transactions id: {transaction._id}
+            App transactions id: {transaction.app_trans_id}
+            <br />
+            Payment reference: {formatPaymentRef(transaction.zp_trans_id)}
             <br />
             Method: {transaction.method}
             <br />

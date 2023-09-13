@@ -51,7 +51,7 @@ const ZaloPay = ({ amount, callback }) => {
             duration: 3000,
             position: 'top-right',
           })
-          navigate('/')
+          navigate('/me')
         }
         else {
           toast({
@@ -61,7 +61,7 @@ const ZaloPay = ({ amount, callback }) => {
             duration: 3000,
             position: 'top-right',
           })
-          navigate('/')
+          navigate('/me')
         }
       }
       // Open a new tab with the order URL

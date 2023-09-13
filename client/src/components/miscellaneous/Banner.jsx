@@ -1,5 +1,5 @@
 import { Box, Image, Text } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React from 'react'
 import DrawerButton from './DrawerButton';
 import ChatButton from '../chat/ChatButton';
 
